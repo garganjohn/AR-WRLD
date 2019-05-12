@@ -35,8 +35,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private ArFragment arFragment;
     private ModelLoader modelLoader;
-    private int modelLives = 3;
-    private float xpos;
+    int numOfModels = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +60,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onUpdate(FrameTime frameTime) {
-
+        if (numOfModels == 1) return;
         Frame frame = arFragment.getArSceneView().getArFrame();
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
-
         for (Plane plane : planes) {
             if (plane.getTrackingState() == TrackingState.TRACKING) {
-                Anchor anchor = plane.createAnchor(plane.getCenterPose());
-
+                addObject(Uri.parse("andy.sfb"));
                 break;
             }
         }
@@ -116,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addObject(Uri model) {
+        numOfModels++;
         Frame frame = arFragment.getArSceneView().getArFrame();
         android.graphics.Point pt = getScreenCenter();
         List<HitResult> hits;
