@@ -4,16 +4,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
+import com.google.ar.core.ArCoreApk;
+import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
+import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
+import com.google.ar.core.exceptions.UnavailableApkTooOldException;
+import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
+import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
+import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
@@ -26,8 +35,10 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "FINDME";
     private ArFragment arFragment;
     private ModelLoader modelLoader;
+    private ArCoreApk arCoreApk;
     private int modelLives = 3;
 
     @Override
@@ -41,6 +52,27 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
+//        arFragment.getArSceneView().getPlaneRenderer().setVisible(false);
+//        arFragment.getArSceneView().getPlaneRenderer().setEnabled(false);
+
+        try {
+            Session session = new Session(this);
+            Log.d(TAG, "onCreate: Session is not null");
+            Config config = new Config(session);
+            config.setPlaneFindingMode(Config.PlaneFindingMode.DISABLED);
+            config.setUpdateMode(Config.UpdateMode.LATEST_CAMERA_IMAGE);
+            arFragment.getArSceneView().setupSession(session);
+            arFragment.getArSceneView().getSession().configure(config);
+        } catch (UnavailableArcoreNotInstalledException e) {
+            e.printStackTrace();
+        } catch (UnavailableApkTooOldException e) {
+            e.printStackTrace();
+        } catch (UnavailableSdkTooOldException e) {
+            e.printStackTrace();
+        } catch (UnavailableDeviceNotCompatibleException e) {
+            e.printStackTrace();
+        }
+
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
             arFragment.onUpdate(frameTime);
