@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,21 +15,28 @@ import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.core.Trackable;
+import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.HitTestResult;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.PlaneRenderer;
 import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
+import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ArFragment arFragment;
     private ModelLoader modelLoader;
     private int modelLives = 3;
+    private float xpos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +50,28 @@ public class MainActivity extends AppCompatActivity {
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
 
+        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
+
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
             arFragment.onUpdate(frameTime);
 
         });
         changetexture();
         initializeGallery();
+    }
+
+    private void onUpdate(FrameTime frameTime) {
+
+        Frame frame = arFragment.getArSceneView().getArFrame();
+        Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
+
+        for (Plane plane : planes) {
+            if (plane.getTrackingState() == TrackingState.TRACKING) {
+                Anchor anchor = plane.createAnchor(plane.getCenterPose());
+
+                break;
+            }
+        }
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -109,22 +133,55 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //TODO add logic to track lives to track per model, not overall
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-        node.setLocalPosition(new Vector3(0f, 0f, -2f));
+        node.setLocalPosition(new Vector3(0f, 2f, 0f));
+        modelLoader.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
+
         node.setOnTapListener((hitTestResult, motionEvent) -> {
-            if (1 < modelLives) {
-                modelLives--;
+            if (0 < modelLoader.getNumofLivesModel0()) {
+                modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
             } else {
-                anchor.detach();
+                anchorNode.removeChild(node);
             }
-            Toast.makeText(MainActivity.this, "MODEL HAS " + modelLives + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "MODEL HAS 0 " + modelLoader.getNumofLivesModel0() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
         });
         node.select();
+
+        TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
+        node1.setRenderable(renderable);
+        node1.setParent(anchorNode);
+        node1.setWorldPosition(new Vector3(0f, 0f, -2f));
+        modelLoader.setNumofLivesModel1(2);
+        node1.setOnTapListener((hitTestResult, motionEvent) -> {
+            if (0 < modelLoader.getNumofLivesModel1()) {
+                modelLoader.setNumofLivesModel1(modelLoader.getNumofLivesModel1() - 1);
+            } else {
+                anchorNode.removeChild(node1);
+            }
+            Toast.makeText(MainActivity.this, "MODEL HAS 1 " + modelLoader.getNumofLivesModel1() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+        });
+        node1.select();
+
+        TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
+        node2.setRenderable(renderable);
+        node2.setParent(anchorNode);
+        node2.setWorldPosition(new Vector3(1f, 0f, 0f));
+        modelLoader.setNumofLivesModel2(2);
+        node2.setOnTapListener((hitTestResult, motionEvent) -> {
+            if (0 < modelLoader.getNumofLivesModel2()) {
+                modelLoader.setNumofLivesModel2(modelLoader.getNumofLivesModel2() - 1);
+            } else {
+                anchorNode.removeChild(node2);
+            }
+            Toast.makeText(MainActivity.this, "MODEL HAS 2 " + modelLoader.getNumofLivesModel2() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+        });
+        node2.select();
     }
 
     public void onException(Throwable throwable) {
