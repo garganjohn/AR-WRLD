@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,14 +17,11 @@ import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
-import com.google.ar.sceneform.HitTestResult;
-import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.PlaneRenderer;
 import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.lang.ref.WeakReference;
@@ -42,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setUpAR();
+    }
+
+    private void setUpAR() {
         modelLoader = new ModelLoader(new WeakReference<>(this));
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             arFragment.onUpdate(frameTime);
 
         });
-        changetexture();
         initializeGallery();
     }
 
@@ -113,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addObject(Uri model) {
-        numOfModels++;
         Frame frame = arFragment.getArSceneView().getArFrame();
         android.graphics.Point pt = getScreenCenter();
         List<HitResult> hits;
@@ -131,13 +129,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //TODO add logic to track lives to track per model, not overall
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
+        numOfModels++;
         AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-        node.setLocalPosition(new Vector3(0f, 2f, 0f));
+        node.setLocalPosition(new Vector3(0f, 0f, 0f));
         modelLoader.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
@@ -154,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
         node1.setRenderable(renderable);
         node1.setParent(anchorNode);
-        node1.setWorldPosition(new Vector3(0f, 0f, -2f));
+        node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
         modelLoader.setNumofLivesModel1(2);
         node1.setOnTapListener((hitTestResult, motionEvent) -> {
             if (0 < modelLoader.getNumofLivesModel1()) {
