@@ -1,4 +1,4 @@
-package org.pursuit.ar_wrld;
+package org.pursuit.ar_wrld.modelObjects;
 
 import android.net.Uri;
 import android.util.Log;
@@ -6,45 +6,29 @@ import android.util.Log;
 import com.google.ar.core.Anchor;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 
+import org.pursuit.ar_wrld.MainActivity;
+
 import java.lang.ref.WeakReference;
 
-public class ModelLoader {
-    private int numofLivesModel0;
-    private int numofLivesModel1;
-    private int numofLivesModel2;
+public class ModelLoader{
+    private int numofLivesModel;
 
     private final WeakReference<MainActivity> owner;
     private static final String TAG = "ModelLoader";
 
     public int getNumofLivesModel0() {
-        return numofLivesModel0;
+        return numofLivesModel;
     }
 
-    public void setNumofLivesModel0(int numofLivesModel0) {
-        this.numofLivesModel0 = numofLivesModel0;
+    public void setNumofLivesModel0(int numofLivesModel) {
+        this.numofLivesModel = numofLivesModel;
     }
 
-    public int getNumofLivesModel1() {
-        return numofLivesModel1;
-    }
-
-    public void setNumofLivesModel1(int numofLivesModel1) {
-        this.numofLivesModel1 = numofLivesModel1;
-    }
-
-    public int getNumofLivesModel2() {
-        return numofLivesModel2;
-    }
-
-    public void setNumofLivesModel2(int numofLivesModel2) {
-        this.numofLivesModel2 = numofLivesModel2;
-    }
-
-    ModelLoader(WeakReference<MainActivity> owner) {
+    public ModelLoader(WeakReference<MainActivity> owner) {
         this.owner = owner;
     }
 
-    void loadModel(Anchor anchor, Uri uri) {
+    public void loadModel(Anchor anchor, Uri uri) {
         if (owner.get() == null) {
             Log.d(TAG, "Activity is null.  Cannot load model.");
             return;

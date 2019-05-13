@@ -19,13 +19,14 @@ import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
-import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.PlaneRenderer;
 import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
+
+import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
@@ -34,7 +35,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
-    private ModelLoader modelLoader;
+    private ModelLoader modelLoader1;
+    private ModelLoader modelLoader2;
+    private ModelLoader modelLoader3;
+    private WeakReference weakReference;
     private Button shootingButton;
     int numOfModels = 0;
 
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         shootingButton = findViewById(R.id.shooting_button);
+        weakReference = new WeakReference<>(this);
         setUpAR();
         shootingButton.setOnClickListener(view -> {
             Log.d(TAG, "onCreate: Shooting button pressed");
@@ -51,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpAR() {
-        modelLoader = new ModelLoader(new WeakReference<>(this));
+//        modelLoader1 = new ModelLoader(weakReference);
+//        modelLoader2 = new ModelLoader(weakReference);
+//        modelLoader3 = new ModelLoader(weakReference);
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
@@ -62,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
             arFragment.onUpdate(frameTime);
-
         });
         initializeGallery();
     }
 
     private void onUpdate(FrameTime frameTime) {
         if (numOfModels == 1) return;
+        modelLoader1 = new ModelLoader(weakReference);
         Frame frame = arFragment.getArSceneView().getArFrame();
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
         for (Plane plane : planes) {
@@ -130,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 Trackable trackable = hit.getTrackable();
                 if (trackable instanceof Plane &&
                         ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-                    modelLoader.loadModel(hit.createAnchor(), model);
+                    modelLoader1.loadModel(hit.createAnchor(), model);
                     break;
 
                 }
@@ -145,40 +152,27 @@ public class MainActivity extends AppCompatActivity {
         node.setRenderable(renderable);
         node.setParent(anchorNode);
         node.setLocalPosition(new Vector3(0f, 0f, 0f));
-        modelLoader.setNumofLivesModel0(2);
+//        modelLoader1 = new ModelLoader(weakReference);
+        modelLoader1.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
-        setNodeListener(node, anchorNode);
+        setNodeListener(node, anchorNode, modelLoader1);
 
         TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
         node1.setRenderable(renderable);
         node1.setParent(anchorNode);
         node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
-        modelLoader.setNumofLivesModel1(2);
-        node1.setOnTapListener((hitTestResult, motionEvent) -> {
-            if (0 < modelLoader.getNumofLivesModel1()) {
-                modelLoader.setNumofLivesModel1(modelLoader.getNumofLivesModel1() - 1);
-            } else {
-                anchorNode.removeChild(node1);
-            }
-            Toast.makeText(MainActivity.this, "MODEL HAS 1 " + modelLoader.getNumofLivesModel1() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
-        });
-        node1.select();
+        modelLoader2.setNumofLivesModel0(2);
+
+        setNodeListener(node1, anchorNode, modelLoader2);
 
         TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
         node2.setRenderable(renderable);
         node2.setParent(anchorNode);
         node2.setWorldPosition(new Vector3(1f, 0f, 0f));
-        modelLoader.setNumofLivesModel2(2);
-        node2.setOnTapListener((hitTestResult, motionEvent) -> {
-            if (0 < modelLoader.getNumofLivesModel2()) {
-                modelLoader.setNumofLivesModel2(modelLoader.getNumofLivesModel2() - 1);
-            } else {
-                anchorNode.removeChild(node2);
-            }
-            Toast.makeText(MainActivity.this, "MODEL HAS 2 " + modelLoader.getNumofLivesModel2() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
-        });
-        node2.select();
+        modelLoader3.setNumofLivesModel0(2);
+
+        setNodeListener(node2, anchorNode, modelLoader3);
     }
 
     public void onException(Throwable throwable) {
@@ -194,17 +188,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode){
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader){
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
-            Log.d(TAG, "setNodeListener: ");
+            Log.d(TAG, "setNodeListener: "+modelLoader.getNumofLivesModel0());
             if (0 < modelLoader.getNumofLivesModel0()){
                 modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
+                Toast.makeText(this, "Lives left: "+modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             }
             else {
                 anchorNode.removeChild(node);
+                Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
             }
-            Log.d(TAG, "setNodeListener: "+node.getName());
         }));
+        Log.d(TAG, "setNodeListener: After if statement"+modelLoader.getNumofLivesModel0());
         node.select();
     }
 
