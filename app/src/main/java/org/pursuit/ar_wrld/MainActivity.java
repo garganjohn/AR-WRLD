@@ -6,24 +6,20 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
-import com.google.ar.core.ArCoreApk;
-import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
-import com.google.ar.core.Pose;
-import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
-import com.google.ar.core.exceptions.UnavailableApkTooOldException;
-import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
-import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
-import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
+import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.PlaneRenderer;
@@ -32,54 +28,55 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
     private ModelLoader modelLoader;
-    private ArCoreApk arCoreApk;
-    private int modelLives = 3;
+    private Button shootingButton;
+    int numOfModels = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        shootingButton = findViewById(R.id.shooting_button);
+        setUpAR();
+        shootingButton.setOnClickListener(view -> {
+            Log.d(TAG, "onCreate: Shooting button pressed");
+            hitReaction();
+        });
+    }
 
+    private void setUpAR() {
         modelLoader = new ModelLoader(new WeakReference<>(this));
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
-//        arFragment.getArSceneView().getPlaneRenderer().setVisible(false);
-//        arFragment.getArSceneView().getPlaneRenderer().setEnabled(false);
 
-        try {
-            Session session = new Session(this);
-            Log.d(TAG, "onCreate: Session is not null");
-            Config config = new Config(session);
-            config.setPlaneFindingMode(Config.PlaneFindingMode.DISABLED);
-            config.setUpdateMode(Config.UpdateMode.LATEST_CAMERA_IMAGE);
-            arFragment.getArSceneView().setupSession(session);
-            arFragment.getArSceneView().getSession().configure(config);
-        } catch (UnavailableArcoreNotInstalledException e) {
-            e.printStackTrace();
-        } catch (UnavailableApkTooOldException e) {
-            e.printStackTrace();
-        } catch (UnavailableSdkTooOldException e) {
-            e.printStackTrace();
-        } catch (UnavailableDeviceNotCompatibleException e) {
-            e.printStackTrace();
-        }
-
+        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
             arFragment.onUpdate(frameTime);
 
         });
-        changetexture();
         initializeGallery();
+    }
+
+    private void onUpdate(FrameTime frameTime) {
+        if (numOfModels == 1) return;
+        Frame frame = arFragment.getArSceneView().getArFrame();
+        Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
+        for (Plane plane : planes) {
+            if (plane.getTrackingState() == TrackingState.TRACKING) {
+                addObject(Uri.parse("andy.sfb"));
+                break;
+            }
+        }
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -142,21 +139,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
+        numOfModels++;
         AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-        node.setLocalPosition(new Vector3(0f, 0f, -2f));
+        node.setLocalPosition(new Vector3(0f, 0f, 0f));
+        modelLoader.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
-        node.setOnTapListener((hitTestResult, motionEvent) -> {
-            if (1 < modelLives) {
-                modelLives--;
+
+        setNodeListener(node, anchorNode);
+
+        TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
+        node1.setRenderable(renderable);
+        node1.setParent(anchorNode);
+        node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
+        modelLoader.setNumofLivesModel1(2);
+        node1.setOnTapListener((hitTestResult, motionEvent) -> {
+            if (0 < modelLoader.getNumofLivesModel1()) {
+                modelLoader.setNumofLivesModel1(modelLoader.getNumofLivesModel1() - 1);
             } else {
-                anchor.detach();
+                anchorNode.removeChild(node1);
             }
-            Toast.makeText(MainActivity.this, "MODEL HAS " + modelLives + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "MODEL HAS 1 " + modelLoader.getNumofLivesModel1() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
         });
-        node.select();
+        node1.select();
+
+        TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
+        node2.setRenderable(renderable);
+        node2.setParent(anchorNode);
+        node2.setWorldPosition(new Vector3(1f, 0f, 0f));
+        modelLoader.setNumofLivesModel2(2);
+        node2.setOnTapListener((hitTestResult, motionEvent) -> {
+            if (0 < modelLoader.getNumofLivesModel2()) {
+                modelLoader.setNumofLivesModel2(modelLoader.getNumofLivesModel2() - 1);
+            } else {
+                anchorNode.removeChild(node2);
+            }
+            Toast.makeText(MainActivity.this, "MODEL HAS 2 " + modelLoader.getNumofLivesModel2() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+        });
+        node2.select();
     }
 
     public void onException(Throwable throwable) {
@@ -166,6 +188,24 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
         return;
+    }
+
+    public void hitReaction(){
+
+    }
+
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode){
+        node.setOnTapListener(((hitTestResult, motionEvent) -> {
+            Log.d(TAG, "setNodeListener: ");
+            if (0 < modelLoader.getNumofLivesModel0()){
+                modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
+            }
+            else {
+                anchorNode.removeChild(node);
+            }
+            Log.d(TAG, "setNodeListener: "+node.getName());
+        }));
+        node.select();
     }
 
     public void changetexture() {
