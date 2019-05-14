@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ModelLoader modelLoader3;
     private WeakReference weakReference;
     private Button shootingButton;
+    private TextView scorekeepingTv;
     int numOfModels = 0;
 
     @Override
