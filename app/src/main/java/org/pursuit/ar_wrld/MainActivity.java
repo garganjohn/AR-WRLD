@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onUpdate(FrameTime frameTime) {
-        if (numOfModels == 1) return;
+        if (numOfModels > 0) return;
         modelLoader1 = new ModelLoader(weakReference);
         Frame frame = arFragment.getArSceneView().getArFrame();
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);

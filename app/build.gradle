@@ -59,3 +59,8 @@ sceneform.asset('sampledata/andy_dance.fbx',
         'default',
         'sampledata/andy_dance.sfa',
         'src/main/assets/andy_dance')
+
+sceneform.asset('sampledata/Alien_01.obj',
+        'default',
+        'sampledata/Alien_01.sfa',
+        'src/main/assets/Alien_01')
