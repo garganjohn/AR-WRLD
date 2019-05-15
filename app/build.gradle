@@ -54,3 +54,8 @@ sceneform.asset('sampledata/igloo.obj',
         'default',
         'sampledata/igloo.sfa',
         'src/main/assets/igloo')
+
+sceneform.asset('sampledata/andy_dance.fbx',
+        'default',
+        'sampledata/andy_dance.sfa',
+        'src/main/assets/andy_dance')

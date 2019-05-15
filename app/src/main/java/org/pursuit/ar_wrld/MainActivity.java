@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
         for (Plane plane : planes) {
             if (plane.getTrackingState() == TrackingState.TRACKING) {
-                addObject(Uri.parse("andy.sfb"));
+                addObject(Uri.parse("andy_dance.sfb"));
                 break;
             }
         }
