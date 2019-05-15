@@ -6,6 +6,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,7 +22,9 @@ import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.PlaneRenderer;
 import com.google.ar.sceneform.rendering.Texture;
@@ -44,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView scorekeepingTv;
     int numOfModels = 0;
 
+    // Controls animation playback.
+    private ModelAnimator animator;
+    // Index of the current animation playing.
+    private int nextAnimation;
+    private ModelRenderable andy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +65,15 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: Shooting button pressed");
             hitReaction();
         });
+    }
+
+    private void playAnimation(ModelRenderable modelRenderable){
+        if (animator == null || !animator.isRunning()){
+            AnimationData data = modelRenderable.getAnimationData(nextAnimation);
+            nextAnimation = (nextAnimation + 1);
+            animator = new ModelAnimator(data, modelRenderable);
+            animator.start();
+        }
     }
 
     private void setUpAR() {
@@ -69,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
-        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
-            arFragment.onUpdate(frameTime);
-        });
+//        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
+//            arFragment.onUpdate(frameTime);
+//        });
         initializeGallery();
     }
 
@@ -160,21 +179,22 @@ public class MainActivity extends AppCompatActivity {
 
         setNodeListener(node, anchorNode, modelLoader1);
 
-        TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
-        node1.setRenderable(renderable);
-        node1.setParent(anchorNode);
-        node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
-        modelLoader2.setNumofLivesModel0(2);
+//        TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
+//        node1.setRenderable(renderable);
+//        node1.setParent(anchorNode);
+//        node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
+//        modelLoader2.setNumofLivesModel0(2);
+//
+//        setNodeListener(node1, anchorNode, modelLoader2);
+//
+//        TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
+//        node2.setRenderable(renderable);
+//        node2.setParent(anchorNode);
+//        node2.setWorldPosition(new Vector3(1f, 0f, 0f));
+//        modelLoader3.setNumofLivesModel0(2);
 
-        setNodeListener(node1, anchorNode, modelLoader2);
-
-        TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
-        node2.setRenderable(renderable);
-        node2.setParent(anchorNode);
-        node2.setWorldPosition(new Vector3(1f, 0f, 0f));
-        modelLoader3.setNumofLivesModel0(2);
-
-        setNodeListener(node2, anchorNode, modelLoader3);
+        playAnimation(renderable);
+       // setNodeListener(node2, anchorNode, modelLoader3);
     }
 
     public void onException(Throwable throwable) {
