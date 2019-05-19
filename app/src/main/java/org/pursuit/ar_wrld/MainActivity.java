@@ -45,6 +45,7 @@ import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
@@ -89,8 +90,19 @@ public class MainActivity extends AppCompatActivity {
         // Possible for models to show up without touch
         modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(3.04f, 2.04f, 1.98f));
-        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+        anchorNode.setWorldPosition(new Vector3(3.04f, 2.04f, 500.0f));
+//        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+
+        ModelRenderable.builder()
+                .setSource(this, Uri.parse("andy.sfb"))
+                .build()
+                .thenAccept(new Consumer<ModelRenderable>() {
+                    @Override
+                    public void accept(ModelRenderable modelRenderable) {
+                        addNodeToScene(anchorNode, modelRenderable);
+                    }
+                });
+
 
 //        shootingButton.setOnClickListener(view -> {
 //            Log.d(TAG, "onCreate: Shooting button pressed");
@@ -117,102 +129,119 @@ public class MainActivity extends AppCompatActivity {
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
 
-        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
+//        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
 //        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
 //            arFragment.onUpdate(frameTime);
 //        });
-        initializeGallery();
+//        initializeGallery();
     }
 
-    private void onUpdate(FrameTime frameTime) {
-        if (numOfModels > 0) return;
-        modelLoader1 = new ModelLoader(weakReference);
-        Frame frame = arFragment.getArSceneView().getArFrame();
-        Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
-        for (Plane plane : planes) {
-            if (plane.getTrackingState() == TrackingState.TRACKING) {
-                addObject(Uri.parse("andy_dance.sfb"));
-                break;
-            }
-        }
-    }
+//    private void onUpdate(FrameTime frameTime) {
+//        if (numOfModels > 0) return;
+//        modelLoader1 = new ModelLoader(weakReference);
+//        Frame frame = arFragment.getArSceneView().getArFrame();
+//        Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
+//        for (Plane plane : planes) {
+//            if (plane.getTrackingState() == TrackingState.TRACKING) {
+//                addObject(Uri.parse("andy_dance.sfb"));
+//                break;
+//            }
+//        }
+//    }
 
     private android.graphics.Point getScreenCenter() {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-    private void initializeGallery() {
-        LinearLayout gallery = findViewById(R.id.gallery_layout);
+//    private void initializeGallery() {
+//        LinearLayout gallery = findViewById(R.id.gallery_layout);
+//
+//        ImageView andy = new ImageView(this);
+//        andy.setImageResource(R.drawable.droid_thumb);
+//        andy.setContentDescription("andy");
+//        andy.setOnClickListener(view -> {
+//            addObject(Uri.parse("andy.sfb"));
+//        });
+//        gallery.addView(andy);
+//
+//        ImageView cabin = new ImageView(this);
+//        cabin.setImageResource(R.drawable.cabin_thumb);
+//        cabin.setContentDescription("cabin");
+//        cabin.setOnClickListener(view -> {
+//            addObject(Uri.parse("Cabin.sfb"));
+//        });
+//        gallery.addView(cabin);
+//
+//        ImageView house = new ImageView(this);
+//        house.setImageResource(R.drawable.house_thumb);
+//        house.setContentDescription("house");
+//        house.setOnClickListener(view -> {
+//            addObject(Uri.parse("House.sfb"));
+//        });
+//        gallery.addView(house);
+//
+//        ImageView igloo = new ImageView(this);
+//        igloo.setImageResource(R.drawable.igloo_thumb);
+//        igloo.setContentDescription("igloo");
+//        igloo.setOnClickListener(view -> {
+//            addObject(Uri.parse("igloo.sfb"));
+//        });
+//        gallery.addView(igloo);
+//    }
 
-        ImageView andy = new ImageView(this);
-        andy.setImageResource(R.drawable.droid_thumb);
-        andy.setContentDescription("andy");
-        andy.setOnClickListener(view -> {
-            addObject(Uri.parse("andy.sfb"));
-        });
-        gallery.addView(andy);
+//    private void addObject(Uri model) {
+//        numOfModels++;
+//        Frame frame = arFragment.getArSceneView().getArFrame();
+//        Point pt = getScreenCenter();
+//        List<HitResult> hits;
+//        if (frame != null) {
+//            hits = frame.hitTest(pt.x, pt.y);
+//            for (HitResult hit : hits) {
+//                Trackable trackable = hit.getTrackable();
+//                if (trackable instanceof Plane &&
+//                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
+//                    modelLoader1.loadModel(hit.createAnchor(), model);
+//                    break;
+//
+//                }
+//            }
+//        }
+//    }
 
-        ImageView cabin = new ImageView(this);
-        cabin.setImageResource(R.drawable.cabin_thumb);
-        cabin.setContentDescription("cabin");
-        cabin.setOnClickListener(view -> {
-            addObject(Uri.parse("Cabin.sfb"));
-        });
-        gallery.addView(cabin);
+//    public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
+//        numOfModels++;
+//        AnchorNode anchorNode = new AnchorNode(anchor);
+//        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+//        node.setRenderable(renderable);
+//        node.setParent(anchorNode);
+//        node.setLocalPosition(new Vector3(0f, 0f, 0f));
+////        modelLoader1 = new ModelLoader(weakReference);
+//        modelLoader1.setNumofLivesModel0(2);
+//        arFragment.getArSceneView().getScene().addChild(anchorNode);
+//
+//        setNodeListener(node, anchorNode, modelLoader1);
+//        playAnimation(renderable);
+//       // setNodeListener(node2, anchorNode, modelLoader3);
+//    }
 
-        ImageView house = new ImageView(this);
-        house.setImageResource(R.drawable.house_thumb);
-        house.setContentDescription("house");
-        house.setOnClickListener(view -> {
-            addObject(Uri.parse("House.sfb"));
-        });
-        gallery.addView(house);
-
-        ImageView igloo = new ImageView(this);
-        igloo.setImageResource(R.drawable.igloo_thumb);
-        igloo.setContentDescription("igloo");
-        igloo.setOnClickListener(view -> {
-            addObject(Uri.parse("igloo.sfb"));
-        });
-        gallery.addView(igloo);
-    }
-
-    private void addObject(Uri model) {
+    public void addNodeToScene(AnchorNode anchorNode, ModelRenderable renderable) {
         numOfModels++;
-        Frame frame = arFragment.getArSceneView().getArFrame();
-        Point pt = getScreenCenter();
-        List<HitResult> hits;
-        if (frame != null) {
-            hits = frame.hitTest(pt.x, pt.y);
-            for (HitResult hit : hits) {
-                Trackable trackable = hit.getTrackable();
-                if (trackable instanceof Plane &&
-                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-                    modelLoader1.loadModel(hit.createAnchor(), model);
-                    break;
-
-                }
-            }
-        }
-    }
-
-    public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
-        numOfModels++;
-        AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-        node.setLocalPosition(new Vector3(0f, 0f, 0f));
+        node.setWorldPosition(new Vector3(0f, 0f, 100.0f));
 //        modelLoader1 = new ModelLoader(weakReference);
         modelLoader1.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
         setNodeListener(node, anchorNode, modelLoader1);
         playAnimation(renderable);
-       // setNodeListener(node2, anchorNode, modelLoader3);
+        // setNodeListener(node2, anchorNode, modelLoader3);
     }
+
+
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
