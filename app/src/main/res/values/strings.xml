@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AR-WRLD</string>
+    <string name="msg_for_user">Tap to destory martians</string>
+    <string name="countdown_timer">00:00</string>
 </resources>
