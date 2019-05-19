@@ -3,4 +3,6 @@
     <string name="msg_for_user">Tap to destory martians</string>
     <string name="countdown_timer">00:00</string>
     <string name="time_up_msg">Time\'s Up!</string>
+    <string name="score_text">Score: %d</string>
+    <string name="default_score_text">Score :</string>
 </resources>
