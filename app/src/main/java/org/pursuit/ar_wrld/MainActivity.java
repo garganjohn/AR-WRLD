@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld;
 
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
+    private int scoreNumber;
+    private String stringPlaceHolder;
+    private SharedPreferences sharedPreferences;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -69,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         weakReference = new WeakReference<>(this);
+        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         setUpAR();
         startStopTimer();
 //        shootingButton.setOnClickListener(view -> {
@@ -224,6 +230,11 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 anchorNode.removeChild(node);
+                numOfModels--;
+                scoreNumber++;
+                stringPlaceHolder = getString(R.string.score_text, scoreNumber);
+                scorekeepingTv.setText(stringPlaceHolder);
+                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
             }
         }));
