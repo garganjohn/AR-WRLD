@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld;
 
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -149,8 +150,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addObject(Uri model) {
+        numOfModels++;
         Frame frame = arFragment.getArSceneView().getArFrame();
-        android.graphics.Point pt = getScreenCenter();
+        Point pt = getScreenCenter();
         List<HitResult> hits;
         if (frame != null) {
             hits = frame.hitTest(pt.x, pt.y);
@@ -178,21 +180,15 @@ public class MainActivity extends AppCompatActivity {
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
         setNodeListener(node, anchorNode, modelLoader1);
-
-//        TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
-//        node1.setRenderable(renderable);
-//        node1.setParent(anchorNode);
-//        node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
-//        modelLoader2.setNumofLivesModel0(2);
-//
-//        setNodeListener(node1, anchorNode, modelLoader2);
-//
-//        TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
-//        node2.setRenderable(renderable);
-//        node2.setParent(anchorNode);
-//        node2.setWorldPosition(new Vector3(1f, 0f, 0f));
-//        modelLoader3.setNumofLivesModel0(2);
-
+        node.setOnTapListener((hitTestResult, motionEvent) -> {
+            if (0 < modelLoader1.getNumofLivesModel0()) {
+                modelLoader1.setNumofLivesModel0(modelLoader1.getNumofLivesModel0() - 1);
+            } else {
+                anchorNode.removeChild(node);
+            }
+            Toast.makeText(MainActivity.this, "MODEL HAS 0 " + modelLoader1.getNumofLivesModel0() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+        });
+        node.select();
         playAnimation(renderable);
        // setNodeListener(node2, anchorNode, modelLoader3);
     }
