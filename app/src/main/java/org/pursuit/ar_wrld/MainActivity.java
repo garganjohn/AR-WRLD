@@ -1,4 +1,5 @@
 package org.pursuit.ar_wrld;
+import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.graphics.Point;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private int scoreNumber;
     private String stringPlaceHolder;
     private SharedPreferences sharedPreferences;
+    private CountDownTimer alienAppearanceRate;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -84,24 +86,29 @@ public class MainActivity extends AppCompatActivity {
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         scorekeepingTv.setText(getString(R.string.default_score_text));
         setUpAR();
-        startStopTimer();
 
-
-        // Possible for models to show up without touch
         modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(3.04f, 2.04f, 500.0f));
-//        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+        anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
 
-        ModelRenderable.builder()
-                .setSource(this, Uri.parse("andy.sfb"))
-                .build()
-                .thenAccept(new Consumer<ModelRenderable>() {
-                    @Override
-                    public void accept(ModelRenderable modelRenderable) {
-                        addNodeToScene(anchorNode, modelRenderable);
-                    }
-                });
+
+        alienAppearanceRate = new CountDownTimer(6000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+                Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        alienAppearanceRate.start();
+
+        // Possible for models to show up without touch
 
 
 //        shootingButton.setOnClickListener(view -> {
@@ -129,109 +136,94 @@ public class MainActivity extends AppCompatActivity {
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
 
-//        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
+        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
 //        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
 //            arFragment.onUpdate(frameTime);
 //        });
-//        initializeGallery();
+        initializeGallery();
     }
 
-//    private void onUpdate(FrameTime frameTime) {
+    private void onUpdate(FrameTime frameTime) {
 //        if (numOfModels > 0) return;
-//        modelLoader1 = new ModelLoader(weakReference);
-//        Frame frame = arFragment.getArSceneView().getArFrame();
-//        Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
-//        for (Plane plane : planes) {
-//            if (plane.getTrackingState() == TrackingState.TRACKING) {
-//                addObject(Uri.parse("andy_dance.sfb"));
-//                break;
-//            }
-//        }
-//    }
+        modelLoader1 = new ModelLoader(weakReference);
+        Frame frame = arFragment.getArSceneView().getArFrame();
+        Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
+        for (Plane plane : planes) {
+            if (plane.getTrackingState() == TrackingState.TRACKING) {
+                addObject(Uri.parse("andy_dance.sfb"));
+                break;
+            }
+        }
+        startTimer();
+    }
 
     private android.graphics.Point getScreenCenter() {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-//    private void initializeGallery() {
-//        LinearLayout gallery = findViewById(R.id.gallery_layout);
-//
-//        ImageView andy = new ImageView(this);
-//        andy.setImageResource(R.drawable.droid_thumb);
-//        andy.setContentDescription("andy");
-//        andy.setOnClickListener(view -> {
-//            addObject(Uri.parse("andy.sfb"));
-//        });
-//        gallery.addView(andy);
-//
-//        ImageView cabin = new ImageView(this);
-//        cabin.setImageResource(R.drawable.cabin_thumb);
-//        cabin.setContentDescription("cabin");
-//        cabin.setOnClickListener(view -> {
-//            addObject(Uri.parse("Cabin.sfb"));
-//        });
-//        gallery.addView(cabin);
-//
-//        ImageView house = new ImageView(this);
-//        house.setImageResource(R.drawable.house_thumb);
-//        house.setContentDescription("house");
-//        house.setOnClickListener(view -> {
-//            addObject(Uri.parse("House.sfb"));
-//        });
-//        gallery.addView(house);
-//
-//        ImageView igloo = new ImageView(this);
-//        igloo.setImageResource(R.drawable.igloo_thumb);
-//        igloo.setContentDescription("igloo");
-//        igloo.setOnClickListener(view -> {
-//            addObject(Uri.parse("igloo.sfb"));
-//        });
-//        gallery.addView(igloo);
-//    }
+    private void initializeGallery() {
+        LinearLayout gallery = findViewById(R.id.gallery_layout);
 
-//    private void addObject(Uri model) {
+        ImageView andy = new ImageView(this);
+        andy.setImageResource(R.drawable.droid_thumb);
+        andy.setContentDescription("andy");
+        andy.setOnClickListener(view -> {
+            addObject(Uri.parse("andy.sfb"));
+        });
+        gallery.addView(andy);
+
+        ImageView cabin = new ImageView(this);
+        cabin.setImageResource(R.drawable.cabin_thumb);
+        cabin.setContentDescription("cabin");
+        cabin.setOnClickListener(view -> {
+            addObject(Uri.parse("Cabin.sfb"));
+        });
+        gallery.addView(cabin);
+
+        ImageView house = new ImageView(this);
+        house.setImageResource(R.drawable.house_thumb);
+        house.setContentDescription("house");
+        house.setOnClickListener(view -> {
+            addObject(Uri.parse("House.sfb"));
+        });
+        gallery.addView(house);
+
+        ImageView igloo = new ImageView(this);
+        igloo.setImageResource(R.drawable.igloo_thumb);
+        igloo.setContentDescription("igloo");
+        igloo.setOnClickListener(view -> {
+            addObject(Uri.parse("igloo.sfb"));
+        });
+        gallery.addView(igloo);
+    }
+
+    private void addObject(Uri model) {
+        Frame frame = arFragment.getArSceneView().getArFrame();
+        Point pt = getScreenCenter();
+        List<HitResult> hits;
+        if (frame != null) {
+            hits = frame.hitTest(pt.x, pt.y);
+            for (HitResult hit : hits) {
+                Trackable trackable = hit.getTrackable();
+                if (trackable instanceof Plane &&
+                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
+                    modelLoader1.loadModel(hit.createAnchor(), model);
+                    break;
+
+                }
+            }
+        }
+    }
+
+    public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
 //        numOfModels++;
-//        Frame frame = arFragment.getArSceneView().getArFrame();
-//        Point pt = getScreenCenter();
-//        List<HitResult> hits;
-//        if (frame != null) {
-//            hits = frame.hitTest(pt.x, pt.y);
-//            for (HitResult hit : hits) {
-//                Trackable trackable = hit.getTrackable();
-//                if (trackable instanceof Plane &&
-//                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-//                    modelLoader1.loadModel(hit.createAnchor(), model);
-//                    break;
-//
-//                }
-//            }
-//        }
-//    }
-
-//    public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
-//        numOfModels++;
-//        AnchorNode anchorNode = new AnchorNode(anchor);
-//        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-//        node.setRenderable(renderable);
-//        node.setParent(anchorNode);
-//        node.setLocalPosition(new Vector3(0f, 0f, 0f));
-////        modelLoader1 = new ModelLoader(weakReference);
-//        modelLoader1.setNumofLivesModel0(2);
-//        arFragment.getArSceneView().getScene().addChild(anchorNode);
-//
-//        setNodeListener(node, anchorNode, modelLoader1);
-//        playAnimation(renderable);
-//       // setNodeListener(node2, anchorNode, modelLoader3);
-//    }
-
-    public void addNodeToScene(AnchorNode anchorNode, ModelRenderable renderable) {
-        numOfModels++;
+        AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-        node.setWorldPosition(new Vector3(0f, 0f, 100.0f));
+        node.setWorldPosition(new Vector3(1.23f, 0f, 0.450f));
 //        modelLoader1 = new ModelLoader(weakReference);
         modelLoader1.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -240,8 +232,6 @@ public class MainActivity extends AppCompatActivity {
         playAnimation(renderable);
         // setNodeListener(node2, anchorNode, modelLoader3);
     }
-
-
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -296,15 +286,6 @@ public class MainActivity extends AppCompatActivity {
 //                });
 //    }
 
-    public void startStopTimer(){
-        if(timerRunning){
-            stopTimer();
-        } else {
-            startTimer();
-        }
-
-    }
-
     public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
@@ -316,15 +297,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                countDownTimer.cancel();
+                countDownText.setText(R.string.time_up_msg);
+                goToResultPage();
 
             }
         }.start();
-        timerRunning = true;
-    }
-
-    public void stopTimer(){
-        countDownTimer.cancel();
-        timerRunning = false;
 
     }
 
@@ -342,6 +320,11 @@ public class MainActivity extends AppCompatActivity {
 
         countDownText.setText(timeLeftText);
 
+    }
+
+    public void goToResultPage(){
+//        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+//        startActivity(goToResultPageIntent);
     }
 
 }
