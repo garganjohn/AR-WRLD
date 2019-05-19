@@ -18,11 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.ar.core.Anchor;
+import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
+import com.google.ar.core.exceptions.UnavailableApkTooOldException;
+import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
+import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
+import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.animation.ModelAnimator;
@@ -75,8 +81,17 @@ public class MainActivity extends AppCompatActivity {
         weakReference = new WeakReference<>(this);
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
+        scorekeepingTv.setText(getString(R.string.default_score_text));
         setUpAR();
         startStopTimer();
+
+
+        // Possible for models to show up without touch
+        modelLoader1 = new ModelLoader(weakReference);
+        AnchorNode anchorNode = new AnchorNode();
+        anchorNode.setWorldPosition(new Vector3(3.04f, 2.04f, 1.98f));
+        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+
 //        shootingButton.setOnClickListener(view -> {
 //            Log.d(TAG, "onCreate: Shooting button pressed");
 //            hitReaction();
@@ -195,15 +210,6 @@ public class MainActivity extends AppCompatActivity {
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
         setNodeListener(node, anchorNode, modelLoader1);
-        node.setOnTapListener((hitTestResult, motionEvent) -> {
-            if (0 < modelLoader1.getNumofLivesModel0()) {
-                modelLoader1.setNumofLivesModel0(modelLoader1.getNumofLivesModel0() - 1);
-            } else {
-                anchorNode.removeChild(node);
-            }
-            Toast.makeText(MainActivity.this, "MODEL HAS 0 " + modelLoader1.getNumofLivesModel0() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
-        });
-        node.select();
         playAnimation(renderable);
        // setNodeListener(node2, anchorNode, modelLoader3);
     }
@@ -217,10 +223,6 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    public void hitReaction(){
-
-    }
-
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader){
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: "+modelLoader.getNumofLivesModel0());
@@ -229,12 +231,15 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Lives left: "+modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             }
             else {
+                Log.d(TAG, "setNodeListener: In else state ");
                 anchorNode.removeChild(node);
                 numOfModels--;
                 scoreNumber++;
                 stringPlaceHolder = getString(R.string.score_text, scoreNumber);
                 scorekeepingTv.setText(stringPlaceHolder);
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                Log.d(TAG, "setNodeListener: "+stringPlaceHolder);
+                Log.d(TAG, "setNodeListener: "+scorekeepingTv.getText().toString());
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
             }
         }));
@@ -242,22 +247,25 @@ public class MainActivity extends AppCompatActivity {
         node.select();
     }
 
-    public void changetexture() {
-        Texture.Sampler sampler =
-                Texture.Sampler.builder()
-                        .setMinFilter(Texture.Sampler.MinFilter.LINEAR)
-                        .setWrapMode(Texture.Sampler.WrapMode.REPEAT)
-                        .build();
-        Texture.builder()
-                .setSource(this, R.drawable.testing_carpet_texture)
-                .setSampler(sampler)
-                .build()
-                .thenAccept(texture -> {
-                    arFragment.getArSceneView().getPlaneRenderer()
-                            .getMaterial().thenAccept(material ->
-                            material.setTexture(PlaneRenderer.MATERIAL_TEXTURE, texture));
-                });
-    }
+    /**
+     * Use for easy plane detection
+     */
+//    public void changetexture() {
+//        Texture.Sampler sampler =
+//                Texture.Sampler.builder()
+//                        .setMinFilter(Texture.Sampler.MinFilter.LINEAR)
+//                        .setWrapMode(Texture.Sampler.WrapMode.REPEAT)
+//                        .build();
+//        Texture.builder()
+//                .setSource(this, R.drawable.testing_carpet_texture)
+//                .setSampler(sampler)
+//                .build()
+//                .thenAccept(texture -> {
+//                    arFragment.getArSceneView().getPlaneRenderer()
+//                            .getMaterial().thenAccept(material ->
+//                            material.setTexture(PlaneRenderer.MATERIAL_TEXTURE, texture));
+//                });
+//    }
 
     public void startStopTimer(){
         if(timerRunning){
@@ -283,8 +291,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
         timerRunning = true;
-
-
     }
 
     public void stopTimer(){
