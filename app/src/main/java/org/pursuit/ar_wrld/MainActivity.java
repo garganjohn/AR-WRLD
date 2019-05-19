@@ -1,7 +1,7 @@
 package org.pursuit.ar_wrld;
+import android.content.Intent;
 
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
-    private boolean timerRunning;
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
@@ -83,19 +82,12 @@ public class MainActivity extends AppCompatActivity {
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         scorekeepingTv.setText(getString(R.string.default_score_text));
         setUpAR();
-        startStopTimer();
-
 
         // Possible for models to show up without touch
         modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(3.04f, 2.04f, 1.98f));
         modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
-
-//        shootingButton.setOnClickListener(view -> {
-//            Log.d(TAG, "onCreate: Shooting button pressed");
-//            hitReaction();
-//        });
     }
 
     private void playAnimation(ModelRenderable modelRenderable){
@@ -136,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+        startTimer();
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -267,14 +260,6 @@ public class MainActivity extends AppCompatActivity {
 //                });
 //    }
 
-    public void startStopTimer(){
-        if(timerRunning){
-            stopTimer();
-        } else {
-            startTimer();
-        }
-
-    }
 
     public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
@@ -287,15 +272,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                countDownTimer.cancel();
+                countDownText.setText(R.string.time_up_msg);
+                goToResultPage();
 
             }
         }.start();
-        timerRunning = true;
-    }
-
-    public void stopTimer(){
-        countDownTimer.cancel();
-        timerRunning = false;
 
     }
 
@@ -313,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
 
         countDownText.setText(timeLeftText);
 
+    }
+
+    public void goToResultPage(){
+        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+        startActivity(goToResultPageIntent);
     }
 
 }
