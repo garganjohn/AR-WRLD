@@ -1,5 +1,7 @@
 package org.pursuit.ar_wrld;
 
+import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
+    private int scoreNumber;
+    private String stringPlaceHolder;
+    private SharedPreferences sharedPreferences;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -68,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         weakReference = new WeakReference<>(this);
+        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         setUpAR();
         startStopTimer();
 //        shootingButton.setOnClickListener(view -> {
@@ -158,8 +165,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addObject(Uri model) {
+        numOfModels++;
         Frame frame = arFragment.getArSceneView().getArFrame();
-        android.graphics.Point pt = getScreenCenter();
+        Point pt = getScreenCenter();
         List<HitResult> hits;
         if (frame != null) {
             hits = frame.hitTest(pt.x, pt.y);
@@ -187,21 +195,15 @@ public class MainActivity extends AppCompatActivity {
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
         setNodeListener(node, anchorNode, modelLoader1);
-
-//        TransformableNode node1 = new TransformableNode(arFragment.getTransformationSystem());
-//        node1.setRenderable(renderable);
-//        node1.setParent(anchorNode);
-//        node1.setWorldPosition(new Vector3(-1f, 0f, 0f));
-//        modelLoader2.setNumofLivesModel0(2);
-//
-//        setNodeListener(node1, anchorNode, modelLoader2);
-//
-//        TransformableNode node2 = new TransformableNode(arFragment.getTransformationSystem());
-//        node2.setRenderable(renderable);
-//        node2.setParent(anchorNode);
-//        node2.setWorldPosition(new Vector3(1f, 0f, 0f));
-//        modelLoader3.setNumofLivesModel0(2);
-
+        node.setOnTapListener((hitTestResult, motionEvent) -> {
+            if (0 < modelLoader1.getNumofLivesModel0()) {
+                modelLoader1.setNumofLivesModel0(modelLoader1.getNumofLivesModel0() - 1);
+            } else {
+                anchorNode.removeChild(node);
+            }
+            Toast.makeText(MainActivity.this, "MODEL HAS 0 " + modelLoader1.getNumofLivesModel0() + " LIVES LEFT!", Toast.LENGTH_SHORT).show();
+        });
+        node.select();
         playAnimation(renderable);
        // setNodeListener(node2, anchorNode, modelLoader3);
     }
@@ -228,6 +230,11 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 anchorNode.removeChild(node);
+                numOfModels--;
+                scoreNumber++;
+                stringPlaceHolder = getString(R.string.score_text, scoreNumber);
+                scorekeepingTv.setText(stringPlaceHolder);
+                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
             }
         }));
