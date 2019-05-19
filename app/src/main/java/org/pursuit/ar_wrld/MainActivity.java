@@ -3,6 +3,7 @@ package org.pursuit.ar_wrld;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
     private WeakReference weakReference;
     private Button shootingButton;
     private TextView scorekeepingTv;
+    private TextView msgForUser;
+    private TextView countDownText;
+    private boolean timerRunning;
+    private CountDownTimer countDownTimer;
+    private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
 
     // Controls animation playback.
@@ -59,13 +65,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        shootingButton = findViewById(R.id.shooting_button);
+       // shootingButton = findViewById(R.id.shooting_button);
+        msgForUser = findViewById(R.id.msg_for_user);
+        countDownText = findViewById(R.id.timer_textview);
         weakReference = new WeakReference<>(this);
         setUpAR();
-        shootingButton.setOnClickListener(view -> {
-            Log.d(TAG, "onCreate: Shooting button pressed");
-            hitReaction();
-        });
+        startStopTimer();
+//        shootingButton.setOnClickListener(view -> {
+//            Log.d(TAG, "onCreate: Shooting button pressed");
+//            hitReaction();
+//        });
     }
 
     private void playAnimation(ModelRenderable modelRenderable){
@@ -237,6 +246,56 @@ public class MainActivity extends AppCompatActivity {
                             .getMaterial().thenAccept(material ->
                             material.setTexture(PlaneRenderer.MATERIAL_TEXTURE, texture));
                 });
+    }
+
+    public void startStopTimer(){
+        if(timerRunning){
+            stopTimer();
+        } else {
+            startTimer();
+        }
+
+    }
+
+    public void startTimer(){
+        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeftInMilliseconds = millisUntilFinished;
+                updateTimer();
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+        }.start();
+        timerRunning = true;
+
+
+    }
+
+    public void stopTimer(){
+        countDownTimer.cancel();
+        timerRunning = false;
+
+    }
+
+    public void updateTimer(){
+
+        int minutes = (int) timeLeftInMilliseconds / 60000;
+        int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
+
+        String timeLeftText;
+
+        timeLeftText = "0" + minutes;
+        timeLeftText += ":";
+        if(seconds < 10) {timeLeftText += "0";}
+        timeLeftText += seconds;
+
+        countDownText.setText(timeLeftText);
+
     }
 
 }
