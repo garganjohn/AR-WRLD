@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
-    private boolean timerRunning;
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         countDownText = findViewById(R.id.timer_textview);
         weakReference = new WeakReference<>(this);
         setUpAR();
-        startStopTimer();
 //        shootingButton.setOnClickListener(view -> {
 //            Log.d(TAG, "onCreate: Shooting button pressed");
 //            hitReaction();
@@ -114,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+        startTimer();
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -252,14 +252,6 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    public void startStopTimer(){
-        if(timerRunning){
-            stopTimer();
-        } else {
-            startTimer();
-        }
-
-    }
 
     public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
@@ -272,17 +264,13 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
+                countDownTimer.cancel();
+                countDownText.setText(R.string.time_up_msg);
+                goToResultPage();
 
             }
         }.start();
-        timerRunning = true;
 
-
-    }
-
-    public void stopTimer(){
-        countDownTimer.cancel();
-        timerRunning = false;
 
     }
 
@@ -300,6 +288,11 @@ public class MainActivity extends AppCompatActivity {
 
         countDownText.setText(timeLeftText);
 
+    }
+
+    public void goToResultPage(){
+        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+        startActivity(goToResultPageIntent);
     }
 
 }
