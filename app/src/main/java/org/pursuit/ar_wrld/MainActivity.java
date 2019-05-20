@@ -294,25 +294,7 @@ public class MainActivity extends AppCompatActivity {
         node.select();
     }
 
-    /**
-     * Use for easy plane detection
-     */
-//    public void changetexture() {
-//        Texture.Sampler sampler =
-//                Texture.Sampler.builder()
-//                        .setMinFilter(Texture.Sampler.MinFilter.LINEAR)
-//                        .setWrapMode(Texture.Sampler.WrapMode.REPEAT)
-//                        .build();
-//        Texture.builder()
-//                .setSource(this, R.drawable.testing_carpet_texture)
-//                .setSampler(sampler)
-//                .build()
-//                .thenAccept(texture -> {
-//                    arFragment.getArSceneView().getPlaneRenderer()
-//                            .getMaterial().thenAccept(material ->
-//                            material.setTexture(PlaneRenderer.MATERIAL_TEXTURE, texture));
-//                });
-//    }
+
 
     public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
