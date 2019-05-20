@@ -10,11 +10,16 @@ import org.pursuit.ar_wrld.MainActivity;
 
 import java.lang.ref.WeakReference;
 
-public class ModelLoader{
+public class ModelLoader {
     private int numofLivesModel;
+    private Model model;
 
     public WeakReference<MainActivity> getOwner() {
         return owner;
+    }
+
+    public Model getModel() {
+        return model;
     }
 
     private final WeakReference<MainActivity> owner;
@@ -32,13 +37,14 @@ public class ModelLoader{
         this.owner = owner;
     }
 
-    public void loadModel(Anchor anchor, Uri uri) {
+    public void loadModel(Model model) {
+        this.model = model;
         if (owner.get() == null) {
             Log.d(TAG, "Activity is null.  Cannot load model.");
             return;
         }
         ModelRenderable.builder()
-                .setSource(owner.get(), uri)
+                .setSource(owner.get(), model.getModel())
                 .build()
                 .handle((renderable, throwable) -> {
                     MainActivity activity = owner.get();
@@ -47,7 +53,7 @@ public class ModelLoader{
                     } else if (throwable != null) {
                         activity.onException(throwable);
                     } else {
-                        activity.addNodeToScene(anchor, renderable);
+                        activity.addNodeToScene(model.getAnchor(), renderable);
                     }
                     return null;
                 });
