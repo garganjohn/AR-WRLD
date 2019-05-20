@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld;
 
+import android.animation.ObjectAnimator;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.net.Uri;
@@ -9,8 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,21 +22,18 @@ import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
-import com.google.ar.core.exceptions.UnavailableApkTooOldException;
-import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
-import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
-import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.rendering.PlaneRenderer;
-import com.google.ar.sceneform.rendering.Texture;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
@@ -70,12 +67,21 @@ public class MainActivity extends AppCompatActivity {
     // Index of the current animation playing.
     private int nextAnimation;
     private ModelRenderable andy;
+    private AnchorNode anchorNode;
+    private AnchorNode startNode;
+    private Node trackedNode;
+    private AnchorNode endNode;
+    private ObjectAnimator objectAnimation;
+    private Session session;
+    private Anchor anchor;
+    private Pose pose;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // shootingButton = findViewById(R.id.shooting_button);
+        // shootingButton = findViewById(R.id.shooting_button);
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         weakReference = new WeakReference<>(this);
@@ -88,9 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Possible for models to show up without touch
         modelLoader1 = new ModelLoader(weakReference);
-        AnchorNode anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(3.04f, 2.04f, 1.98f));
+        anchorNode = new AnchorNode();
+        anchorNode.setLocalPosition(new Vector3(3.00f, 0.0f, 0.4f));
         modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+        moveAndy();
 
 //        shootingButton.setOnClickListener(view -> {
 //            Log.d(TAG, "onCreate: Shooting button pressed");
@@ -98,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
 //        });
     }
 
-    private void playAnimation(ModelRenderable modelRenderable){
-        if (animator == null || !animator.isRunning()){
+    private void playAnimation(ModelRenderable modelRenderable) {
+        if (animator == null || !animator.isRunning()) {
             AnimationData data = modelRenderable.getAnimationData(nextAnimation);
             nextAnimation = (nextAnimation + 1);
             animator = new ModelAnimator(data, modelRenderable);
@@ -116,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
-
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
 //        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
@@ -204,14 +210,29 @@ public class MainActivity extends AppCompatActivity {
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-        node.setLocalPosition(new Vector3(0f, 0f, 0f));
+        node.setWorldPosition(new Vector3(0.0f, 0f, -.700f));
 //        modelLoader1 = new ModelLoader(weakReference);
         modelLoader1.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
+        startWalking();
+        objectAnimation.start();
 
         setNodeListener(node, anchorNode, modelLoader1);
         playAnimation(renderable);
-       // setNodeListener(node2, anchorNode, modelLoader3);
+
+//        numOfModels++;
+//        AnchorNode anchorNode = new AnchorNode(anchor);
+//        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+//        node.setRenderable(renderable);
+//        node.setParent(anchorNode);
+//        node.setLocalPosition(new Vector3(0f, 0f, 0f));
+////        modelLoader1 = new ModelLoader(weakReference);
+//        modelLoader1.setNumofLivesModel0(2);
+//        arFragment.getArSceneView().getScene().addChild(anchorNode);
+//
+//        setNodeListener(node, anchorNode, modelLoader1);
+//        playAnimation(renderable);
+        // setNodeListener(node2, anchorNode, modelLoader3);
     }
 
     public void onException(Throwable throwable) {
@@ -223,14 +244,13 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader){
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
-            Log.d(TAG, "setNodeListener: "+modelLoader.getNumofLivesModel0());
-            if (0 < modelLoader.getNumofLivesModel0()){
+            Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
+            if (0 < modelLoader.getNumofLivesModel0()) {
                 modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
-                Toast.makeText(this, "Lives left: "+modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
-            }
-            else {
+                Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
+            } else {
                 Log.d(TAG, "setNodeListener: In else state ");
                 anchorNode.removeChild(node);
                 numOfModels--;
@@ -238,12 +258,12 @@ public class MainActivity extends AppCompatActivity {
                 stringPlaceHolder = getString(R.string.score_text, scoreNumber);
                 scorekeepingTv.setText(stringPlaceHolder);
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                Log.d(TAG, "setNodeListener: "+stringPlaceHolder);
-                Log.d(TAG, "setNodeListener: "+scorekeepingTv.getText().toString());
+                Log.d(TAG, "setNodeListener: " + stringPlaceHolder);
+                Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
             }
         }));
-        Log.d(TAG, "setNodeListener: After if statement"+modelLoader.getNumofLivesModel0());
+        Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getNumofLivesModel0());
         node.select();
     }
 
@@ -266,9 +286,8 @@ public class MainActivity extends AppCompatActivity {
 //                            material.setTexture(PlaneRenderer.MATERIAL_TEXTURE, texture));
 //                });
 //    }
-
-    public void startStopTimer(){
-        if(timerRunning){
+    public void startStopTimer() {
+        if (timerRunning) {
             stopTimer();
         } else {
             startTimer();
@@ -276,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void startTimer(){
+    public void startTimer() {
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -293,13 +312,13 @@ public class MainActivity extends AppCompatActivity {
         timerRunning = true;
     }
 
-    public void stopTimer(){
+    public void stopTimer() {
         countDownTimer.cancel();
         timerRunning = false;
 
     }
 
-    public void updateTimer(){
+    public void updateTimer() {
 
         int minutes = (int) timeLeftInMilliseconds / 60000;
         int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
@@ -308,11 +327,71 @@ public class MainActivity extends AppCompatActivity {
 
         timeLeftText = "0" + minutes;
         timeLeftText += ":";
-        if(seconds < 10) {timeLeftText += "0";}
+        if (seconds < 10) {
+            timeLeftText += "0";
+        }
         timeLeftText += seconds;
 
         countDownText.setText(timeLeftText);
 
+
     }
+
+    private void moveAndy() {
+        if (andy == null) {
+            return;
+        }
+        // Create the Anchor.
+        // Create the starting position.
+        if (startNode == null) {
+            startNode = new AnchorNode(anchorNode.getAnchor());
+            startNode.setParent(arFragment.getArSceneView().getScene());
+
+            // Create the transformable andy and add it to the anchor.
+            trackedNode = new Node();
+            trackedNode.setParent(startNode);
+            trackedNode.setRenderable(andy);
+        } else {
+            // Create the end position and start the animation.
+            endNode = new AnchorNode(anchorNode.getAnchor());
+            endNode.setParent(arFragment.getArSceneView().getScene());
+            startWalking();
+        }
+    }
+
+    private void startWalking() {
+        objectAnimation = new ObjectAnimator();
+        objectAnimation.setAutoCancel(true);
+        objectAnimation.setTarget(trackedNode);
+
+        // All the positions should be world positions
+        // The first position is the start, and the second is the end.
+        objectAnimation.setObjectValues(trackedNode.getWorldPosition(), endNode.getWorldPosition());
+
+        // Use setWorldPosition to position andy.
+        objectAnimation.setPropertyName("worldPosition");
+
+        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
+        // vector3.  The default is to use lerp.
+        objectAnimation.setEvaluator(new Vector3Evaluator());
+        // This makes the animation linear (smooth and uniform).
+        objectAnimation.setInterpolator(new LinearInterpolator());
+        // Duration in ms of the animation.
+        objectAnimation.setDuration(12000);
+       // objectAnimation.start();
+
+
+    }
+
+    private Session createSession(/*FrameTime frame*/) {
+        session = arFragment.getArSceneView().getSession();
+        Config config = new Config(session);
+        config.setUpdateMode(config.getUpdateMode().LATEST_CAMERA_IMAGE);
+        session.configure(config);
+        arFragment.getArSceneView().setupSession(session);
+
+        return session;
+    }
+
 
 }

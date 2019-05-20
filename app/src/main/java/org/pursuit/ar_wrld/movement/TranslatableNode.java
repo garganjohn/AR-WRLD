@@ -33,8 +33,7 @@ public final class TranslatableNode extends Node {
         this.setLocalPosition(new Vector3(posX, posY, posZ));
     }
 
-    // $FF: synthetic method
-    public static void addOffset$default(TranslatableNode var0, float var1, float var2, float var3, int var4, Object var5) {
+    public static void addOffsetdefault(TranslatableNode node, float var1, float var2, float var3, int var4, Object var5) {
         if ((var4 & 1) != 0) {
             var1 = 0.0F;
         }
@@ -47,7 +46,7 @@ public final class TranslatableNode extends Node {
             var3 = 0.0F;
         }
 
-        var0.addOffset(var1, var2, var3);
+        node.addOffset(var1, var2, var3);
     }
 
     public final void pullUp() {

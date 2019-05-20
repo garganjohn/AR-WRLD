@@ -2,8 +2,12 @@ package org.pursuit.ar_wrld.modelObjects;
 
 import android.net.Uri;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.google.ar.core.Anchor;
+import com.google.ar.core.HitResult;
+import com.google.ar.core.Plane;
+import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 
 import org.pursuit.ar_wrld.MainActivity;
@@ -14,6 +18,7 @@ public class ModelLoader{
     private int numofLivesModel;
 
     private final WeakReference<MainActivity> owner;
+    //allows class to respect mainactivies lifcycle during garbage collection
     private static final String TAG = "ModelLoader";
 
     public int getNumofLivesModel0() {
@@ -43,12 +48,15 @@ public class ModelLoader{
                     } else if (throwable != null) {
                         activity.onException(throwable);
                     } else {
-                        activity.addNodeToScene(anchor, renderable);
+                        activity.
+                        addNodeToScene(anchor, renderable);
                     }
                     return null;
                 });
 
         return;
     }
+
+
 }
 
