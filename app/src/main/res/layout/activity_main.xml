@@ -17,6 +17,16 @@
         app:layout_constraintVertical_weight="9"/>
 
     <TextView
+        android:id="@+id/number_of_aliens_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
         android:id="@+id/scorekeeping_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

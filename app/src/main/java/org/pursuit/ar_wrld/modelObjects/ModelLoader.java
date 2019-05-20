@@ -13,6 +13,10 @@ import java.lang.ref.WeakReference;
 public class ModelLoader{
     private int numofLivesModel;
 
+    public WeakReference<MainActivity> getOwner() {
+        return owner;
+    }
+
     private final WeakReference<MainActivity> owner;
     private static final String TAG = "ModelLoader";
 
