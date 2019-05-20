@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
+    private TextView numOfAliensTv;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -101,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                AnchorNode anchorNode1 = new AnchorNode();
-                anchorNode.setWorldPosition(new Vector3(0,0,0));
                 modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 alienAppearanceRate.start();
@@ -154,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
         for (Plane plane : planes) {
             if (plane.getTrackingState() == TrackingState.TRACKING) {
-                addObject(Uri.parse("andy_dance.sfb"));
+//                addObject(Uri.parse("andy_dance.sfb"));
                 break;
             }
         }
@@ -221,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
-//        numOfModels++;
+        numOfModels++;
+        Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
@@ -237,6 +237,29 @@ public class MainActivity extends AppCompatActivity {
         playAnimation(renderable);
         // setNodeListener(node2, anchorNode, modelLoader3);
     }
+
+//    private void loadModel(Anchor anchor, Uri uri, ModelLoader modelLoader) {
+//        if (modelLoader.getOwner() == null) {
+//            Log.d(TAG, "Activity is null.  Cannot load model.");
+//            return;
+//        }
+//        ModelRenderable.builder()
+//                .setSource(owner.get(), uri)
+//                .build()
+//                .handle((renderable, throwable) -> {
+//                    MainActivity activity = owner.get();
+//                    if (activity == null) {
+//                        return null;
+//                    } else if (throwable != null) {
+//                        activity.onException(throwable);
+//                    } else {
+//                        activity.addNodeToScene(anchor, renderable);
+//                    }
+//                    return null;
+//                });
+//
+//        return;
+//    }
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
