@@ -154,14 +154,17 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
+        anchorNode = new AnchorNode();
+        node = new TransformableNode(arFragment.getTransformationSystem());
+        node.getScaleController().setMinScale(0.25f);
+        node.getScaleController().setMaxScale(1.0f);
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
-        AnchorNode anchorNode = new AnchorNode(anchor);
-        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
+
+        node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
-
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0,1f,0), 90f);
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
@@ -281,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
 
         alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
 
+
         handler.postDelayed(runnable, 1000);
     }
 
@@ -295,6 +299,14 @@ public class MainActivity extends AppCompatActivity {
         return random.nextFloat() - .500f;
     }
 
+
+    private ArrayList<Vector3> randomVector3Array() {
+        random = new Random();
+        vector3List = new ArrayList<>();
+        float xVector;
+        float yVector;
+        float zVector;
+        for (int i = 0; i < 12; i++) {
 
     // Number is displayed between -.7 and -1
     public static float randomZCoordinates(){
