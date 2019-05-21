@@ -348,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
             startNode.setParent(arFragment.getArSceneView().getScene());
 
             // Create the transformable andy and add it to the anchor.
-            trackedNode = new Node();
+            trackedNode = new AnchorNode();
             trackedNode.setParent(startNode);
             trackedNode.setRenderable(andy);
         } else {
