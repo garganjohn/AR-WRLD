@@ -9,12 +9,14 @@ import android.view.animation.LinearInterpolator;
 
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
-public final class TranslatableNode extends Node {
+public class TranslatableNode extends Node {
+    private TransformableNode transformableNode;
 
     private DroidPosition position;
 
@@ -121,7 +123,8 @@ public final class TranslatableNode extends Node {
         animation.start();
     }
 
-    public TranslatableNode() {
+    public TranslatableNode(TransformableNode transformableNode) {
         this.position = DroidPosition.DOWN;
+        this.transformableNode = transformableNode;
     }
 }

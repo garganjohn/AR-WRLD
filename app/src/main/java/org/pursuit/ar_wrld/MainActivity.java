@@ -27,6 +27,7 @@ import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
@@ -37,8 +38,10 @@ import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.movement.TranslatableNode;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -71,12 +74,16 @@ public class MainActivity extends AppCompatActivity {
     private int nextAnimation;
     private ModelRenderable andy;
     private AnchorNode anchorNode;
-    private AnchorNode startNode;
+    private Node startNode;
     private AnchorNode trackedNode;
     private AnchorNode endNode;
     private ObjectAnimator objectAnimation;
+    private TranslatableNode translatableNode;
+    private ArrayList<Vector3> vector3List;
 
     private Anchor anchor;
+    private TransformableNode node;
+    private Random random;
 
 
     @Override
@@ -96,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         modelLoader1 = new ModelLoader(weakReference);
         anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, -.500f));
-        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
-        moveAndy();
+        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("Alien_01.sfb"));
+//        moveAndy();
 
         arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
             @Override
@@ -114,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("Alien_01.sfb"));
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 alienAppearanceRate.start();
             }
@@ -233,8 +240,8 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
-        anchorNode = new AnchorNode(anchor);
-        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+        anchorNode = new AnchorNode();
+        node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
 //        node.setWorldPosition(new Vector3(4.0f, 2f, 0.450f));
@@ -243,11 +250,17 @@ public class MainActivity extends AppCompatActivity {
 //        modelLoader1 = new ModelLoader(weakReference);
         modelLoader1.setNumofLivesModel0(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
-        startWalking();
-        objectAnimation.start();
+        node.getScaleController().setMinScale(0.5f);
+        node.getScaleController().setMaxScale(3.0f);
+        objectMovement();
+        // objectAnimation.start();
 
         setNodeListener(node, anchorNode, modelLoader1);
+        //node.setWorldPosition(new Vector3(node.getRight().x+0.04f,0.0f,-0.00f));
+        TranslatableNode translatableNode = new TranslatableNode(node);
+        translatableNode.pullUp();
         playAnimation(renderable);
+
         // setNodeListener(node2, anchorNode, modelLoader3);
     }
 
@@ -365,35 +378,47 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void moveAndy() {
+    private void moveAndy(AnchorNode anchorNode) {
+        random = new Random();
+        int cooridanateOption = random.nextInt(10) + 1;
         if (numOfModels < 1) {
             return;
         }
         // Create the Anchor.
         // Create the starting position.
         if (startNode == null) {
-           // startNode = startNode.setParent(anchorNode);
+            // startNode = startNode.setParent(anchorNode);
+            startNode = node.getParent();
+            node.setParent(startNode);
+
 
             // Create the transformable andy and add it to the anchor.
-            trackedNode = new AnchorNode();
-            trackedNode.setParent(startNode);
-            trackedNode.setRenderable(andy);
+            endNode = new AnchorNode(anchorNode.getAnchor());
+            endNode.setParent(startNode);
+            endNode.setWorldPosition(new Vector3(vector3List.get(cooridanateOption)));
         } else {
             // Create the end position and start the animation.
-            endNode = new AnchorNode(anchorNode.getAnchor());
-            endNode.setParent(arFragment.getArSceneView().getScene());
-            startWalking();
+//            endNode = new AnchorNode(anchorNode.getAnchor());
+//            endNode.setParent(arFragment.getArSceneView().getScene());
+            //  endNode.setWorldPosition(new Vector3(.799f, 0.78f, -.700f));
+            //endNode.setParent(arFragment.getArSceneView().getScene());
+            objectMovement();
         }
     }
 
-    private void startWalking() {
+    private void objectMovement() {
+        randomVector3Array();
+        random = new Random();
+        int coordinateOption = random.nextInt(10) + 1;
+
         objectAnimation = new ObjectAnimator();
         objectAnimation.setAutoCancel(true);
-        objectAnimation.setTarget(trackedNode);
-
+        objectAnimation.setTarget(node);
+        endNode = new AnchorNode();
+        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
         // All the positions should be world positions
         // The first position is the start, and the second is the end.
-        objectAnimation.setObjectValues(trackedNode.getWorldPosition(), endNode.getWorldPosition());
+        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
 
         // Use setWorldPosition to position andy.
         objectAnimation.setPropertyName("worldPosition");
@@ -404,21 +429,12 @@ public class MainActivity extends AppCompatActivity {
         // This makes the animation linear (smooth and uniform).
         objectAnimation.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
-        objectAnimation.setDuration(12000);
+        objectAnimation.setDuration(5000);
         objectAnimation.start();
 
 
     }
 
-//    private Session createSession(/*FrameTime frame*/) {
-//        session = arFragment.getArSceneView().getSession();
-//        Config config = new Config(session);
-//        config.setUpdateMode(config.getUpdateMode().LATEST_CAMERA_IMAGE);
-//        session.configure(config);
-//        arFragment.getArSceneView().setupSession(session);
-//
-//        return session;
-//    }
 
 
     public void goToResultPage() {
@@ -427,9 +443,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public float randomCoordinates(boolean isX) {
-        Random random = new Random();
+        random = new Random();
         if (isX) return random.nextFloat() - .700f;
         return random.nextFloat() - .500f;
+    }
+
+    private ArrayList<Vector3> randomVector3Array() {
+        random = new Random();
+        vector3List = new ArrayList<>();
+        float xVector ;
+        float yVector;
+        float zVector ;
+        for (int i = 0; i < 12; i++) {
+
+            xVector = random.nextFloat();
+            yVector = random.nextFloat();
+            zVector = random.nextFloat();
+
+
+            vector3List.add(new Vector3(xVector, yVector, zVector));
+        }
+
+        return vector3List;
     }
 
 }

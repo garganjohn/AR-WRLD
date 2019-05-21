@@ -4,5 +4,5 @@ public enum DroidPosition {
     UP,
     MOVING_UP,
     MOVING_DOWN,
-    DOWN;
+    DOWN
 }
