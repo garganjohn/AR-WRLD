@@ -17,6 +17,10 @@ import java.lang.ref.WeakReference;
 public class ModelLoader{
     private int numofLivesModel;
 
+    public WeakReference<MainActivity> getOwner() {
+        return owner;
+    }
+
     private final WeakReference<MainActivity> owner;
     //allows class to respect mainactivies lifcycle during garbage collection
     private static final String TAG = "ModelLoader";

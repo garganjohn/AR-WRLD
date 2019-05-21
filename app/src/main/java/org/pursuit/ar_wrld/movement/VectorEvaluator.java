@@ -18,8 +18,6 @@ public final class VectorEvaluator implements TypeEvaluator {
         return new Vector3(x, y, z);
     }
 
-    // $FF: synthetic method
-    // $FF: bridge method
     public Object evaluate(float var1, Object var2, Object var3) {
         return this.evaluate(var1, (Vector3) var2, (Vector3) var3);
     }
