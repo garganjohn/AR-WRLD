@@ -10,13 +10,20 @@ import org.pursuit.ar_wrld.MainActivity;
 
 import java.lang.ref.WeakReference;
 
-public class ModelLoader{
+public class ModelLoader {
     private int numofLivesModel;
+    private Model model;
 
 //    public WeakReference<MainActivity> getOwner() {
 //        return owner;
 //    }
 
+
+    public Model getModel() {
+        return model;
+    }
+
+    private final WeakReference<MainActivity> owner;
     private static final String TAG = "ModelLoader";
 
     public int getNumofLivesModel0() {
@@ -53,5 +60,6 @@ public class ModelLoader{
 //
 //        return;
 //    }
+
 }
 
