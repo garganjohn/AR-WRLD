@@ -56,15 +56,14 @@
         android:id="@+id/msg_for_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/msg_for_user"
         android:background="#F51720"
         android:textAlignment="center"
-        android:textStyle="bold"
         android:textSize="16sp"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <!--<LinearLayout-->

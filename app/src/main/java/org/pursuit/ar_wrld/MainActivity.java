@@ -1,9 +1,11 @@
 package org.pursuit.ar_wrld;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -77,13 +79,19 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        AnchorNode anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+
 
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
 
+        spawningAliens();
 
-        alienSpawnRate = new Hourglass(5000, 1000) {
+
+    }
+
+    private void spawningAliens(){
+        AnchorNode anchorNode = new AnchorNode();
+        anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+        alienSpawnRate = new Hourglass(1000, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
 
@@ -99,7 +107,9 @@ public class MainActivity extends AppCompatActivity {
         };
 
         alienSpawnRate.startTimer();
+        startGameTimer();
     }
+
 
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
@@ -134,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        startTimer();
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -218,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    public void startTimer(){
+    public void startGameTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -229,8 +238,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                countDownTimer.cancel();
                 countDownText.setText(R.string.time_up_msg);
+                showDialog();
                 goToResultPage();
 
             }
@@ -256,9 +265,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void showDialog() {
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("Loading...").setMessage("Please wait for your results!");
+        dialog.setPositiveButton(" ", (dialog1, whichButton) -> Toast.makeText(MainActivity.this, "Exiting", Toast.LENGTH_SHORT).show());
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+        final Handler handler = new Handler();
+        final Runnable runnable = () -> {
+            if (alert.isShowing()) {
+                alert.dismiss();
+            }
+        };
+
+        alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
+
+        handler.postDelayed(runnable, 1000);
+    }
+
     public void goToResultPage() {
-//        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
-//        startActivity(goToResultPageIntent);
+        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+        startActivity(goToResultPageIntent);
     }
 
     public float randomCoordinates(boolean isX) {
