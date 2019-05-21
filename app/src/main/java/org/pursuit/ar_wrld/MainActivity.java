@@ -85,9 +85,10 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        modelLoader1 = new ModelLoader(weakReference);
+//        modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+
         modelLoader1.loadModel(new Model(anchorNode.getAnchor(), Uri.parse("andy.sfb")));
 
         arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+                loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
                 numOfAliensTv.setText(String.valueOf(numOfModels));
 
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
@@ -145,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpAR() {
 
-
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
         arFragment.getPlaneDiscoveryController().hide();
@@ -153,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
-
-        //initializeGallery();
     }
 
     private void onUpdate(FrameTime frameTime) {
@@ -173,41 +171,25 @@ public class MainActivity extends AppCompatActivity {
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-//    private void initializeGallery() {
-//        LinearLayout gallery = findViewById(R.id.gallery_layout);
-//
-//        ImageView andy = new ImageView(this);
-//        andy.setImageResource(R.drawable.droid_thumb);
-//        andy.setContentDescription("andy");
-//        andy.setOnClickListener(view -> {
-//            addObject(Uri.parse("andy.sfb"));
-//        });
-//        gallery.addView(andy);
-//
-//        ImageView cabin = new ImageView(this);
-//        cabin.setImageResource(R.drawable.cabin_thumb);
-//        cabin.setContentDescription("cabin");
-//        cabin.setOnClickListener(view -> {
-//            addObject(Uri.parse("Cabin.sfb"));
-//        });
-//        gallery.addView(cabin);
-//
-//        ImageView house = new ImageView(this);
-//        house.setImageResource(R.drawable.house_thumb);
-//        house.setContentDescription("house");
-//        house.setOnClickListener(view -> {
-//            addObject(Uri.parse("House.sfb"));
-//        });
-//        gallery.addView(house);
-//
-//        ImageView igloo = new ImageView(this);
-//        igloo.setImageResource(R.drawable.igloo_thumb);
-//        igloo.setContentDescription("igloo");
-//        igloo.setOnClickListener(view -> {
-//            addObject(Uri.parse("igloo.sfb"));
-//        });
-//        gallery.addView(igloo);
-//    }
+//    
+
+    private void addObject(Uri model) {
+        Frame frame = arFragment.getArSceneView().getArFrame();
+        Point pt = getScreenCenter();
+        List<HitResult> hits;
+        if (frame != null) {
+            hits = frame.hitTest(pt.x, pt.y);
+            for (HitResult hit : hits) {
+                Trackable trackable = hit.getTrackable();
+                if (trackable instanceof Plane &&
+                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
+//                    modelLoader1.loadModel(hit.createAnchor(), model);
+                    break;
+
+                }
+            }
+        }
+    }
 
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
@@ -220,10 +202,11 @@ public class MainActivity extends AppCompatActivity {
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
 
         node.setLocalPosition(vector);
+        ModelLoader modelLoader = new ModelLoader(2);
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
-        setNodeListener(node, anchorNode, modelLoader1);
+        setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
     }
 
@@ -259,6 +242,15 @@ public class MainActivity extends AppCompatActivity {
         }));
         Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getModel().getLives());
         node.select();
+    }
+
+    public void loadModel(Anchor anchor, Uri uri) {
+        ModelRenderable.builder()
+                .setSource(this, uri)
+                .build()
+                .thenAccept(modelRenderable -> {addNodeToScene(anchor,modelRenderable);});
+
+        return;
     }
 
     public void startTimer(){
