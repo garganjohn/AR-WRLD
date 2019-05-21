@@ -242,10 +242,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         anchorNode = new AnchorNode();
         node = new TransformableNode(arFragment.getTransformationSystem());
+        node.getScaleController().setMinScale(0.25f);
+        node.getScaleController().setMaxScale(1.0f);
         node.setRenderable(renderable);
+
+        node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
 //        node.setWorldPosition(new Vector3(4.0f, 2f, 0.450f));
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
+
         node.setLocalPosition(vector);
 //        modelLoader1 = new ModelLoader(weakReference);
         modelLoader1.setNumofLivesModel0(2);
@@ -436,7 +441,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void goToResultPage() {
 //        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
 //        startActivity(goToResultPageIntent);
@@ -451,9 +455,9 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Vector3> randomVector3Array() {
         random = new Random();
         vector3List = new ArrayList<>();
-        float xVector ;
+        float xVector;
         float yVector;
-        float zVector ;
+        float zVector;
         for (int i = 0; i < 12; i++) {
 
             xVector = random.nextFloat();
