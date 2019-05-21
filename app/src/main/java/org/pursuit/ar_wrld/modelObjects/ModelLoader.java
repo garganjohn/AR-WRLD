@@ -13,11 +13,10 @@ import java.lang.ref.WeakReference;
 public class ModelLoader{
     private int numofLivesModel;
 
-    public WeakReference<MainActivity> getOwner() {
-        return owner;
-    }
+//    public WeakReference<MainActivity> getOwner() {
+//        return owner;
+//    }
 
-    private final WeakReference<MainActivity> owner;
     private static final String TAG = "ModelLoader";
 
     public int getNumofLivesModel0() {
@@ -28,31 +27,31 @@ public class ModelLoader{
         this.numofLivesModel = numofLivesModel;
     }
 
-    public ModelLoader(WeakReference<MainActivity> owner) {
-        this.owner = owner;
+    public ModelLoader(int numofLivesModel) {
+        this.numofLivesModel = numofLivesModel;
     }
 
-    public void loadModel(Anchor anchor, Uri uri) {
-        if (owner.get() == null) {
-            Log.d(TAG, "Activity is null.  Cannot load model.");
-            return;
-        }
-        ModelRenderable.builder()
-                .setSource(owner.get(), uri)
-                .build()
-                .handle((renderable, throwable) -> {
-                    MainActivity activity = owner.get();
-                    if (activity == null) {
-                        return null;
-                    } else if (throwable != null) {
-                        activity.onException(throwable);
-                    } else {
-                        activity.addNodeToScene(anchor, renderable);
-                    }
-                    return null;
-                });
-
-        return;
-    }
+//    public void loadModel(Anchor anchor, Uri uri) {
+//        if (owner.get() == null) {
+//            Log.d(TAG, "Activity is null.  Cannot load model.");
+//            return;
+//        }
+//        ModelRenderable.builder()
+//                .setSource(owner.get(), uri)
+//                .build()
+//                .handle((renderable, throwable) -> {
+//                    MainActivity activity = owner.get();
+//                    if (activity == null) {
+//                        return null;
+//                    } else if (throwable != null) {
+//                        activity.onException(throwable);
+//                    } else {
+//                        activity.addNodeToScene(anchor, renderable);
+//                    }
+//                    return null;
+//                });
+//
+//        return;
+//    }
 }
 

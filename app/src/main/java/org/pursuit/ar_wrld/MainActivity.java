@@ -84,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        modelLoader1 = new ModelLoader(weakReference);
+//        modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
-        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+//        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
 
         arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
             @Override
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+                loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
                 numOfAliensTv.setText(String.valueOf(numOfModels));
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 alienSpawnRate.startTimer();
@@ -124,9 +124,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpAR() {
-//        modelLoader1 = new ModelLoader(weakReference);
-//        modelLoader2 = new ModelLoader(weakReference);
-//        modelLoader3 = new ModelLoader(weakReference);
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
@@ -206,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
                 Trackable trackable = hit.getTrackable();
                 if (trackable instanceof Plane &&
                         ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-                    modelLoader1.loadModel(hit.createAnchor(), model);
+//                    modelLoader1.loadModel(hit.createAnchor(), model);
                     break;
 
                 }
@@ -225,10 +222,10 @@ public class MainActivity extends AppCompatActivity {
         vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
         node.setLocalPosition(vector);
 //        modelLoader1 = new ModelLoader(weakReference);
-        modelLoader1.setNumofLivesModel0(2);
+        ModelLoader modelLoader = new ModelLoader(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
-        setNodeListener(node, anchorNode, modelLoader1);
+        setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
         // setNodeListener(node2, anchorNode, modelLoader3);
     }
@@ -288,6 +285,15 @@ public class MainActivity extends AppCompatActivity {
         }));
         Log.d(TAG, "setNodeListener: After if statement"+modelLoader.getNumofLivesModel0());
         node.select();
+    }
+
+    public void loadModel(Anchor anchor, Uri uri) {
+        ModelRenderable.builder()
+                .setSource(this, uri)
+                .build()
+                .thenAccept(modelRenderable -> {addNodeToScene(anchor,modelRenderable);});
+
+        return;
     }
 
     public void startTimer(){
