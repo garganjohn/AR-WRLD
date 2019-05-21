@@ -1,7 +1,6 @@
 package org.pursuit.ar_wrld;
 
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -10,9 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +17,12 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
-import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
@@ -34,12 +30,10 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
-import org.pursuit.ar_wrld.modelObjects.Model;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import java.lang.ref.WeakReference;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
     private int scoreNumber;
-    private String stringPlaceHolder;
+    private String scoreString;
+    private String aliensLeftString;
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
@@ -81,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         scorekeepingTv.setText(getString(R.string.default_score_text));
         numOfAliensTv = findViewById(R.id.number_of_aliens_textview);
+        getStringRes();
 
         vector = new Vector3();
         setUpAR();
@@ -88,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
 //        modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
-
-
 
         arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
             @Override
@@ -107,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerFinish() {
                 loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
-                numOfAliensTv.setText(String.valueOf(numOfModels));
 
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 alienSpawnRate.startTimer();
@@ -115,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
         };
 
         alienSpawnRate.startTimer();
+    }
+
+    private void getStringRes() {
+        scoreString = getString(R.string.score_text, scoreNumber);
+        aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
     }
 
 //    private void addObject(Uri model) {
@@ -171,44 +169,38 @@ public class MainActivity extends AppCompatActivity {
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-//
-
-    private void addObject(Uri model) {
-        Frame frame = arFragment.getArSceneView().getArFrame();
-        Point pt = getScreenCenter();
-        List<HitResult> hits;
-        if (frame != null) {
-            hits = frame.hitTest(pt.x, pt.y);
-            for (HitResult hit : hits) {
-                Trackable trackable = hit.getTrackable();
-                if (trackable instanceof Plane &&
-                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-//                    modelLoader1.loadModel(hit.createAnchor(), model);
-                    break;
-
-                }
-            }
-        }
-    }
-
-
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
+        getStringRes();
+        numOfAliensTv.setText(aliensLeftString);
         AnchorNode anchorNode = new AnchorNode(anchor);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
 
+        Quaternion rotate = Quaternion.axisAngle(new Vector3(0,1f,0), 90f);
+        node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
         ModelLoader modelLoader = new ModelLoader(2);
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
+        //Rotates the model every frame
+        arFragment.getArSceneView().getScene().addOnUpdateListener(new Scene.OnUpdateListener() {
+            @Override
+            public void onUpdate(FrameTime frameTime) {
+                Quaternion startQ = node.getLocalRotation();
+                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0,1f,0), 5f);
+                node.setLocalRotation(Quaternion.multiply(startQ,rotateQ));
+            }
+        });
 
         setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
     }
+
+
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -231,13 +223,13 @@ public class MainActivity extends AppCompatActivity {
                 anchorNode.removeChild(node);
                 numOfModels--;
                 scoreNumber++;
-                stringPlaceHolder = getString(R.string.score_text, scoreNumber);
-                scorekeepingTv.setText(stringPlaceHolder);
+                getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                Log.d(TAG, "setNodeListener: " + stringPlaceHolder);
+                Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
-                numOfAliensTv.setText(String.valueOf(numOfModels));
+                scorekeepingTv.setText(scoreString);
+                numOfAliensTv.setText(aliensLeftString);
             }
         }));
         Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getNumofLivesModel0());
