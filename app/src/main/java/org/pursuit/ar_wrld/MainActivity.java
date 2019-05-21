@@ -1,36 +1,31 @@
 package org.pursuit.ar_wrld;
 
-import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ankushgrover.hourglass.Hourglass;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
-import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
-import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -38,22 +33,14 @@ import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
-import org.pursuit.ar_wrld.movement.TranslatableNode;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
-    private ModelLoader modelLoader1;
-    private ModelLoader modelLoader2;
-    private ModelLoader modelLoader3;
-    private WeakReference weakReference;
-    private Button shootingButton;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -62,29 +49,19 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds = 15000;
     int numOfModels = 0;
     private int scoreNumber;
-    private String stringPlaceHolder;
+    private String scoreString;
+    private String aliensLeftString;
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
     private TextView numOfAliensTv;
+    private Hourglass alienSpawnRate;
+
 
     // Controls animation playback.
     private ModelAnimator animator;
     // Index of the current animation playing.
     private int nextAnimation;
-    private ModelRenderable andy;
-    private AnchorNode anchorNode;
-    private Node startNode;
-    private AnchorNode trackedNode;
-    private AnchorNode endNode;
-    private ObjectAnimator objectAnimation;
-    private TranslatableNode translatableNode;
-    private ArrayList<Vector3> vector3List;
-
-    private Anchor anchor;
-    private TransformableNode node;
-    private Random random;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,49 +70,50 @@ public class MainActivity extends AppCompatActivity {
         // shootingButton = findViewById(R.id.shooting_button);
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
-        weakReference = new WeakReference<>(this);
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         scorekeepingTv.setText(getString(R.string.default_score_text));
+        numOfAliensTv = findViewById(R.id.number_of_aliens_textview);
+        getStringRes();
+
         vector = new Vector3();
         setUpAR();
 
-        modelLoader1 = new ModelLoader(weakReference);
-        anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(0, 0, -.500f));
-        modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("Alien_01.sfb"));
-//        moveAndy();
 
-        arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
+
+        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
+
+        spawningAliens();
+
+
+    }
+
+    private void spawningAliens(){
+        AnchorNode anchorNode = new AnchorNode();
+        anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+        alienSpawnRate = new Hourglass(1000, 1000) {
             @Override
-            public void onTapPlane(HitResult hitResult, Plane plane, MotionEvent motionEvent) {
-                Log.d(TAG, "onTapPlane: Event hit");
+            public void onTimerTick(long timeRemaining) {
+
             }
-        });
-
-        alienAppearanceRate = new CountDownTimer(6000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
 
             @Override
-            public void onFinish() {
-                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("Alien_01.sfb"));
+            public void onTimerFinish() {
+                loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
-                alienAppearanceRate.start();
+                alienSpawnRate.startTimer();
             }
         };
 
-        alienAppearanceRate.start();
+        alienSpawnRate.startTimer();
+        startGameTimer();
+    }
 
-        // Possible for models to show up without touch
 
-
-//        shootingButton.setOnClickListener(view -> {
-//            Log.d(TAG, "onCreate: Shooting button pressed");
-//            hitReaction();
-//        });
+    private void getStringRes() {
+        scoreString = getString(R.string.score_text, scoreNumber);
+        aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -148,93 +126,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpAR() {
-//        modelLoader1 = new ModelLoader(weakReference);
-//        modelLoader2 = new ModelLoader(weakReference);
-//        modelLoader3 = new ModelLoader(weakReference);
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
 
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
+
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
-//        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
-//            arFragment.onUpdate(frameTime);
-//        });
-        initializeGallery();
     }
 
     private void onUpdate(FrameTime frameTime) {
-//        if (numOfModels > 0) return;
-//        modelLoader1 = new ModelLoader(weakReference);
         Frame frame = arFragment.getArSceneView().getArFrame();
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
         for (Plane plane : planes) {
             if (plane.getTrackingState() == TrackingState.TRACKING) {
-//                addObject(Uri.parse("andy_dance.sfb"));
                 break;
             }
         }
-        startTimer();
     }
 
     private android.graphics.Point getScreenCenter() {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
-    }
-
-    private void initializeGallery() {
-        LinearLayout gallery = findViewById(R.id.gallery_layout);
-
-        ImageView andy = new ImageView(this);
-        andy.setImageResource(R.drawable.droid_thumb);
-        andy.setContentDescription("andy");
-        andy.setOnClickListener(view -> {
-            addObject(Uri.parse("andy.sfb"));
-        });
-        gallery.addView(andy);
-
-        ImageView cabin = new ImageView(this);
-        cabin.setImageResource(R.drawable.cabin_thumb);
-        cabin.setContentDescription("cabin");
-        cabin.setOnClickListener(view -> {
-            addObject(Uri.parse("Cabin.sfb"));
-        });
-        gallery.addView(cabin);
-
-        ImageView house = new ImageView(this);
-        house.setImageResource(R.drawable.house_thumb);
-        house.setContentDescription("house");
-        house.setOnClickListener(view -> {
-            addObject(Uri.parse("House.sfb"));
-        });
-        gallery.addView(house);
-
-        ImageView igloo = new ImageView(this);
-        igloo.setImageResource(R.drawable.igloo_thumb);
-        igloo.setContentDescription("igloo");
-        igloo.setOnClickListener(view -> {
-            addObject(Uri.parse("igloo.sfb"));
-        });
-        gallery.addView(igloo);
-    }
-
-    private void addObject(Uri model) {
-        Frame frame = arFragment.getArSceneView().getArFrame();
-        Point pt = getScreenCenter();
-        List<HitResult> hits;
-        if (frame != null) {
-            hits = frame.hitTest(pt.x, pt.y);
-            for (HitResult hit : hits) {
-                Trackable trackable = hit.getTrackable();
-                if (trackable instanceof Plane &&
-                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-                    modelLoader1.loadModel(hit.createAnchor(), model);
-                    break;
-
-                }
-            }
-        }
     }
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
@@ -244,53 +158,34 @@ public class MainActivity extends AppCompatActivity {
         node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
+        getStringRes();
+        numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
-//        node.setWorldPosition(new Vector3(4.0f, 2f, 0.450f));
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
-
+        Quaternion rotate = Quaternion.axisAngle(new Vector3(0,1f,0), 90f);
+        node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
-//        modelLoader1 = new ModelLoader(weakReference);
-        modelLoader1.setNumofLivesModel0(2);
+        ModelLoader modelLoader = new ModelLoader(2);
+
         arFragment.getArSceneView().getScene().addChild(anchorNode);
-        node.getScaleController().setMinScale(0.5f);
-        node.getScaleController().setMaxScale(3.0f);
-        objectMovement();
-        // objectAnimation.start();
+        //Rotates the model every frame
+        arFragment.getArSceneView().getScene().addOnUpdateListener(new Scene.OnUpdateListener() {
+            @Override
+            public void onUpdate(FrameTime frameTime) {
+                Quaternion startQ = node.getLocalRotation();
+                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0,1f,0), 5f);
+                node.setLocalRotation(Quaternion.multiply(startQ,rotateQ));
+            }
+        });
 
-        setNodeListener(node, anchorNode, modelLoader1);
-        //node.setWorldPosition(new Vector3(node.getRight().x+0.04f,0.0f,-0.00f));
-        TranslatableNode translatableNode = new TranslatableNode(node);
-        translatableNode.pullUp();
+        setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
-
-        // setNodeListener(node2, anchorNode, modelLoader3);
     }
 
-//    private void loadModel(Anchor anchor, Uri uri, ModelLoader modelLoader) {
-//        if (modelLoader.getOwner() == null) {
-//            Log.d(TAG, "Activity is null.  Cannot load model.");
-//            return;
-//        }
-//        ModelRenderable.builder()
-//                .setSource(owner.get(), uri)
-//                .build()
-//                .handle((renderable, throwable) -> {
-//                    MainActivity activity = owner.get();
-//                    if (activity == null) {
-//                        return null;
-//                    } else if (throwable != null) {
-//                        activity.onException(throwable);
-//                    } else {
-//                        activity.addNodeToScene(anchor, renderable);
-//                    }
-//                    return null;
-//                });
-//
-//        return;
-//    }
+
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -301,8 +196,8 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    @SuppressLint("StringFormatInvalid")
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
+
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
             if (0 < modelLoader.getNumofLivesModel0()) {
@@ -313,38 +208,29 @@ public class MainActivity extends AppCompatActivity {
                 anchorNode.removeChild(node);
                 numOfModels--;
                 scoreNumber++;
-                stringPlaceHolder = getString(R.string.score_text, scoreNumber);
-                scorekeepingTv.setText(stringPlaceHolder);
+                getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                Log.d(TAG, "setNodeListener: " + stringPlaceHolder);
+                Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
+                scorekeepingTv.setText(scoreString);
+                numOfAliensTv.setText(aliensLeftString);
             }
         }));
         Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getNumofLivesModel0());
         node.select();
     }
 
-    /**
-     * Use for easy plane detection
-     */
-//    public void changetexture() {
-//        Texture.Sampler sampler =
-//                Texture.Sampler.builder()
-//                        .setMinFilter(Texture.Sampler.MinFilter.LINEAR)
-//                        .setWrapMode(Texture.Sampler.WrapMode.REPEAT)
-//                        .build();
-//        Texture.builder()
-//                .setSource(this, R.drawable.testing_carpet_texture)
-//                .setSampler(sampler)
-//                .build()
-//                .thenAccept(texture -> {
-//                    arFragment.getArSceneView().getPlaneRenderer()
-//                            .getMaterial().thenAccept(material ->
-//                            material.setTexture(PlaneRenderer.MATERIAL_TEXTURE, texture));
-//                });
-//    }
-    public void startTimer() {
+    public void loadModel(Anchor anchor, Uri uri) {
+        ModelRenderable.builder()
+                .setSource(this, uri)
+                .build()
+                .thenAccept(modelRenderable -> {addNodeToScene(anchor,modelRenderable);});
+
+        return;
+    }
+
+    public void startGameTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -355,8 +241,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                countDownTimer.cancel();
                 countDownText.setText(R.string.time_up_msg);
+                showDialog();
                 goToResultPage();
 
             }
@@ -380,77 +266,39 @@ public class MainActivity extends AppCompatActivity {
 
         countDownText.setText(timeLeftText);
 
-
     }
 
-    private void moveAndy(AnchorNode anchorNode) {
-        random = new Random();
-        int cooridanateOption = random.nextInt(10) + 1;
-        if (numOfModels < 1) {
-            return;
-        }
-        // Create the Anchor.
-        // Create the starting position.
-        if (startNode == null) {
-            // startNode = startNode.setParent(anchorNode);
-            startNode = node.getParent();
-            node.setParent(startNode);
+    public void showDialog() {
+
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("Loading...").setMessage("Please wait for your results!");
+        dialog.setPositiveButton(" ", (dialog1, whichButton) -> Toast.makeText(MainActivity.this, "Exiting", Toast.LENGTH_SHORT).show());
+        final AlertDialog alert = dialog.create();
+        alert.show();
+
+        final Handler handler = new Handler();
+        final Runnable runnable = () -> {
+            if (alert.isShowing()) {
+                alert.dismiss();
+            }
+        };
+
+        alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
 
 
-            // Create the transformable andy and add it to the anchor.
-            endNode = new AnchorNode(anchorNode.getAnchor());
-            endNode.setParent(startNode);
-            endNode.setWorldPosition(new Vector3(vector3List.get(cooridanateOption)));
-        } else {
-            // Create the end position and start the animation.
-//            endNode = new AnchorNode(anchorNode.getAnchor());
-//            endNode.setParent(arFragment.getArSceneView().getScene());
-            //  endNode.setWorldPosition(new Vector3(.799f, 0.78f, -.700f));
-            //endNode.setParent(arFragment.getArSceneView().getScene());
-            objectMovement();
-        }
+        handler.postDelayed(runnable, 1000);
     }
-
-    private void objectMovement() {
-        randomVector3Array();
-        random = new Random();
-        int coordinateOption = random.nextInt(10) + 1;
-
-        objectAnimation = new ObjectAnimator();
-        objectAnimation.setAutoCancel(true);
-        objectAnimation.setTarget(node);
-        endNode = new AnchorNode();
-        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-        // All the positions should be world positions
-        // The first position is the start, and the second is the end.
-        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-
-        // Use setWorldPosition to position andy.
-        objectAnimation.setPropertyName("worldPosition");
-
-        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-        // vector3.  The default is to use lerp.
-        objectAnimation.setEvaluator(new Vector3Evaluator());
-        // This makes the animation linear (smooth and uniform).
-        objectAnimation.setInterpolator(new LinearInterpolator());
-        // Duration in ms of the animation.
-        objectAnimation.setDuration(5000);
-        objectAnimation.start();
-
-
-    }
-
 
     public void goToResultPage() {
-//        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
-//        startActivity(goToResultPageIntent);
+        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+        startActivity(goToResultPageIntent);
     }
 
     public float randomCoordinates(boolean isX) {
-        random = new Random();
+        Random random = new Random();
         if (isX) return random.nextFloat() - .700f;
         return random.nextFloat() - .500f;
     }
+
 
     private ArrayList<Vector3> randomVector3Array() {
         random = new Random();
@@ -460,15 +308,24 @@ public class MainActivity extends AppCompatActivity {
         float zVector;
         for (int i = 0; i < 12; i++) {
 
-            xVector = random.nextFloat();
-            yVector = random.nextFloat();
-            zVector = random.nextFloat();
-
-
-            vector3List.add(new Vector3(xVector, yVector, zVector));
-        }
-
-        return vector3List;
+    // Number is displayed between -.7 and -1
+    public static float randomZCoordinates(){
+        Random random = new Random();
+        Float maxFloat = .7f;
+        Float minFloat = 1f;
+        return random.nextFloat() * (maxFloat - minFloat) - maxFloat;
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (alienSpawnRate.isRunning()) alienSpawnRate.pauseTimer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (alienSpawnRate.isPaused()) alienSpawnRate.resumeTimer();
+
+    }
 }
