@@ -17,6 +17,7 @@ import java.lang.ref.WeakReference;
 public class ModelLoader {
     private int numofLivesModel;
     private Model model;
+    private WeakReference weakReference;
 
 //    public WeakReference<MainActivity> getOwner() {
 //        return owner;
@@ -27,7 +28,7 @@ public class ModelLoader {
         return model;
     }
 
-    private final WeakReference<MainActivity> owner;
+    private WeakReference<MainActivity> owner;
 
     private static final String TAG = "ModelLoader";
 
@@ -41,6 +42,9 @@ public class ModelLoader {
 
     public ModelLoader(int numofLivesModel) {
         this.numofLivesModel = numofLivesModel;
+    }
+    public ModelLoader(WeakReference<MainActivity> weakReference){
+        this.owner = weakReference;
     }
 
     public void loadModel(Anchor anchor, Uri uri) {
