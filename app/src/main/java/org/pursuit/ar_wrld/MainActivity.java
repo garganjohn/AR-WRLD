@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         setUpAR();
 
 
-
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
 
         spawningAliens();
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void spawningAliens(){
+    private void spawningAliens() {
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
         alienSpawnRate = new Hourglass(1000, 1000) {
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void detectHit(Button button){
+    private void detectHit(Button button) {
         button.setOnClickListener(v -> {
         });
     }
@@ -185,12 +184,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //TODO check for hit detection
-shootingButton.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        node.getTranslationController().getTransformableNode().getLocalPosition();
-    }
-});
+        shootingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
+                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
     }
@@ -239,7 +240,7 @@ shootingButton.setOnClickListener(new View.OnClickListener() {
         return;
     }
 
-    public void startGameTimer(){
+    public void startGameTimer() {
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
