@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
 
-        modelLoader1.loadModel(new Model(anchorNode.getAnchor(), Uri.parse("andy.sfb")));
+
 
         arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
             @Override
@@ -222,10 +222,10 @@ public class MainActivity extends AppCompatActivity {
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
 
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
-            Log.d(TAG, "setNodeListener: " + modelLoader.getModel().getLives());
-            if (0 < modelLoader.getModel().getLives()) {
-                modelLoader.getModel().setLives(modelLoader.getModel().getLives() - 1);
-                Toast.makeText(this, "Lives left: " + modelLoader.getModel().getLives(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
+            if (0 < modelLoader.getNumofLivesModel0()) {
+                modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
+                Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 Log.d(TAG, "setNodeListener: In else state ");
                 anchorNode.removeChild(node);

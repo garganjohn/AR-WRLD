@@ -23,7 +23,6 @@ public class ModelLoader {
         return model;
     }
 
-    private final WeakReference<MainActivity> owner;
     private static final String TAG = "ModelLoader";
 
     public int getNumofLivesModel0() {
