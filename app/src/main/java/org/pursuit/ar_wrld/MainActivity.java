@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ankushgrover.hourglass.Hourglass;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
@@ -45,10 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
     private ModelLoader modelLoader1;
-    private ModelLoader modelLoader2;
-    private ModelLoader modelLoader3;
     private WeakReference weakReference;
-    private Button shootingButton;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -62,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
     private TextView numOfAliensTv;
+    private Hourglass alienSpawnRate;
+
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         scorekeepingTv.setText(getString(R.string.default_score_text));
+        numOfAliensTv = findViewById(R.id.number_of_aliens_textview);
+
         vector = new Vector3();
         setUpAR();
 
@@ -95,29 +97,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        alienAppearanceRate = new CountDownTimer(6000, 1000) {
+        alienSpawnRate = new Hourglass(5000, 1000) {
             @Override
-            public void onTick(long millisUntilFinished) {
+            public void onTimerTick(long timeRemaining) {
 
             }
 
             @Override
-            public void onFinish() {
-                modelLoader1.loadModel(new Model(anchorNode.getAnchor(), Uri.parse("andy.sfb")));
+            public void onTimerFinish() {
+                modelLoader1.loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+                numOfAliensTv.setText(String.valueOf(numOfModels));
+
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
-                alienAppearanceRate.start();
+                alienSpawnRate.startTimer();
             }
         };
 
-        alienAppearanceRate.start();
-
-        // Possible for models to show up without touch
-
-
-//        shootingButton.setOnClickListener(view -> {
-//            Log.d(TAG, "onCreate: Shooting button pressed");
-//            hitReaction();
-//        });
+        alienSpawnRate.startTimer();
     }
 
 //    private void addObject(Uri model) {
@@ -222,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
         node.setRenderable(renderable);
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
+
         node.setLocalPosition(vector);
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -257,14 +254,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "setNodeListener: " + stringPlaceHolder);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
+                numOfAliensTv.setText(String.valueOf(numOfModels));
             }
         }));
         Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getModel().getLives());
         node.select();
     }
 
-
-    public void startTimer() {
+    public void startTimer(){
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -313,4 +310,25 @@ public class MainActivity extends AppCompatActivity {
         return random.nextFloat() - .500f;
     }
 
+
+    // Number is displayed between -.7 and -1
+    public static float randomZCoordinates(){
+        Random random = new Random();
+        Float maxFloat = .7f;
+        Float minFloat = 1f;
+        return random.nextFloat() * (maxFloat - minFloat) - maxFloat;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (alienSpawnRate.isRunning()) alienSpawnRate.pauseTimer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (alienSpawnRate.isPaused()) alienSpawnRate.resumeTimer();
+
+    }
 }
