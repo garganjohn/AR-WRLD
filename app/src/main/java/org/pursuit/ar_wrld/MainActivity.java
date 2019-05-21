@@ -45,8 +45,6 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
-    private ModelLoader modelLoader1;
-    private WeakReference weakReference;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private ModelAnimator animator;
     // Index of the current animation playing.
     private int nextAnimation;
-    private ModelRenderable andy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         // shootingButton = findViewById(R.id.shooting_button);
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
-        weakReference = new WeakReference<>(this);
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         scorekeepingTv.setText(getString(R.string.default_score_text));
@@ -85,18 +81,12 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-//        modelLoader1 = new ModelLoader(weakReference);
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
 
 
 
-        arFragment.setOnTapArPlaneListener(new BaseArFragment.OnTapArPlaneListener() {
-            @Override
-            public void onTapPlane(HitResult hitResult, Plane plane, MotionEvent motionEvent) {
-                Log.d(TAG, "onTapPlane: Event hit");
-            }
-        });
+        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
 
         alienSpawnRate = new Hourglass(5000, 1000) {
             @Override
@@ -117,23 +107,6 @@ public class MainActivity extends AppCompatActivity {
         alienSpawnRate.startTimer();
     }
 
-//    private void addObject(Uri model) {
-//        Frame frame = arFragment.getArSceneView().getArFrame();
-//        Point pt = getScreenCenter();
-//        List<HitResult> hits;
-//        if (frame != null) {
-//            hits = frame.hitTest(pt.x, pt.y);
-//            for (HitResult hit : hits) {
-//                Trackable trackable = hit.getTrackable();
-//                if (trackable instanceof Plane &&
-//                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-//                    modelLoader1.loadModel(hit.createAnchor(), model);
-//                    break;
-//
-//                }
-//            }
-//        }
-//    }
 
     private void playAnimation(ModelRenderable modelRenderable) {
         if (animator == null || !animator.isRunning()) {
@@ -170,27 +143,6 @@ public class MainActivity extends AppCompatActivity {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
-
-//    
-
-    private void addObject(Uri model) {
-        Frame frame = arFragment.getArSceneView().getArFrame();
-        Point pt = getScreenCenter();
-        List<HitResult> hits;
-        if (frame != null) {
-            hits = frame.hitTest(pt.x, pt.y);
-            for (HitResult hit : hits) {
-                Trackable trackable = hit.getTrackable();
-                if (trackable instanceof Plane &&
-                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-//                    modelLoader1.loadModel(hit.createAnchor(), model);
-                    break;
-
-                }
-            }
-        }
-    }
-
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
