@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -240,7 +241,17 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 countDownText.setText(R.string.time_up_msg);
                 showDialog();
-                goToResultPage();
+                new CountDownTimer(3000, 1000){
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        goToResultPage();
+                    }
+                }.start();
 
             }
         }.start();
@@ -267,21 +278,30 @@ public class MainActivity extends AppCompatActivity {
 
     public void showDialog() {
 
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("Loading...").setMessage("Please wait for your results!");
-        dialog.setPositiveButton(" ", (dialog1, whichButton) -> Toast.makeText(MainActivity.this, "Exiting", Toast.LENGTH_SHORT).show());
-        final AlertDialog alert = dialog.create();
-        alert.show();
-
-        final Handler handler = new Handler();
-        final Runnable runnable = () -> {
-            if (alert.isShowing()) {
-                alert.dismiss();
+//        final AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("Loading...").setMessage("Please wait for your results!");
+        AlertDialog.Builder aBuilder = new AlertDialog.Builder(this);
+        aBuilder.setMessage("Press Continue to see your results");
+        aBuilder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show();
             }
-        };
+        });
+        aBuilder.show();
+//        dialog.setPositiveButton(" ", (dialog1, whichButton) -> Toast.makeText(MainActivity.this, "Exiting", Toast.LENGTH_SHORT).show());
+//        final AlertDialog alert = dialog.create();
+//        alert.show();
 
-        alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
-
-        handler.postDelayed(runnable, 1000);
+//        final Handler handler = new Handler();
+//        final Runnable runnable = () -> {
+//            if (alert.isShowing()) {
+//                alert.dismiss();
+//            }
+//        };
+//
+//        alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
+//
+//        handler.postDelayed(runnable, 1000);
     }
 
     public void goToResultPage() {
