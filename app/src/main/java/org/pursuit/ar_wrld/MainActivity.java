@@ -34,6 +34,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
+import org.pursuit.ar_wrld.modelObjects.Model;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import java.lang.ref.WeakReference;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       // shootingButton = findViewById(R.id.shooting_button);
+        // shootingButton = findViewById(R.id.shooting_button);
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         weakReference = new WeakReference<>(this);
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerFinish() {
                 loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
                 numOfAliensTv.setText(String.valueOf(numOfModels));
+
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 alienSpawnRate.startTimer();
             }
@@ -114,8 +116,26 @@ public class MainActivity extends AppCompatActivity {
         alienSpawnRate.startTimer();
     }
 
-    private void playAnimation(ModelRenderable modelRenderable){
-        if (animator == null || !animator.isRunning()){
+//    private void addObject(Uri model) {
+//        Frame frame = arFragment.getArSceneView().getArFrame();
+//        Point pt = getScreenCenter();
+//        List<HitResult> hits;
+//        if (frame != null) {
+//            hits = frame.hitTest(pt.x, pt.y);
+//            for (HitResult hit : hits) {
+//                Trackable trackable = hit.getTrackable();
+//                if (trackable instanceof Plane &&
+//                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
+//                    modelLoader1.loadModel(hit.createAnchor(), model);
+//                    break;
+//
+//                }
+//            }
+//        }
+//    }
+
+    private void playAnimation(ModelRenderable modelRenderable) {
+        if (animator == null || !animator.isRunning()) {
             AnimationData data = modelRenderable.getAnimationData(nextAnimation);
             nextAnimation = (nextAnimation + 1);
             animator = new ModelAnimator(data, modelRenderable);
@@ -132,20 +152,15 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
-//        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
-//            arFragment.onUpdate(frameTime);
-//        });
-        initializeGallery();
+
+        //initializeGallery();
     }
 
     private void onUpdate(FrameTime frameTime) {
-//        if (numOfModels > 0) return;
-//        modelLoader1 = new ModelLoader(weakReference);
         Frame frame = arFragment.getArSceneView().getArFrame();
         Collection<Plane> planes = frame.getUpdatedTrackables(Plane.class);
         for (Plane plane : planes) {
             if (plane.getTrackingState() == TrackingState.TRACKING) {
-//                addObject(Uri.parse("andy_dance.sfb"));
                 break;
             }
         }
@@ -157,59 +172,42 @@ public class MainActivity extends AppCompatActivity {
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-    private void initializeGallery() {
-        LinearLayout gallery = findViewById(R.id.gallery_layout);
+//    private void initializeGallery() {
+//        LinearLayout gallery = findViewById(R.id.gallery_layout);
+//
+//        ImageView andy = new ImageView(this);
+//        andy.setImageResource(R.drawable.droid_thumb);
+//        andy.setContentDescription("andy");
+//        andy.setOnClickListener(view -> {
+//            addObject(Uri.parse("andy.sfb"));
+//        });
+//        gallery.addView(andy);
+//
+//        ImageView cabin = new ImageView(this);
+//        cabin.setImageResource(R.drawable.cabin_thumb);
+//        cabin.setContentDescription("cabin");
+//        cabin.setOnClickListener(view -> {
+//            addObject(Uri.parse("Cabin.sfb"));
+//        });
+//        gallery.addView(cabin);
+//
+//        ImageView house = new ImageView(this);
+//        house.setImageResource(R.drawable.house_thumb);
+//        house.setContentDescription("house");
+//        house.setOnClickListener(view -> {
+//            addObject(Uri.parse("House.sfb"));
+//        });
+//        gallery.addView(house);
+//
+//        ImageView igloo = new ImageView(this);
+//        igloo.setImageResource(R.drawable.igloo_thumb);
+//        igloo.setContentDescription("igloo");
+//        igloo.setOnClickListener(view -> {
+//            addObject(Uri.parse("igloo.sfb"));
+//        });
+//        gallery.addView(igloo);
+//    }
 
-        ImageView andy = new ImageView(this);
-        andy.setImageResource(R.drawable.droid_thumb);
-        andy.setContentDescription("andy");
-        andy.setOnClickListener(view -> {
-            addObject(Uri.parse("andy.sfb"));
-        });
-        gallery.addView(andy);
-
-        ImageView cabin = new ImageView(this);
-        cabin.setImageResource(R.drawable.cabin_thumb);
-        cabin.setContentDescription("cabin");
-        cabin.setOnClickListener(view -> {
-            addObject(Uri.parse("Cabin.sfb"));
-        });
-        gallery.addView(cabin);
-
-        ImageView house = new ImageView(this);
-        house.setImageResource(R.drawable.house_thumb);
-        house.setContentDescription("house");
-        house.setOnClickListener(view -> {
-            addObject(Uri.parse("House.sfb"));
-        });
-        gallery.addView(house);
-
-        ImageView igloo = new ImageView(this);
-        igloo.setImageResource(R.drawable.igloo_thumb);
-        igloo.setContentDescription("igloo");
-        igloo.setOnClickListener(view -> {
-            addObject(Uri.parse("igloo.sfb"));
-        });
-        gallery.addView(igloo);
-    }
-
-    private void addObject(Uri model) {
-        Frame frame = arFragment.getArSceneView().getArFrame();
-        Point pt = getScreenCenter();
-        List<HitResult> hits;
-        if (frame != null) {
-            hits = frame.hitTest(pt.x, pt.y);
-            for (HitResult hit : hits) {
-                Trackable trackable = hit.getTrackable();
-                if (trackable instanceof Plane &&
-                        ((Plane) trackable).isPoseInPolygon(hit.getHitPose())) {
-//                    modelLoader1.loadModel(hit.createAnchor(), model);
-                    break;
-
-                }
-            }
-        }
-    }
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
@@ -218,40 +216,17 @@ public class MainActivity extends AppCompatActivity {
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
         node.setParent(anchorNode);
-//        node.setWorldPosition(new Vector3(4.0f, 2f, 0.450f));
-        vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
+        vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
+
         node.setLocalPosition(vector);
+
 //        modelLoader1 = new ModelLoader(weakReference);
         ModelLoader modelLoader = new ModelLoader(2);
         arFragment.getArSceneView().getScene().addChild(anchorNode);
 
         setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
-        // setNodeListener(node2, anchorNode, modelLoader3);
     }
-
-//    private void loadModel(Anchor anchor, Uri uri, ModelLoader modelLoader) {
-//        if (modelLoader.getOwner() == null) {
-//            Log.d(TAG, "Activity is null.  Cannot load model.");
-//            return;
-//        }
-//        ModelRenderable.builder()
-//                .setSource(owner.get(), uri)
-//                .build()
-//                .handle((renderable, throwable) -> {
-//                    MainActivity activity = owner.get();
-//                    if (activity == null) {
-//                        return null;
-//                    } else if (throwable != null) {
-//                        activity.onException(throwable);
-//                    } else {
-//                        activity.addNodeToScene(anchor, renderable);
-//                    }
-//                    return null;
-//                });
-//
-//        return;
-//    }
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -262,14 +237,14 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader){
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
+
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
-            Log.d(TAG, "setNodeListener: "+modelLoader.getNumofLivesModel0());
-            if (0 < modelLoader.getNumofLivesModel0()){
+            Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
+            if (0 < modelLoader.getNumofLivesModel0()) {
                 modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
-                Toast.makeText(this, "Lives left: "+modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
-            }
-            else {
+                Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
+            } else {
                 Log.d(TAG, "setNodeListener: In else state ");
                 anchorNode.removeChild(node);
                 numOfModels--;
@@ -277,13 +252,13 @@ public class MainActivity extends AppCompatActivity {
                 stringPlaceHolder = getString(R.string.score_text, scoreNumber);
                 scorekeepingTv.setText(stringPlaceHolder);
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                Log.d(TAG, "setNodeListener: "+stringPlaceHolder);
-                Log.d(TAG, "setNodeListener: "+scorekeepingTv.getText().toString());
+                Log.d(TAG, "setNodeListener: " + stringPlaceHolder);
+                Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 numOfAliensTv.setText(String.valueOf(numOfModels));
             }
         }));
-        Log.d(TAG, "setNodeListener: After if statement"+modelLoader.getNumofLivesModel0());
+        Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getNumofLivesModel0());
         node.select();
     }
 
@@ -316,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void updateTimer(){
+    public void updateTimer() {
 
         int minutes = (int) timeLeftInMilliseconds / 60000;
         int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
@@ -325,19 +300,21 @@ public class MainActivity extends AppCompatActivity {
 
         timeLeftText = "0" + minutes;
         timeLeftText += ":";
-        if(seconds < 10) {timeLeftText += "0";}
+        if (seconds < 10) {
+            timeLeftText += "0";
+        }
         timeLeftText += seconds;
 
         countDownText.setText(timeLeftText);
 
     }
 
-    public void goToResultPage(){
+    public void goToResultPage() {
 //        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
 //        startActivity(goToResultPageIntent);
     }
 
-    public float randomCoordinates(boolean isX){
+    public float randomCoordinates(boolean isX) {
         Random random = new Random();
         if (isX) return random.nextFloat() - .700f;
         return random.nextFloat() - .500f;
