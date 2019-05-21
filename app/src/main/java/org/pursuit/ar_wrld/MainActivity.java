@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private Vector3 vector;
     private TextView numOfAliensTv;
     private Hourglass alienSpawnRate;
+    Button shootingButton;
 
 
     // Controls animation playback.
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // shootingButton = findViewById(R.id.shooting_button);
+        shootingButton = findViewById(R.id.shooting_button);
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
@@ -125,6 +127,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void detectHit(Button button){
+        button.setOnClickListener(v -> {
+        });
+    }
+
     private void setUpAR() {
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
@@ -162,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
 
-        Quaternion rotate = Quaternion.axisAngle(new Vector3(0,1f,0), 90f);
+        Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
         ModelLoader modelLoader = new ModelLoader(2);
@@ -173,15 +180,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onUpdate(FrameTime frameTime) {
                 Quaternion startQ = node.getLocalRotation();
-                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0,1f,0), 5f);
-                node.setLocalRotation(Quaternion.multiply(startQ,rotateQ));
+                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
+                node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
             }
         });
-
+        //TODO check for hit detection
+shootingButton.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        node.getTranslationController().getTransformableNode().getLocalPosition();
+    }
+});
         setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
     }
-
 
 
     public void onException(Throwable throwable) {
@@ -194,7 +206,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
-
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
             if (0 < modelLoader.getNumofLivesModel0()) {
@@ -222,8 +233,9 @@ public class MainActivity extends AppCompatActivity {
         ModelRenderable.builder()
                 .setSource(this, uri)
                 .build()
-                .thenAccept(modelRenderable -> {addNodeToScene(anchor,modelRenderable);});
-
+                .thenAccept(modelRenderable -> {
+                    addNodeToScene(anchor, modelRenderable);
+                });
         return;
     }
 
@@ -297,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Number is displayed between -.7 and -1
-    public static float randomZCoordinates(){
+    public static float randomZCoordinates() {
         Random random = new Random();
         Float maxFloat = .7f;
         Float minFloat = 1f;

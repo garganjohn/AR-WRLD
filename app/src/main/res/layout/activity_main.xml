@@ -10,44 +10,52 @@
         android:id="@+id/sceneform_fragment"
         android:name="com.google.ar.sceneform.ux.ArFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
+
+
+    <Button
+        android:id="@+id/shooting_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="shoot"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/number_of_aliens_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:background="#F51720"
         android:padding="8dp"
         android:text="@string/aliens_remaining_string"
         android:textColor="#fff"
-        android:background="#F51720"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/scorekeeping_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:text="@string/score_text"
-        android:background="#F51720"
-        android:textColor="#fff"
         android:layout_margin="8dp"
+        android:background="#F51720"
         android:padding="8dp"
+        android:text="@string/score_text"
+        android:textColor="#fff"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/timer_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#F51720"
-        android:textColor="#fff"
         android:layout_margin="8dp"
+        android:background="#F51720"
         android:padding="8dp"
         android:text="@string/countdown_timer"
+        android:textColor="#fff"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -56,15 +64,15 @@
         android:id="@+id/msg_for_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/msg_for_user"
         android:background="#F51720"
+        android:text=""
         android:textAlignment="center"
+        android:textColor="#000000"
         android:textSize="16sp"
-        android:textColor="#ffffff"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!--<LinearLayout-->
         <!--android:id="@+id/gallery_layout"-->
