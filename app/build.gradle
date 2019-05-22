@@ -39,6 +39,8 @@ dependencies {
     androidTestImplementation 'junit:junit:4.12'
 }
 
+
+
 sceneform.asset('sampledata/CUPIC_FYINGSAUCER.obj',
         'default',
         'sampledata/CUPIC_FYINGSAUCER.sfa',
