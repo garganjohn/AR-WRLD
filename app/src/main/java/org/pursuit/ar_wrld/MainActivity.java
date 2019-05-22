@@ -80,13 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
         vector = new Vector3();
         setUpAR();
-
-
+      
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
-
         spawningAliens();
-
-
     }
 
     private void spawningAliens() {
@@ -160,15 +156,20 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
+        anchorNode = new AnchorNode();
+        node = new TransformableNode(arFragment.getTransformationSystem());
+        node.getScaleController().setMinScale(0.25f);
+        node.getScaleController().setMaxScale(1.0f);
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
-        AnchorNode anchorNode = new AnchorNode(anchor);
-        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setRenderable(renderable);
+
+        node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
+
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
         ModelLoader modelLoader = new ModelLoader(2);
@@ -275,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         timeLeftText += seconds;
 
         countDownText.setText(timeLeftText);
-
     }
 
     public void showDialog() {
@@ -293,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
-
         handler.postDelayed(runnable, 1000);
     }
 
@@ -307,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
         if (isX) return random.nextFloat() - .700f;
         return random.nextFloat() - .500f;
     }
-
 
     // Number is displayed between -.7 and -1
     public static float randomZCoordinates() {
