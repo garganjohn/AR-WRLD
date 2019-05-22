@@ -1,6 +1,7 @@
 package org.pursuit.ar_wrld;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("StringFormatInvalid")
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
@@ -175,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
-
+        objectMovement(node);
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
         node.setWorldRotation(rotate);
@@ -356,15 +358,15 @@ public class MainActivity extends AppCompatActivity {
         if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
-    private void objectMovement() {
+    private void objectMovement(TransformableNode node) {
         randomVector3Array();
-        random = new Random();
+         Random random = new Random();
         int coordinateOption = random.nextInt(10) + 1;
 
         objectAnimation = new ObjectAnimator();
         objectAnimation.setAutoCancel(true);
         objectAnimation.setTarget(node);
-        endNode = new AnchorNode();
+       AnchorNode endNode = new AnchorNode();
         endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
         // All the positions should be world positions
         // The first position is the start, and the second is the end.
@@ -383,6 +385,25 @@ public class MainActivity extends AppCompatActivity {
         objectAnimation.start();
 
 
+    }
+
+    private ArrayList<Vector3> randomVector3Array() {
+        Random random = new Random();
+        vector3List = new ArrayList<>();
+        float xVector;
+        float yVector;
+        float zVector;
+        for (int i = 0; i < 12; i++) {
+
+            xVector = random.nextFloat();
+            yVector = random.nextFloat();
+            zVector = random.nextFloat();
+
+
+            vector3List.add(new Vector3(xVector, yVector, zVector));
+        }
+
+        return vector3List;
     }
 
 }
