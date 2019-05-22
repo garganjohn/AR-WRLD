@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/user_image"
         android:scaleType="fitCenter"
-        android:src="" />
+        android:src="@drawable/blank_profile_picture" />
 
     <EditText
         android:id="@+id/email"
