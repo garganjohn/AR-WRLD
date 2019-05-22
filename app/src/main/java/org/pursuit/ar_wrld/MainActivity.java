@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private Vector3 vector;
     private TextView numOfAliensTv;
     private Hourglass alienSpawnRate;
+    Button shootingButton;
 
 
     // Controls animation playback.
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // shootingButton = findViewById(R.id.shooting_button);
+        shootingButton = findViewById(R.id.shooting_button);
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
@@ -78,17 +80,12 @@ public class MainActivity extends AppCompatActivity {
 
         vector = new Vector3();
         setUpAR();
-
-
-
+      
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
-
         spawningAliens();
-
-
     }
 
-    private void spawningAliens(){
+    private void spawningAliens() {
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
         alienSpawnRate = new Hourglass(1000, 1000) {
@@ -123,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
             animator = new ModelAnimator(data, modelRenderable);
             animator.start();
         }
+    }
+
+    private void detectHit(Button button) {
+        button.setOnClickListener(v -> {
+        });
     }
 
     private void setUpAR() {
@@ -165,7 +167,9 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
-        Quaternion rotate = Quaternion.axisAngle(new Vector3(0,1f,0), 90f);
+
+        Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
+
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
         ModelLoader modelLoader = new ModelLoader(2);
@@ -176,15 +180,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onUpdate(FrameTime frameTime) {
                 Quaternion startQ = node.getLocalRotation();
-                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0,1f,0), 5f);
-                node.setLocalRotation(Quaternion.multiply(startQ,rotateQ));
+                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
+                node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
             }
         });
-
+        //TODO check for hit detection
+        shootingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
+                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
     }
-
 
 
     public void onException(Throwable throwable) {
@@ -197,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
-
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
             if (0 < modelLoader.getNumofLivesModel0()) {
@@ -225,12 +235,13 @@ public class MainActivity extends AppCompatActivity {
         ModelRenderable.builder()
                 .setSource(this, uri)
                 .build()
-                .thenAccept(modelRenderable -> {addNodeToScene(anchor,modelRenderable);});
-
+                .thenAccept(modelRenderable -> {
+                    addNodeToScene(anchor, modelRenderable);
+                });
         return;
     }
 
-    public void startGameTimer(){
+    public void startGameTimer() {
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -265,7 +276,6 @@ public class MainActivity extends AppCompatActivity {
         timeLeftText += seconds;
 
         countDownText.setText(timeLeftText);
-
     }
 
     public void showDialog() {
@@ -283,8 +293,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
-
-
         handler.postDelayed(runnable, 1000);
     }
 
@@ -299,17 +307,8 @@ public class MainActivity extends AppCompatActivity {
         return random.nextFloat() - .500f;
     }
 
-
-    private ArrayList<Vector3> randomVector3Array() {
-        random = new Random();
-        vector3List = new ArrayList<>();
-        float xVector;
-        float yVector;
-        float zVector;
-        for (int i = 0; i < 12; i++) {
-
     // Number is displayed between -.7 and -1
-    public static float randomZCoordinates(){
+    public static float randomZCoordinates() {
         Random random = new Random();
         Float maxFloat = .7f;
         Float minFloat = 1f;
