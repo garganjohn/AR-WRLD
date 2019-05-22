@@ -345,4 +345,6 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
+
+
 }
