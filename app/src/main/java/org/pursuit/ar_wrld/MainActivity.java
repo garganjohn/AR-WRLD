@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld;
 
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -37,6 +40,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView numOfAliensTv;
     private Hourglass alienSpawnRate;
     Button shootingButton;
+    private ObjectAnimator objectAnimation;
+    private ArrayList<Vector3> vector3List;
 
 
     // Controls animation playback.
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         vector = new Vector3();
         setUpAR();
-      
+
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
         spawningAliens();
     }
@@ -189,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         shootingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
+                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z) {
                     Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -255,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 countDownText.setText(R.string.time_up_msg);
                 showDialog();
-                new CountDownTimer(3000, 1000){
+                new CountDownTimer(3000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
 
@@ -350,5 +356,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void objectMovement() {
+        randomVector3Array();
+        random = new Random();
+        int coordinateOption = random.nextInt(10) + 1;
+
+        objectAnimation = new ObjectAnimator();
+        objectAnimation.setAutoCancel(true);
+        objectAnimation.setTarget(node);
+        endNode = new AnchorNode();
+        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
+        // All the positions should be world positions
+        // The first position is the start, and the second is the end.
+        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
+
+        // Use setWorldPosition to position andy.
+        objectAnimation.setPropertyName("worldPosition");
+
+        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
+        // vector3.  The default is to use lerp.
+        objectAnimation.setEvaluator(new Vector3Evaluator());
+        // This makes the animation linear (smooth and uniform).
+        objectAnimation.setInterpolator(new LinearInterpolator());
+        // Duration in ms of the animation.
+        objectAnimation.setDuration(5000);
+        objectAnimation.start();
+
+
+    }
 
 }
