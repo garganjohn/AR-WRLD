@@ -3,6 +3,9 @@
     package="org.pursuit.ar_wrld">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
     <uses-feature
         android:name="android.hardware.camera.ar"
         android:required="true" />
@@ -14,8 +17,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ResultPage"></activity>
-        <activity android:name=".MainActivity" android:screenOrientation="portrait">
+        <activity android:name=".login.SignUpActivity"></activity>
+        <activity android:name=".login.SignInActivity" />
+        <activity android:name=".ResultPage" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +33,6 @@
         <meta-data
             android:name="com.google.ar.core"
             android:value="required" />
-
     </application>
 
 </manifest>
