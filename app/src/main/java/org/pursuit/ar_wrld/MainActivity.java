@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
@@ -37,6 +39,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Random;
 
@@ -58,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private Vector3 vector;
     private TextView numOfAliensTv;
     private Hourglass alienSpawnRate;
-    Button shootingButton;
+    private Button shootingButton;
+    private ImageView reticule;
 
 
     // Controls animation playback.
@@ -81,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         vector = new Vector3();
         setUpAR();
-      
+
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
         spawningAliens();
     }
@@ -110,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getStringRes() {
+        reticule = findViewById(R.id.reticule);
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
     }
@@ -157,11 +162,13 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
-        AnchorNode anchorNode = new AnchorNode();
+
+
+        AnchorNode anchorNode = new AnchorNode(anchor);//0,0,0
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
-        getStringRes();
+
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
 
@@ -189,9 +196,7 @@ public class MainActivity extends AppCompatActivity {
         shootingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
-                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
-                }
+
             }
         });
         setNodeListener(node, anchorNode, modelLoader);
@@ -255,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 countDownText.setText(R.string.time_up_msg);
                 showDialog();
-                new CountDownTimer(3000, 1000){
+                new CountDownTimer(3000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
 
