@@ -806,4 +806,23 @@ public class MainActivity extends AppCompatActivity {
 //            return vector3List;
 //
     }
+    private ArrayList<Vector3> randomVector3Array() {
+        Random random = new Random();
+        vector3List = new ArrayList<>();
+        float xVector;
+        float yVector;
+        float zVector;
+        for (int i = 0; i < 12; i++) {
+
+            xVector = random.nextFloat();
+            yVector = random.nextFloat();
+            zVector = random.nextFloat();
+
+
+            vector3List.add(new Vector3(xVector, yVector, zVector));
+        }
+
+        return vector3List;
+    }
+
 }
