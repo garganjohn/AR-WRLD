@@ -157,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
-        anchorNode = new AnchorNode();
-        node = new TransformableNode(arFragment.getTransformationSystem());
+        AnchorNode anchorNode = new AnchorNode();
+        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
         getStringRes();
