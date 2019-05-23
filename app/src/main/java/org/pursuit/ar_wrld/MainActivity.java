@@ -6,11 +6,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 import com.ankushgrover.hourglass.Hourglass;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
-import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
@@ -31,12 +28,10 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.BaseArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Random;
 
@@ -57,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
     private TextView numOfAliensTv;
-    private Hourglass alienSpawnRate;
+    private Hourglass easyAlienSpawn;
+    private Hourglass medAlienSpawn;
+    private Hourglass hardAlienSpawn;
     Button shootingButton;
 
 
@@ -89,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private void spawningAliens() {
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
-        alienSpawnRate = new Hourglass(1000, 1000) {
+        easyAlienSpawn = new Hourglass(2000, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
 
@@ -97,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse("andy.sfb"));
+                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY));
 
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
-                alienSpawnRate.startTimer();
+                easyAlienSpawn.startTimer();
             }
         };
 
-        alienSpawnRate.startTimer();
+        easyAlienSpawn.startTimer();
         startGameTimer();
     }
 
@@ -177,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
         //Rotates the model every frame
+        //Second parameter in Quaternion.axisAngle() measures speed of rotation
         arFragment.getArSceneView().getScene().addOnUpdateListener(new Scene.OnUpdateListener() {
             @Override
             public void onUpdate(FrameTime frameTime) {
@@ -215,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
-                Log.d(TAG, "setNodeListener: In else state ");
                 anchorNode.removeChild(node);
                 numOfModels--;
                 scoreNumber++;
@@ -273,7 +270,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateTimer() {
-
         int minutes = (int) timeLeftInMilliseconds / 60000;
         int seconds = (int) timeLeftInMilliseconds % 60000 / 1000;
 
@@ -322,7 +318,8 @@ public class MainActivity extends AppCompatActivity {
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
-
+    //Random X coordinates will be between -.3 to .3
+    //Radnom Y coordinates will be between -.5 to .5
     public float randomCoordinates(boolean isX) {
         Random random = new Random();
         if (isX) return random.nextFloat() - .700f;
@@ -340,13 +337,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (alienSpawnRate.isRunning()) alienSpawnRate.pauseTimer();
+        if (easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (alienSpawnRate.isPaused()) alienSpawnRate.resumeTimer();
-
+        if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 }

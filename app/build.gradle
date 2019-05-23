@@ -51,27 +51,8 @@ sceneform.asset('sampledata/andy.obj',
         'sampledata/andy.sfa',
         'src/main/assets/andy')
 
-sceneform.asset('sampledata/Cabin.obj',
-        'default',
-        'sampledata/Cabin.sfa',
-        'src/main/assets/Cabin')
-
-sceneform.asset('sampledata/House.obj',
-        'default',
-        'sampledata/House.sfa',
-        'src/main/assets/House')
-
-sceneform.asset('sampledata/igloo.obj',
-        'default',
-        'sampledata/igloo.sfa',
-        'src/main/assets/igloo')
 
 sceneform.asset('sampledata/andy_dance.fbx',
         'default',
         'sampledata/andy_dance.sfa',
         'src/main/assets/andy_dance')
-
-sceneform.asset('sampledata/Alien_01.obj',
-        'default',
-        'sampledata/Alien_01.sfa',
-        'src/main/assets/Alien_01')
