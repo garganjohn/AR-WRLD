@@ -34,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/reticule"
         android:layout_width="80dp"
         android:layout_height="80dp"

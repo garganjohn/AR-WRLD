@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView numOfAliensTv;
     private Hourglass alienSpawnRate;
     private Button shootingButton;
-    private ImageView reticule;
+    private AppCompatImageButton reticule;
 
 
     // Controls animation playback.
@@ -196,7 +197,9 @@ public class MainActivity extends AppCompatActivity {
         shootingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                reticule.performClick();
+                node.getParent().getScene().getCamera();
+                Log.d(TAG, "setClickShootingButton: "  + Arrays.toString(arFragment.getArSceneView().getArFrame().getAndroidSensorPose().getTranslation()));
             }
         });
         setNodeListener(node, anchorNode, modelLoader);
@@ -216,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
+            Log.d(TAG, "setNodeListener: " + node.getLocalPosition());
             if (0 < modelLoader.getNumofLivesModel0()) {
                 modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
