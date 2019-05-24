@@ -54,3 +54,8 @@ sceneform.asset('sampledata/clock_image/1345 Analog Clock.obj',
         'default',
         'sampledata/clock_image/1345 Analog Clock.sfa',
         'src/main/assets/1345 Analog Clock')
+
+sceneform.asset('sampledata/sphere_spaceship/spaceship.obj',
+        'default',
+        'sampledata/sphere_spaceship/spaceship.sfa',
+        'src/main/assets/spaceship')

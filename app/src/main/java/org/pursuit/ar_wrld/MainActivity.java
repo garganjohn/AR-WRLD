@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void spawningAliens() {
         final boolean[] isMedEnemyAdded = {false};
+        final boolean[] isHardEnemyAdded = {false};
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
         easyAlienSpawn = new Hourglass(2000, 1000) {
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        medAlienSpawn = new Hourglass(5000, 1000) {
+        medAlienSpawn = new Hourglass(3000, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
 
@@ -119,8 +120,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerFinish() {
                 loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-
                 medAlienSpawn.startTimer();
+
+                if (scoreNumber > 25000 && !isHardEnemyAdded[0]){
+                    isHardEnemyAdded[0] = true;
+                    hardAlienSpawn.startTimer();
+                }
+            }
+        };
+
+        hardAlienSpawn = new Hourglass(6000, 1000) {
+            @Override
+            public void onTimerTick(long timeRemaining) {
+
+            }
+
+            @Override
+            public void onTimerFinish() {
+                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                hardAlienSpawn.startTimer();
             }
         };
 
@@ -277,7 +295,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (scoreNumber >= scoreTillClockModel){
-                    scoreTillClockModel += 5000;
+                    if (scoreTillClockModel <= 20000){
+                        scoreTillClockModel += 5000;
+                    }
+                    else {
+                        scoreTillClockModel += 10000;
+                    }
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }
 
