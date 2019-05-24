@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context=".login.SignInActivity">
 
+<<<<<<< HEAD
     <ImageView
         android:id="@+id/user_image"
         android:layout_width="200dp"
@@ -15,6 +16,16 @@
         android:contentDescription="@string/user_image"
         android:scaleType="fitCenter"
         android:src="@drawable/blank_profile_picture" />
+=======
+    <!--<ImageView-->
+        <!--android:id="@+id/user_image"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:contentDescription="@string/user_image"-->
+        <!--android:scaleType="fitCenter"-->
+        <!--android:src="" />-->
+>>>>>>> d778a90e5dbe92dcb9c210f5d4a7a8c414fb1e02
 
 
     <EditText
