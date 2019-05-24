@@ -39,20 +39,7 @@ dependencies {
     androidTestImplementation 'junit:junit:4.12'
 }
 
-
-
 sceneform.asset('sampledata/CUPIC_FYINGSAUCER.obj',
         'default',
         'sampledata/CUPIC_FYINGSAUCER.sfa',
         'src/main/assets/CUPIC_FYINGSAUCER')
-
-sceneform.asset('sampledata/andy.obj',
-        'default',
-        'sampledata/andy.sfa',
-        'src/main/assets/andy')
-
-
-sceneform.asset('sampledata/andy_dance.fbx',
-        'default',
-        'sampledata/andy_dance.sfa',
-        'src/main/assets/andy_dance')
