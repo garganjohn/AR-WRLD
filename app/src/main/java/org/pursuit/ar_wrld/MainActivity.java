@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 15000;
+    private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private int scoreNumber;
     private String scoreString;
@@ -94,10 +94,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY));
+                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 easyAlienSpawn.startTimer();
+
+                if (scoreNumber == 5){
+                    Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
+                    medAlienSpawn.startTimer();
+                }
+            }
+        };
+
+        medAlienSpawn = new Hourglass(5000, 1000) {
+            @Override
+            public void onTimerTick(long timeRemaining) {
+
+            }
+
+            @Override
+            public void onTimerFinish() {
+                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+
+                medAlienSpawn.startTimer();
             }
         };
 
@@ -151,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-    public void addNodeToScene(Anchor anchor, ModelRenderable renderable) {
+    public void addNodeToScene(Anchor anchor, ModelRenderable renderable,String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         AnchorNode anchorNode = new AnchorNode();
@@ -170,7 +189,15 @@ public class MainActivity extends AppCompatActivity {
 
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
-        ModelLoader modelLoader = new ModelLoader(2);
+
+        ModelLoader modelLoader = new ModelLoader();
+
+        if (whichEnemy == GameInformation.EASY_ENEMY){
+            modelLoader.setNumofLivesModel0(3);
+        }
+        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+            modelLoader.setNumofLivesModel0(6);
+        }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
         //Rotates the model every frame
@@ -183,15 +210,15 @@ public class MainActivity extends AppCompatActivity {
                 node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
             }
         });
-        //TODO check for hit detection
-        shootingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
-                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        //TODO check for hit detection
+//        shootingButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
+//                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
         setNodeListener(node, anchorNode, modelLoader);
         playAnimation(renderable);
     }
@@ -209,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
-            if (0 < modelLoader.getNumofLivesModel0()) {
+            if (1 < modelLoader.getNumofLivesModel0()) {
                 modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
@@ -229,12 +256,12 @@ public class MainActivity extends AppCompatActivity {
         node.select();
     }
 
-    public void loadModel(Anchor anchor, Uri uri) {
+    public void loadModel(Anchor anchor, Uri uri, String whichEnemy) {
         ModelRenderable.builder()
                 .setSource(this, uri)
                 .build()
                 .thenAccept(modelRenderable -> {
-                    addNodeToScene(anchor, modelRenderable);
+                    addNodeToScene(anchor, modelRenderable,whichEnemy);
                 });
         return;
     }
