@@ -37,7 +37,7 @@
     file: 'sampledata/CUPIC_FYINGSAUCER.obj',
     name: 'CUPIC_FYINGSAUCER',
     recenter: 'root',
-    scale: 0.0092180000000000005,
+    scale: 0.0032150000000000005,
   },
   samplers: [
     {

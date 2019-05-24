@@ -206,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
         else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
+            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
