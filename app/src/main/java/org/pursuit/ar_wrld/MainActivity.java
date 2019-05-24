@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private Hourglass easyAlienSpawn;
     private Hourglass medAlienSpawn;
     private Hourglass hardAlienSpawn;
+    private Hourglass startGame;
     Button shootingButton;
 
 
@@ -89,7 +90,9 @@ public class MainActivity extends AppCompatActivity {
         easyAlienSpawn = new Hourglass(2000, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
-
+                if (scoreNumber >= 2500 && scoreNumber % 2500 == 0){
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
+                }
             }
 
             @Override
@@ -191,12 +194,20 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalPosition(vector);
 
         ModelLoader modelLoader = new ModelLoader();
+        boolean isTimerModel = false;
 
         if (whichEnemy == GameInformation.EASY_ENEMY){
             modelLoader.setNumofLivesModel0(3);
         }
         else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
             modelLoader.setNumofLivesModel0(6);
+        }
+        else if (whichEnemy == GameInformation.HARD_ENEMY){
+            modelLoader.setNumofLivesModel0(10);
+        }
+        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+            modelLoader.setNumofLivesModel0(1);
+            isTimerModel = true;
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -219,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-        setNodeListener(node, anchorNode, modelLoader);
+        setNodeListener(node, anchorNode, modelLoader, isTimerModel);
         playAnimation(renderable);
     }
 
@@ -233,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
             if (1 < modelLoader.getNumofLivesModel0()) {
@@ -250,9 +261,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
+
+                if (isTimerModel){
+                    startGame.setTime(timeLeftInMilliseconds + 5000);
+                    Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
+                }
+
             }
         }));
-        Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getNumofLivesModel0());
         node.select();
     }
 
@@ -266,34 +282,32 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    public void startGameTimer() {
-        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
+    public void startGameTimer(){
+        startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
-            public void onTick(long millisUntilFinished) {
-                timeLeftInMilliseconds = millisUntilFinished;
+            public void onTimerTick(long timeRemaining) {
+                timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
-
             }
 
             @Override
-            public void onFinish() {
-                countDownText.setText(R.string.time_up_msg);
+            public void onTimerFinish() {
+                countDownText.setText("Time's Up");
                 showDialog();
-                new CountDownTimer(3000, 1000){
+                new Hourglass(3000, 1000) {
                     @Override
-                    public void onTick(long millisUntilFinished) {
+                    public void onTimerTick(long timeRemaining) {
 
                     }
 
                     @Override
-                    public void onFinish() {
+                    public void onTimerFinish() {
                         goToResultPage();
                     }
-                }.start();
-
+                }.startTimer();
             }
-        }.start();
-
+        };
+        startGame.startTimer();
     }
 
     public void updateTimer() {
