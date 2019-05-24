@@ -16,6 +16,7 @@
         android:scaleType="fitCenter"
         android:src="@drawable/blank_profile_picture" />
 
+
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
