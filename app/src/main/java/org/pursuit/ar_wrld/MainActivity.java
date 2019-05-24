@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private Hourglass easyAlienSpawn;
     private Hourglass medAlienSpawn;
     private Hourglass hardAlienSpawn;
+    private Hourglass startGame;
     Button shootingButton;
 
 
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-    public void addNodeToScene(Anchor anchor, ModelRenderable renderable,String whichEnemy) {
+    public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         AnchorNode anchorNode = new AnchorNode();
@@ -191,12 +192,20 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalPosition(vector);
 
         ModelLoader modelLoader = new ModelLoader();
+        boolean isTimerModel = false;
 
         if (whichEnemy == GameInformation.EASY_ENEMY){
             modelLoader.setNumofLivesModel0(3);
         }
         else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
             modelLoader.setNumofLivesModel0(6);
+        }
+        else if (whichEnemy == GameInformation.HARD_ENEMY){
+            modelLoader.setNumofLivesModel0(10);
+        }
+        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+            modelLoader.setNumofLivesModel0(1);
+            isTimerModel = true;
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -219,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-        setNodeListener(node, anchorNode, modelLoader);
+        setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
 
@@ -233,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader) {
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
             if (1 < modelLoader.getNumofLivesModel0()) {
@@ -241,8 +250,32 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
+
+                if (whichEnemy == GameInformation.EASY_ENEMY){
+                    scoreNumber += 1000;
+                }
+                else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+                    scoreNumber += 2500;
+                }
+                else if (whichEnemy == GameInformation.HARD_ENEMY){
+                    scoreNumber += 5000;
+                }
+
+                if (isTimerModel){
+                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
+                    timeLeftInMilliseconds += 5000;
+                    startGame.pauseTimer();
+                    startGame = null;
+                    startGameTimer();
+                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:"+timeLeftInMilliseconds);
+                    Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
+                }
+
+                if (scoreNumber >= 2500 && scoreNumber % 2500 == 0){
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
+                }
+
                 numOfModels--;
-                scoreNumber++;
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -250,9 +283,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
+
             }
         }));
-        Log.d(TAG, "setNodeListener: After if statement" + modelLoader.getNumofLivesModel0());
         node.select();
     }
 
@@ -261,39 +294,38 @@ public class MainActivity extends AppCompatActivity {
                 .setSource(this, uri)
                 .build()
                 .thenAccept(modelRenderable -> {
-                    addNodeToScene(anchor, modelRenderable,whichEnemy);
+                    addNodeToScene(anchor, modelRenderable, whichEnemy);
                 });
         return;
     }
 
-    public void startGameTimer() {
-        countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
+    public void startGameTimer(){
+        startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
-            public void onTick(long millisUntilFinished) {
-                timeLeftInMilliseconds = millisUntilFinished;
+            public void onTimerTick(long timeRemaining) {
+                timeLeftInMilliseconds = timeRemaining;
+                Log.d(TAG, "onTimerTick: "+timeLeftInMilliseconds);
                 updateTimer();
-
             }
 
             @Override
-            public void onFinish() {
-                countDownText.setText(R.string.time_up_msg);
+            public void onTimerFinish() {
+                countDownText.setText("Time's Up");
                 showDialog();
-                new CountDownTimer(3000, 1000){
+                new Hourglass(3000, 1000) {
                     @Override
-                    public void onTick(long millisUntilFinished) {
+                    public void onTimerTick(long timeRemaining) {
 
                     }
 
                     @Override
-                    public void onFinish() {
+                    public void onTimerFinish() {
                         goToResultPage();
                     }
-                }.start();
-
+                }.startTimer();
             }
-        }.start();
-
+        };
+        startGame.startTimer();
     }
 
     public void updateTimer() {

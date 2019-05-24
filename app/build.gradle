@@ -49,3 +49,8 @@ sceneform.asset('sampledata/model.obj',
         'default',
         'sampledata/model.sfa',
         'src/main/assets/model')
+
+sceneform.asset('sampledata/clock_image/1345 Analog Clock.obj',
+        'default',
+        'sampledata/clock_image/1345 Analog Clock.sfa',
+        'src/main/assets/1345 Analog Clock')

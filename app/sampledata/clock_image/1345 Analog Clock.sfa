@@ -1,0 +1,50 @@
+{
+  materials: [
+    {
+      name: 'Mat',
+      parameters: [
+        {
+          baseColor: '1345 Analog Clock',
+        },
+        {
+          baseColorTint: [
+            0.59999999999999998,
+            0.59999999999999998,
+            0.59999999999999998,
+            1,
+          ],
+        },
+        {
+          metallic: 0,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/obj_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+    ],
+    collision: {},
+    file: 'sampledata/clock_image/1345 Analog Clock.obj',
+    name: '1345 Analog Clock',
+    recenter: 'root',
+    scale: 0.26019199999999998,
+  },
+  samplers: [
+    {
+      file: 'sampledata/clock_image/1345 Analog Clock.png',
+      name: '1345 Analog Clock',
+      pipeline_name: '1345 Analog Clock.png',
+    },
+  ],
+  version: '0.54:2',
+}
