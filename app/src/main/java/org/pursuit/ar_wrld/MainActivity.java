@@ -90,9 +90,7 @@ public class MainActivity extends AppCompatActivity {
         easyAlienSpawn = new Hourglass(2000, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
-                if (scoreNumber >= 2500 && scoreNumber % 2500 == 0){
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
-                }
+
             }
 
             @Override
@@ -173,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
 
-    public void addNodeToScene(Anchor anchor, ModelRenderable renderable,String whichEnemy) {
+    public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         AnchorNode anchorNode = new AnchorNode();
@@ -230,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-        setNodeListener(node, anchorNode, modelLoader, isTimerModel);
+        setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
 
@@ -244,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel) {
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
             Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
             if (1 < modelLoader.getNumofLivesModel0()) {
@@ -252,8 +250,32 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
+
+                if (whichEnemy == GameInformation.EASY_ENEMY){
+                    scoreNumber += 1000;
+                }
+                else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+                    scoreNumber += 2500;
+                }
+                else if (whichEnemy == GameInformation.HARD_ENEMY){
+                    scoreNumber += 5000;
+                }
+
+                if (isTimerModel){
+                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
+                    timeLeftInMilliseconds += 5000;
+                    startGame.pauseTimer();
+                    startGame = null;
+                    startGameTimer();
+                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:"+timeLeftInMilliseconds);
+                    Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
+                }
+
+                if (scoreNumber >= 2500 && scoreNumber % 2500 == 0){
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
+                }
+
                 numOfModels--;
-                scoreNumber++;
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -261,11 +283,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
-
-                if (isTimerModel){
-                    startGame.setTime(timeLeftInMilliseconds + 5000);
-                    Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
-                }
 
             }
         }));
@@ -277,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSource(this, uri)
                 .build()
                 .thenAccept(modelRenderable -> {
-                    addNodeToScene(anchor, modelRenderable,whichEnemy);
+                    addNodeToScene(anchor, modelRenderable, whichEnemy);
                 });
         return;
     }
@@ -287,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
+                Log.d(TAG, "onTimerTick: "+timeLeftInMilliseconds);
                 updateTimer();
             }
 
