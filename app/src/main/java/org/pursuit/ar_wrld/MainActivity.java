@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private int scoreNumber;
+    private int scoreTillClockModel = 2000;
     private String scoreString;
     private String aliensLeftString;
     private SharedPreferences sharedPreferences;
@@ -85,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void spawningAliens() {
+        final boolean[] isMedEnemyAdded = {false};
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
         easyAlienSpawn = new Hourglass(2000, 1000) {
@@ -100,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 easyAlienSpawn.startTimer();
 
-                if (scoreNumber == 5){
+                if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
+                    isMedEnemyAdded[0] = true;
                     Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
                     medAlienSpawn.startTimer();
                 }
@@ -265,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isTimerModel){
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 5000;
+                    scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
                     startGameTimer();
@@ -272,7 +276,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
-                if (scoreNumber >= 2500 && scoreNumber % 2500 == 0){
+                if (scoreNumber >= scoreTillClockModel){
+                    scoreTillClockModel += 5000;
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }
 
