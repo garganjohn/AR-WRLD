@@ -180,11 +180,15 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
+<<<<<<< HEAD
         //objectMovement(node);
         movementNode = new MovementNode(objectAnimation);
 
 
         getNodeCoordinates(node);
+=======
+        objectMovement(node);
+>>>>>>> d778a90e5dbe92dcb9c210f5d4a7a8c414fb1e02
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
         node.setWorldRotation(rotate);
@@ -366,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+<<<<<<< HEAD
 //    private void objectMovement(TransformableNode node) {
 //        randomVector3Array();
 //        Random random = new Random();
@@ -418,6 +423,54 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+=======
+    private void objectMovement(TransformableNode node) {
+        randomVector3Array();
+         Random random = new Random();
+        int coordinateOption = random.nextInt(10) + 1;
+
+        objectAnimation = new ObjectAnimator();
+        objectAnimation.setAutoCancel(true);
+        objectAnimation.setTarget(node);
+       AnchorNode endNode = new AnchorNode();
+        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
+        // All the positions should be world positions
+        // The first position is the start, and the second is the end.
+        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
+
+        // Use setWorldPosition to position andy.
+        objectAnimation.setPropertyName("worldPosition");
+
+        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
+        // vector3.  The default is to use lerp.
+        objectAnimation.setEvaluator(new Vector3Evaluator());
+        // This makes the animation linear (smooth and uniform).
+        objectAnimation.setInterpolator(new LinearInterpolator());
+        // Duration in ms of the animation.
+        objectAnimation.setDuration(5000);
+        objectAnimation.start();
+
+
+    }
+
+    private ArrayList<Vector3> randomVector3Array() {
+        Random random = new Random();
+        vector3List = new ArrayList<>();
+        float xVector;
+        float yVector;
+        float zVector;
+        for (int i = 0; i < 12; i++) {
+
+            xVector = random.nextFloat();
+            yVector = random.nextFloat();
+            zVector = random.nextFloat();
+
+
+            vector3List.add(new Vector3(xVector, yVector, zVector));
+        }
+
+        return vector3List;
+>>>>>>> d778a90e5dbe92dcb9c210f5d4a7a8c414fb1e02
     }
 
 }
