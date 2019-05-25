@@ -9,6 +9,7 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
@@ -92,7 +94,41 @@ public class MainActivity extends AppCompatActivity {
         setUpAR();
       
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
+        // If user misses their shot account here
+        onTapForMissInteraction();
         spawningAliens();
+    }
+
+    private void onTapForMissInteraction() {
+        arFragment.getArSceneView().getScene().setOnTouchListener(new Scene.OnTouchListener() {
+            @Override
+            public boolean onSceneTouch(HitTestResult hitTestResult, MotionEvent motionEvent) {
+                if (!isOutOfAmmo() && isMedWeaponChosen){
+                    shootMedWeapon();
+                    setMedAmmoTv();
+                }
+
+                if (isMedWeaponChosen && isOutOfAmmo()) {
+                    isWeakWeaponChosen = true;
+                    isMedWeaponChosen = false;
+                    weaponSwitch();
+                }
+                return false;
+            }
+        });
+    }
+
+    private void setMedAmmoTv() {
+        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
+        medWeaponAmmoTv.setText(medAmmoCounter);
+    }
+
+    private boolean isOutOfAmmo(){
+        return weaponSelection.getMedWeaponAmmo() == 0;
+    }
+
+    private void shootMedWeapon() {
+        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo()-1);
     }
 
     private void weaponSetup() {
@@ -125,9 +161,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         medWeapon.setOnClickListener(v -> {
-            isMedWeaponChosen = true;
-            isWeakWeaponChosen = false;
-            weaponSwitch();
+            if (weaponSelection.getMedWeaponAmmo() > 0) {
+                isMedWeaponChosen = true;
+                isWeakWeaponChosen = false;
+                weaponSwitch();
+            }
         });
     }
 
@@ -206,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.damage_med_weapon,weaponSelection.getMedWeaponAmmo());
+        medAmmoCounter = getString(R.string.med_weapon_info,weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -323,6 +361,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
+
+            if (!isOutOfAmmo() && isMedWeaponChosen) {
+                shootMedWeapon();
+                setMedAmmoTv();
+            }
+            if (isMedWeaponChosen && isOutOfAmmo()) {
+                isWeakWeaponChosen = true;
+                isMedWeaponChosen = false;
+                weaponSwitch();
+            }
+
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();

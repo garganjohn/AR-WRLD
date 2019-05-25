@@ -24,7 +24,7 @@
         android:id="@+id/damage_for_med_weapon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/damage_med_weapon"
+        android:text="@string/med_weapon_info"
         app:layout_constraintBottom_toTopOf="@id/med_weapon"
         app:layout_constraintStart_toStartOf="@id/med_weapon"
         app:layout_constraintEnd_toEndOf="@id/med_weapon"/>
