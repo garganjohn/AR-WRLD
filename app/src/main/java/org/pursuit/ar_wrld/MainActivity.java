@@ -375,6 +375,7 @@ public class MainActivity extends AppCompatActivity {
                 shootMedWeapon();
                 setMedAmmoTv();
             }
+
             if (isMedWeaponChosen && isOutOfAmmo()) {
                 isWeakWeaponChosen = true;
                 isMedWeaponChosen = false;
