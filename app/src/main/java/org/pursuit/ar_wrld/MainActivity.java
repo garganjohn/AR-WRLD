@@ -49,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
     private int scoreTillClockModel = 2000;
     private String scoreString;
     private String aliensLeftString;
+    private String medAmmoCounter;
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
     private TextView numOfAliensTv;
+    private TextView medWeaponAmmoTv;
     private Hourglass easyAlienSpawn;
     private Hourglass medAlienSpawn;
     private Hourglass hardAlienSpawn;
@@ -70,19 +72,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        shootingButton = findViewById(R.id.shooting_button);
-        msgForUser = findViewById(R.id.msg_for_user);
-        countDownText = findViewById(R.id.timer_textview);
-        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-        scorekeepingTv = findViewById(R.id.scorekeeping_textview);
-        scorekeepingTv.setText(getString(R.string.default_score_text));
-        numOfAliensTv = findViewById(R.id.number_of_aliens_textview);
+        findViews();
         getStringRes();
+        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        scorekeepingTv.setText(scoreString);
+        numOfAliensTv.setText(aliensLeftString);
+        medWeaponAmmoTv.setText(medAmmoCounter);
+
 
         vector = new Vector3();
         setUpAR();
       
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
         spawningAliens();
+    }
+
+    private void findViews() {
+        msgForUser = findViewById(R.id.msg_for_user);
+        countDownText = findViewById(R.id.timer_textview);
+        scorekeepingTv = findViewById(R.id.scorekeeping_textview);
+        numOfAliensTv = findViewById(R.id.number_of_aliens_textview);
+        medWeaponAmmoTv = findViewById(R.id.damage_for_med_weapon);
     }
 
     private void spawningAliens() {
@@ -150,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
+        medAmmoCounter = getString(R.string.damage_med_weapon, 50);
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
