@@ -61,5 +61,3 @@ sceneform.asset('sampledata/sphere_spaceship/spaceship.obj',
         'default',
         'sampledata/sphere_spaceship/spaceship.sfa',
         'src/main/assets/spaceship')
-
-apply plugin: 'com.google.gms.google-services'
