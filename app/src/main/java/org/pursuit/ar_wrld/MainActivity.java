@@ -3,6 +3,7 @@ package org.pursuit.ar_wrld;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -33,6 +34,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
+import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         findViews();
         weaponSetup();
         getStringRes();
+        audioSetup();
+
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -97,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
         // If user misses their shot account here
         onTapForMissInteraction();
         spawningAliens();
+    }
+
+    private void audioSetup() {
+        AudioLoader audioLoader = new AudioLoader(getApplicationContext());
+        audioLoader.setShootingSound(R.raw.laser_sound);
     }
 
     private void onTapForMissInteraction() {
