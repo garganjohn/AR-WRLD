@@ -11,4 +11,6 @@
     <string name="user_password">Password</string>
     <string name="log_in">Log In</string>
     <string name="create_a_new_account">Create A New Account</string>
+    <string name="failed">Attempt Unsuccessful!</string>
+
 </resources>
