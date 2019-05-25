@@ -37,7 +37,7 @@
     file: 'sampledata/clock_image/1345 Analog Clock.obj',
     name: '1345 Analog Clock',
     recenter: 'root',
-    scale: 0.26019199999999998,
+    scale: 0.016019199999999998,
   },
   samplers: [
     {

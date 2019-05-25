@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private int scoreNumber;
+    private int scoreTillClockModel = 2000;
     private String scoreString;
     private String aliensLeftString;
     private SharedPreferences sharedPreferences;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void spawningAliens() {
+        final boolean[] isMedEnemyAdded = {false};
+        final boolean[] isHardEnemyAdded = {false};
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
         easyAlienSpawn = new Hourglass(2000, 1000) {
@@ -100,14 +103,15 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 easyAlienSpawn.startTimer();
 
-                if (scoreNumber == 5){
+                if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
+                    isMedEnemyAdded[0] = true;
                     Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
                     medAlienSpawn.startTimer();
                 }
             }
         };
 
-        medAlienSpawn = new Hourglass(5000, 1000) {
+        medAlienSpawn = new Hourglass(3000, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
 
@@ -116,8 +120,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerFinish() {
                 loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-
                 medAlienSpawn.startTimer();
+
+                if (scoreNumber > 25000 && !isHardEnemyAdded[0]){
+                    isHardEnemyAdded[0] = true;
+                    hardAlienSpawn.startTimer();
+                }
+            }
+        };
+
+        hardAlienSpawn = new Hourglass(6000, 1000) {
+            @Override
+            public void onTimerTick(long timeRemaining) {
+
+            }
+
+            @Override
+            public void onTimerFinish() {
+                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                hardAlienSpawn.startTimer();
             }
         };
 
@@ -206,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
         else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
+            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -264,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isTimerModel){
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 5000;
+                    scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
                     startGameTimer();
@@ -271,7 +294,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
-                if (scoreNumber >= 2500 && scoreNumber % 2500 == 0){
+                if (scoreNumber >= scoreTillClockModel){
+                    if (scoreTillClockModel <= 20000){
+                        scoreTillClockModel += 5000;
+                    }
+                    else {
+                        scoreTillClockModel += 10000;
+                    }
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }
 
