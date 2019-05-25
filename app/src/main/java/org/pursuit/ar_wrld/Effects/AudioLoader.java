@@ -5,6 +5,13 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.widget.Button;
 
+/**
+ * MediaPlayer.create needs context, and R.raw.nameofsound
+ * Store all audio in raw folder, for now use MP3
+ * Example of how to make audio sound,
+ * EX: getShootingSound().start
+ */
+
 public class AudioLoader {
     private Context context;
     private MediaPlayer shootingSound;
