@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
-        vector.set(randomCoordinates(true), randomCoordinates(false), -.7f);
+        vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
@@ -406,20 +406,31 @@ public class MainActivity extends AppCompatActivity {
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
-    //Random X coordinates will be between -.3 to .3
+    //Random X coordinates will be between -.3 to .8f
     //Radnom Y coordinates will be between -.5 to .5
     public float randomCoordinates(boolean isX) {
         Random random = new Random();
-        if (isX) return random.nextFloat() - .700f;
+
+        if (isX){
+            float min = -.5f;
+            float max = .6f;
+            return (min + random.nextFloat() * (max - min));
+        }
+
         return random.nextFloat() - .500f;
     }
 
     // Number is displayed between -.7 and -1
     public static float randomZCoordinates() {
         Random random = new Random();
-        Float maxFloat = .7f;
-        Float minFloat = 1f;
-        return random.nextFloat() * (maxFloat - minFloat) - maxFloat;
+        Float minFloat = .7f;
+        Float maxFloat = 1f;
+        //Location behind user
+        if (new Random().nextInt(2) == 0){
+            return minFloat + random.nextFloat() * (maxFloat - minFloat);
+        }
+        //Location infront of user
+        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.util.Log;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
+
 import static org.junit.Assert.*;
 
 /**
@@ -31,17 +33,33 @@ public class ExampleUnitTest {
 //    }
     @Test
     public void isRandomZMethod_correct_when_used(){
-        boolean isExpected;
+        boolean isExpected = true;
+        //.25 >= -1
+        //.25 <= -.7
         for (int i = 0; i < 100; i++) {
             float result = MainActivity.randomZCoordinates();
-            if (-1f <=result && result <= -.7f){
-                isExpected = true;
-            }
-            else{
+            if (result >= 0){
                 isExpected = false;
             }
             System.out.println(result);
             assertTrue("Number is not between .7 and 1", isExpected);
+        }
+    }
+
+    @Test
+    public void isRandomX_correct_number(){
+        float min = -.1f;
+        float max = 1.2f;
+        Random random = new Random();
+        boolean isExpected = true;
+
+        for (int i = 0; i < 100; i++){
+            float randomFloat = min + random.nextFloat() * (max - min);
+            if (!(randomFloat <= max && randomFloat >= min)){
+                isExpected = false;
+            }
+            assertTrue("Number is not between -1.f and 1.2f", isExpected);
+            System.out.println(randomFloat);
         }
     }
 }
