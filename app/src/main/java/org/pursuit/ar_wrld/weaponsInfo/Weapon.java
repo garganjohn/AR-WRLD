@@ -8,4 +8,16 @@ class Weapon {
         this.damageDone = damageDone;
         this.ammo = ammo;
     }
+
+    public int getDamageDone() {
+        return damageDone;
+    }
+
+    public int getAmmo() {
+        return ammo;
+    }
+
+    public void setAmmo(int ammo) {
+        this.ammo = ammo;
+    }
 }
