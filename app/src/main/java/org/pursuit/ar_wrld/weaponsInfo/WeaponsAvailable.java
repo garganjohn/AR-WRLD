@@ -4,19 +4,24 @@ public class WeaponsAvailable {
     private Weapon weakWeapon;
     private Weapon medWeapon;
 
-    public void weakWeaponSetup(){
+    public WeaponsAvailable(int medAmmo) {
         weakWeapon = new Weapon(1, -1);
+        medWeapon = new Weapon(3, medAmmo);
     }
 
-    public void medWeaponSetup(int startAmmo){
-        medWeapon = new Weapon(3, startAmmo);
+    public int getWeakWeaponDamage(){
+        return weakWeapon.getDamageDone();
     }
 
-    public Weapon getWeakWeapon() {
-        return weakWeapon;
+    public int getMedWeaponAmmo(){
+        return medWeapon.getAmmo();
     }
 
-    public Weapon getMedWeapon() {
-        return medWeapon;
+    public int getMedWeaponDamage(){
+        return medWeapon.getDamageDone();
+    }
+
+    public void setMedWeaponAmmo(int ammo){
+        medWeapon.setAmmo(ammo);
     }
 }

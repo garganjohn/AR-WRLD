@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.Collection;
 import java.util.Random;
@@ -59,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
     private Hourglass medAlienSpawn;
     private Hourglass hardAlienSpawn;
     private Hourglass startGame;
+    private ImageView weakWeapon;
+    private ImageView medWeapon;
+    private WeaponsAvailable weaponSelection;
+    private int weaponDamage;
+    private boolean isWeakWeaponChosen;
+    private boolean isMedWeaponChosen;
     Button shootingButton;
 
 
@@ -73,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        shootingButton = findViewById(R.id.shooting_button);
         findViews();
+        weaponSetup();
         getStringRes();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
-
 
         vector = new Vector3();
         setUpAR();
@@ -87,12 +95,50 @@ public class MainActivity extends AppCompatActivity {
         spawningAliens();
     }
 
+    private void weaponSetup() {
+        medWeapon.setAlpha(0.125f);
+        setWeaponListener();
+        weaponSelection = new WeaponsAvailable(25);
+        weaponDamage = weaponSelection.getWeakWeaponDamage();
+    }
+
+    private void weaponSwitch(){
+        if (!isWeakWeaponChosen){
+            weakWeapon.setAlpha(0.125f);
+        }else {
+            weaponDamage = weaponSelection.getWeakWeaponDamage();
+            weakWeapon.setAlpha(1f);
+        }
+        if (!isMedWeaponChosen){
+            medWeapon.setAlpha(0.125f);
+        }else {
+            weaponDamage = weaponSelection.getMedWeaponDamage();
+            medWeapon.setAlpha(1f);
+        }
+    }
+
+    private void setWeaponListener(){
+        weakWeapon.setOnClickListener(v -> {
+            isWeakWeaponChosen = true;
+            isMedWeaponChosen = false;
+            weaponSwitch();
+        });
+
+        medWeapon.setOnClickListener(v -> {
+            isMedWeaponChosen = true;
+            isWeakWeaponChosen = false;
+            weaponSwitch();
+        });
+    }
+
     private void findViews() {
         msgForUser = findViewById(R.id.msg_for_user);
         countDownText = findViewById(R.id.timer_textview);
         scorekeepingTv = findViewById(R.id.scorekeeping_textview);
         numOfAliensTv = findViewById(R.id.number_of_aliens_textview);
         medWeaponAmmoTv = findViewById(R.id.damage_for_med_weapon);
+        weakWeapon = findViewById(R.id.weak_weapon);
+        medWeapon = findViewById(R.id.med_weapon);
     }
 
     private void spawningAliens() {
@@ -160,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.damage_med_weapon, 50);
+        medAmmoCounter = getString(R.string.damage_med_weapon,weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -277,9 +323,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
-            Log.d(TAG, "setNodeListener: " + modelLoader.getNumofLivesModel0());
-            if (1 < modelLoader.getNumofLivesModel0()) {
-                modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - 1);
+            modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
+            if (0 < modelLoader.getNumofLivesModel0()) {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
