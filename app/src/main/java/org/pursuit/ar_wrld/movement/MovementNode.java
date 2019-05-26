@@ -44,7 +44,8 @@ public class MovementNode extends AnchorNode {
             return;
 
         }
-        upMovment();
+        upMovement();
+        //downMovement();
     }
 
     private ArrayList<Vector3> randomVector3Array() {
@@ -121,6 +122,7 @@ public class MovementNode extends AnchorNode {
 //        objectAnimator = startRandomMovement(node);
 //    }
 
+
     public void addOffset(float x, float y, float z) {
         float posX = this.getLocalPosition().x + x;
         float posY = this.getLocalPosition().y + y;
@@ -128,7 +130,30 @@ public class MovementNode extends AnchorNode {
         this.setLocalPosition(new Vector3(posX, posY, posZ));
     }
 
-   public ObjectAnimator upMovment() {
+    public ObjectAnimator downMovement() {
+        Vector3 originalNodePosition = this.getLocalPosition();
+        down = new Vector3(-.089f, 0.0f, -734f);
+        objectAnimator = new ObjectAnimator();
+        ObjectAnimator objectAnimator = new ObjectAnimator();
+        objectAnimator.setAutoCancel(true);
+        objectAnimator.setTarget(this);
+        objectAnimator.setPropertyName("localPosition");
+        objectAnimator.setEvaluator(new Vector3Evaluator());
+        objectAnimator.setObjectValues(originalNodePosition, down);
+        objectAnimator.setEvaluator(new Vector3Evaluator());
+        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
+        // This makes the animation linear (smooth and uniform).
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        // Duration in ms of the animation.
+        objectAnimator.setDuration(5000);
+        objectAnimator.start();
+
+
+        return objectAnimator;
+    }
+
+    public ObjectAnimator upMovement() {
         //get nodes original coordinates
         Vector3 originalNodePosition = this.getLocalPosition();
         Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
