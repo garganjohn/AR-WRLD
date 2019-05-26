@@ -45,6 +45,7 @@ import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
+import org.pursuit.ar_wrld.movement.MovementNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
