@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameSessionPopup.GameSessionInfo">
+
+    <TextView
+        android:id="@+id/game_popup"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="84dp"
+        android:background="#75000000"
+        android:fontFamily="@font/aansa"
+        android:padding="8dp"
+        android:text="Fragment for game is here"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+</android.support.constraint.ConstraintLayout>

@@ -35,6 +35,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.GameSessionPopup.GameSessionInfo;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -206,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
                     isMedEnemyAdded[0] = true;
-                    Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
                     medAlienSpawn.startTimer();
                 }
             }
@@ -386,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 anchorNode.removeChild(node);
 
+
                 if (whichEnemy == GameInformation.EASY_ENEMY){
                     scoreNumber += 1000;
                 }
@@ -422,7 +423,6 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
-                Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
 
