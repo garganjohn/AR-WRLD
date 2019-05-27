@@ -8,6 +8,7 @@
     android:padding="24dp"
     tools:context=".login.SignInActivity">
 
+
     <ImageView
         android:id="@+id/user_image"
         android:layout_width="200dp"
