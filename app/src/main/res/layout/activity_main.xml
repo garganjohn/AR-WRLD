@@ -13,19 +13,61 @@
         android:layout_height="match_parent" />
 
 
-    <Button
-        android:id="@+id/shooting_button"
+    <!--<Button-->
+        <!--android:id="@+id/shooting_button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="shoot"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent" />-->
+    <TextView
+        android:id="@+id/damage_for_med_weapon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="shoot"
+        android:text="@string/med_weapon_info"
+        android:background="#70000000"
+        android:textColor="#ffff"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@id/med_weapon"
+        app:layout_constraintStart_toStartOf="@id/med_weapon"
+        app:layout_constraintEnd_toEndOf="@id/med_weapon"/>
+
+    <ImageView
+        android:id="@+id/med_weapon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/space_gun"
+        android:layout_marginEnd="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/damage_for_weak_weapon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/damage_weak_weapon"
+        android:textColor="#ffff"
+        android:background="#70000000"
+        app:layout_constraintBottom_toTopOf="@id/weak_weapon"
+        app:layout_constraintEnd_toEndOf="@id/weak_weapon"
+        app:layout_constraintStart_toStartOf="@id/weak_weapon" />
+
+    <ImageView
+        android:id="@+id/weak_weapon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/gun"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/med_weapon"/>
 
     <TextView
         android:id="@+id/number_of_aliens_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#F51720"
+        android:layout_marginTop="8dp"
+        android:background="#70000000"
+        android:fontFamily="@font/aansa"
         android:padding="8dp"
         android:text="@string/aliens_remaining_string"
         android:textColor="#fff"
@@ -39,7 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="#F51720"
+        android:background="#70000000"
+        android:fontFamily="@font/aansa"
         android:padding="8dp"
         android:text="@string/score_text"
         android:textColor="#fff"
@@ -52,7 +95,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:background="#F51720"
+        android:background="#70000000"
+        android:fontFamily="@font/aansa"
         android:padding="8dp"
         android:text="@string/countdown_timer"
         android:textColor="#fff"

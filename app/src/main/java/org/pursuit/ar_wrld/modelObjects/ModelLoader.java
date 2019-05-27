@@ -41,6 +41,8 @@ public class ModelLoader {
         this.numofLivesModel = numofLivesModel;
     }
 
+    public ModelLoader(){}
+
     public ModelLoader(int numofLivesModel) {
         this.numofLivesModel = numofLivesModel;
     }
@@ -48,7 +50,7 @@ public class ModelLoader {
         this.owner = weakReference;
     }
 
-    public void loadModel(Anchor anchor, Uri uri) {
+    public void loadModel(Anchor anchor, Uri uri, String whichEnemy) {
         if (owner.get() == null) {
             Log.d(TAG, "Activity is null.  Cannot load model.");
             return;
@@ -64,7 +66,7 @@ public class ModelLoader {
                         activity.onException(throwable);
                     } else {
                         activity.
-                        addNodeToScene(anchor, renderable);
+                        addNodeToScene(anchor, renderable, whichEnemy);
                     }
                     return null;
                 });
