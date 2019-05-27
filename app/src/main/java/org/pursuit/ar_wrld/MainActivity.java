@@ -36,6 +36,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.Collection;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onTapForMissInteraction() {
         arFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> {
-            if (!isOutOfAmmo() && isMedWeaponChosen){
+            if (!isOutOfAmmo() && isMedWeaponChosen) {
                 shootMedWeapon();
                 setMedAmmoTv();
             }
@@ -127,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv.setText(medAmmoCounter);
     }
 
-    private boolean isOutOfAmmo(){
+    private boolean isOutOfAmmo() {
         return weaponSelection.getMedWeaponAmmo() == 0;
     }
 
     private void shootMedWeapon() {
-        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo()-1);
+        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo() - 1);
     }
 
     private void weaponSetup() {
@@ -142,22 +143,22 @@ public class MainActivity extends AppCompatActivity {
         weaponDamage = weaponSelection.getWeakWeaponDamage();
     }
 
-    private void weaponSwitch(){
-        if (!isWeakWeaponChosen){
+    private void weaponSwitch() {
+        if (!isWeakWeaponChosen) {
             weakWeapon.setAlpha(0.125f);
-        }else {
+        } else {
             weaponDamage = weaponSelection.getWeakWeaponDamage();
             weakWeapon.setAlpha(1f);
         }
-        if (!isMedWeaponChosen){
+        if (!isMedWeaponChosen) {
             medWeapon.setAlpha(0.125f);
-        }else {
+        } else {
             weaponDamage = weaponSelection.getMedWeaponDamage();
             medWeapon.setAlpha(1f);
         }
     }
 
-    private void setWeaponListener(){
+    private void setWeaponListener() {
         weakWeapon.setOnClickListener(v -> {
             isWeakWeaponChosen = true;
             isMedWeaponChosen = false;
@@ -200,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
                 easyAlienSpawn.startTimer();
 
-                if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
+                if (scoreNumber > 10000 && !isMedEnemyAdded[0]) {
                     isMedEnemyAdded[0] = true;
                     Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
                     medAlienSpawn.startTimer();
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
                 medAlienSpawn.startTimer();
 
-                if (scoreNumber > 25000 && !isHardEnemyAdded[0]){
+                if (scoreNumber > 25000 && !isHardEnemyAdded[0]) {
                     isHardEnemyAdded[0] = true;
                     hardAlienSpawn.startTimer();
                 }
@@ -247,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.med_weapon_info,weaponSelection.getMedWeaponAmmo());
+        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -305,22 +306,24 @@ public class MainActivity extends AppCompatActivity {
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
 
+        //TODO put location logic here
+        ModelLocationIndicator modelLocationIndicator = new ModelLocationIndicator(node, vector, arFragment);
+        modelLocationIndicator.addMarkerToModel();
+
+
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY){
+        if (whichEnemy == GameInformation.EASY_ENEMY) {
             modelLoader.setNumofLivesModel0(3);
-        }
-        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
             modelLoader.setNumofLivesModel0(6);
-        }
-        else if (whichEnemy == GameInformation.HARD_ENEMY){
+        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
             modelLoader.setNumofLivesModel0(10);
-        }
-        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
-            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
+            Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -369,32 +372,29 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 anchorNode.removeChild(node);
 
-                if (whichEnemy == GameInformation.EASY_ENEMY){
+                if (whichEnemy == GameInformation.EASY_ENEMY) {
                     scoreNumber += 1000;
-                }
-                else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+                } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
                     scoreNumber += 2500;
-                }
-                else if (whichEnemy == GameInformation.HARD_ENEMY){
+                } else if (whichEnemy == GameInformation.HARD_ENEMY) {
                     scoreNumber += 5000;
                 }
 
-                if (isTimerModel){
-                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
+                if (isTimerModel) {
+                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 5000;
                     scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
                     startGameTimer();
-                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:"+timeLeftInMilliseconds);
+                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
                     Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
-                if (scoreNumber >= scoreTillClockModel){
-                    if (scoreTillClockModel <= 20000){
+                if (scoreNumber >= scoreTillClockModel) {
+                    if (scoreTillClockModel <= 20000) {
                         scoreTillClockModel += 5000;
-                    }
-                    else {
+                    } else {
                         scoreTillClockModel += 10000;
                     }
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
@@ -424,12 +424,12 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    public void startGameTimer(){
+    public void startGameTimer() {
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
-                Log.d(TAG, "onTimerTick: "+timeLeftInMilliseconds);
+                Log.d(TAG, "onTimerTick: " + timeLeftInMilliseconds);
                 updateTimer();
             }
 
@@ -481,12 +481,13 @@ public class MainActivity extends AppCompatActivity {
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
+
     //Random X coordinates will be between -.3 to .8f
     //Radnom Y coordinates will be between -.5 to .5
     public float randomCoordinates(boolean isX) {
         Random random = new Random();
 
-        if (isX){
+        if (isX) {
             float min = -.5f;
             float max = .6f;
             return (min + random.nextFloat() * (max - min));
@@ -501,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
         Float minFloat = .7f;
         Float maxFloat = 1f;
         //Location behind user
-        if (new Random().nextInt(2) == 0){
+        if (new Random().nextInt(2) == 0) {
             return minFloat + random.nextFloat() * (maxFloat - minFloat);
         }
         //Location infront of user
