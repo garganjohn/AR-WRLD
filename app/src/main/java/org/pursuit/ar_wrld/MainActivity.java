@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
     private void audioSetup() {
         AudioLoader audioLoader = new AudioLoader(getApplicationContext());
         audioLoader.setShootingSound(R.raw.laser_sound);
-        audioLoader.getShootingSound().start();
     }
 
     private void onTapForMissInteraction() {
@@ -203,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerFinish() {
                 loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
-                Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 easyAlienSpawn.startTimer();
 
                 if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
