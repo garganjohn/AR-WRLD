@@ -25,6 +25,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/med_weapon_info"
+        android:background="#70000000"
+        android:textColor="#ffff"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toTopOf="@id/med_weapon"
         app:layout_constraintStart_toStartOf="@id/med_weapon"
         app:layout_constraintEnd_toEndOf="@id/med_weapon"/>
@@ -43,9 +46,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/damage_weak_weapon"
+        android:textColor="#ffff"
+        android:background="#70000000"
         app:layout_constraintBottom_toTopOf="@id/weak_weapon"
-        app:layout_constraintStart_toStartOf="@id/weak_weapon"
-        app:layout_constraintEnd_toEndOf="@id/weak_weapon"/>
+        app:layout_constraintEnd_toEndOf="@id/weak_weapon"
+        app:layout_constraintStart_toStartOf="@id/weak_weapon" />
 
     <ImageView
         android:id="@+id/weak_weapon"

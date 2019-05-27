@@ -88,16 +88,15 @@ public class MainActivity extends AppCompatActivity {
         weaponSetup();
         getStringRes();
         audioSetup();
-
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
 
         vector = new Vector3();
         setUpAR();
-      
-        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
+
         // If user misses their shot account here
         onTapForMissInteraction();
         spawningAliens();
@@ -106,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     private void audioSetup() {
         AudioLoader audioLoader = new AudioLoader(getApplicationContext());
         audioLoader.setShootingSound(R.raw.laser_sound);
+        audioLoader.getShootingSound().start();
     }
 
     private void onTapForMissInteraction() {
