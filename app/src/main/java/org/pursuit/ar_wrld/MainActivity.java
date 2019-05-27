@@ -88,16 +88,15 @@ public class MainActivity extends AppCompatActivity {
         weaponSetup();
         getStringRes();
         audioSetup();
-
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
 
         vector = new Vector3();
         setUpAR();
-      
-        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> Log.d(TAG, "onTapPlane: Event hit"));
+
         // If user misses their shot account here
         onTapForMissInteraction();
         spawningAliens();
@@ -203,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerFinish() {
                 loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
-                Toast.makeText(MainActivity.this, "Model Loaded", Toast.LENGTH_SHORT).show();
                 easyAlienSpawn.startTimer();
 
                 if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
