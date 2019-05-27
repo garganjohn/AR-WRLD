@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        shootingButton = findViewById(R.id.shooting_button);
         findViews();
         weaponSetup();
         getStringRes();
@@ -108,21 +107,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onTapForMissInteraction() {
-        arFragment.getArSceneView().getScene().setOnTouchListener(new Scene.OnTouchListener() {
-            @Override
-            public boolean onSceneTouch(HitTestResult hitTestResult, MotionEvent motionEvent) {
-                if (!isOutOfAmmo() && isMedWeaponChosen){
-                    shootMedWeapon();
-                    setMedAmmoTv();
-                }
-
-                if (isMedWeaponChosen && isOutOfAmmo()) {
-                    isWeakWeaponChosen = true;
-                    isMedWeaponChosen = false;
-                    weaponSwitch();
-                }
-                return false;
+        arFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> {
+            if (!isOutOfAmmo() && isMedWeaponChosen){
+                shootMedWeapon();
+                setMedAmmoTv();
             }
+
+            if (isMedWeaponChosen && isOutOfAmmo()) {
+                isWeakWeaponChosen = true;
+                isMedWeaponChosen = false;
+                weaponSwitch();
+            }
+            return false;
         });
     }
 
@@ -263,11 +259,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void detectHit(Button button) {
-        button.setOnClickListener(v -> {
-        });
-    }
-
     private void setUpAR() {
 
         arFragment = (ArFragment) getSupportFragmentManager().findFragmentById(R.id.sceneform_fragment);
@@ -343,15 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
             }
         });
-//        //TODO check for hit detection
-//        shootingButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
-//                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+
         setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
@@ -488,31 +471,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void showDialog() {
 
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("Loading...").setMessage("Please wait for your results!");
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(this);
         aBuilder.setMessage("Press Continue to see your results");
-        aBuilder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+        aBuilder.setPositiveButton("Continue", (dialog, which) -> Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show());
         aBuilder.show();
-//        dialog.setPositiveButton(" ", (dialog1, whichButton) -> Toast.makeText(MainActivity.this, "Exiting", Toast.LENGTH_SHORT).show());
-//        final AlertDialog alert = dialog.create();
-//        alert.show();
-
-//        final Handler handler = new Handler();
-//        final Runnable runnable = () -> {
-//            if (alert.isShowing()) {
-//                alert.dismiss();
-//            }
-//        };
-//
-//        alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
-//
-//        handler.postDelayed(runnable, 1000);
-
     }
 
     public void goToResultPage() {
