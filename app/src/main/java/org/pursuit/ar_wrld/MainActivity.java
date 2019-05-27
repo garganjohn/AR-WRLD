@@ -392,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
         MovementNode anchorNode = new MovementNode(objectAnimation);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.setParent(anchorNode);
+        movementNode.upMovement();
         node.getScaleController().setMinScale(0.025f);
         node.getScaleController().setMaxScale(0.5f);
         getStringRes();
