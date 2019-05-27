@@ -307,8 +307,6 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalPosition(vector);
 
         //TODO put location logic here
-        ModelLocationIndicator modelLocationIndicator = new ModelLocationIndicator(node, vector, arFragment);
-        modelLocationIndicator.addMarkerToModel();
 
 
         ModelLoader modelLoader = new ModelLoader();
