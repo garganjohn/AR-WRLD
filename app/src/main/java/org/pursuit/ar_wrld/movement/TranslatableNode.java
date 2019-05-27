@@ -7,6 +7,7 @@ import android.animation.TimeInterpolator;
 import android.animation.TypeEvaluator;
 import android.view.animation.LinearInterpolator;
 
+import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -15,7 +16,7 @@ import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
-public class TranslatableNode extends Node {
+public class TranslatableNode extends AnchorNode {
     private TransformableNode transformableNode;
 
     private DroidPosition position;

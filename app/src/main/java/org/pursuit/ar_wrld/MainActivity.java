@@ -46,6 +46,7 @@ import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 import org.pursuit.ar_wrld.movement.MovementNode;
+import org.pursuit.ar_wrld.movement.TranslatableNode;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -218,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
                 easyAlienSpawn.startTimer();
 
-                if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
+                if (scoreNumber > 10000 && !isMedEnemyAdded[0]) {
                     isMedEnemyAdded[0] = true;
                     Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
                     medAlienSpawn.startTimer();
@@ -237,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
                 medAlienSpawn.startTimer();
 
-                if (scoreNumber > 25000 && !isHardEnemyAdded[0]){
+                if (scoreNumber > 25000 && !isHardEnemyAdded[0]) {
                     isHardEnemyAdded[0] = true;
                     hardAlienSpawn.startTimer();
                 }
@@ -315,14 +316,14 @@ public class MainActivity extends AppCompatActivity {
         // AnchorNode anchorNode = new AnchorNode();
         MovementNode anchorNode = new MovementNode(objectAnimation);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-        node.getScaleController().setMinScale(0.25f);
-        node.getScaleController().setMaxScale(1.0f);
+        node.setParent(anchorNode);
+        node.getScaleController().setMinScale(0.025f);
+        node.getScaleController().setMaxScale(0.5f);
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
-        node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
@@ -334,22 +335,19 @@ public class MainActivity extends AppCompatActivity {
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY){
+        if (whichEnemy == GameInformation.EASY_ENEMY) {
             modelLoader.setNumofLivesModel0(3);
-        }
-        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
             modelLoader.setNumofLivesModel0(6);
-        }
-        else if (whichEnemy == GameInformation.HARD_ENEMY){
+        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
             modelLoader.setNumofLivesModel0(10);
-        }
-        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
-            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
+            Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
         }
 
-        arFragment.getArSceneView().getScene().addChild(anchorNode);
+
         //Rotates the model every frame
         //Second parameter in Quaternion.axisAngle() measures speed of rotation
         arFragment.getArSceneView().getScene().addOnUpdateListener(new Scene.OnUpdateListener() {
@@ -403,32 +401,29 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 anchorNode.removeChild(node);
 
-                if (whichEnemy == GameInformation.EASY_ENEMY){
+                if (whichEnemy == GameInformation.EASY_ENEMY) {
                     scoreNumber += 1000;
-                }
-                else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+                } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
                     scoreNumber += 2500;
-                }
-                else if (whichEnemy == GameInformation.HARD_ENEMY){
+                } else if (whichEnemy == GameInformation.HARD_ENEMY) {
                     scoreNumber += 5000;
                 }
 
-                if (isTimerModel){
-                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
+                if (isTimerModel) {
+                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 5000;
                     scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
                     startGameTimer();
-                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:"+timeLeftInMilliseconds);
+                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
                     Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
-                if (scoreNumber >= scoreTillClockModel){
-                    if (scoreTillClockModel <= 20000){
+                if (scoreNumber >= scoreTillClockModel) {
+                    if (scoreTillClockModel <= 20000) {
                         scoreTillClockModel += 5000;
-                    }
-                    else {
+                    } else {
                         scoreTillClockModel += 10000;
                     }
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
@@ -458,12 +453,12 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    public void startGameTimer(){
+    public void startGameTimer() {
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
-                Log.d(TAG, "onTimerTick: "+timeLeftInMilliseconds);
+                Log.d(TAG, "onTimerTick: " + timeLeftInMilliseconds);
                 updateTimer();
             }
 
@@ -536,12 +531,13 @@ public class MainActivity extends AppCompatActivity {
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
+
     //Random X coordinates will be between -.3 to .8f
     //Radnom Y coordinates will be between -.5 to .5
     public float randomCoordinates(boolean isX) {
         Random random = new Random();
 
-        if (isX){
+        if (isX) {
             float min = -.5f;
             float max = .6f;
             return (min + random.nextFloat() * (max - min));
@@ -556,7 +552,7 @@ public class MainActivity extends AppCompatActivity {
         Float minFloat = .7f;
         Float maxFloat = 1f;
         //Location behind user
-        if (new Random().nextInt(2) == 0){
+        if (new Random().nextInt(2) == 0) {
             return minFloat + random.nextFloat() * (maxFloat - minFloat);
         }
         //Location infront of user
