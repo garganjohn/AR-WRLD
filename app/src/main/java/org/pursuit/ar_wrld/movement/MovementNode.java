@@ -51,10 +51,7 @@ public class MovementNode extends Node {
 
         }
 
-        objectAnimator = upMovement();
-        objectAnimator.setTarget(this);
-        objectAnimator.setDuration(upMovement().getDuration());
-        objectAnimator.start();
+        upMovement();
     }
 
     private ArrayList<Vector3> randomVector3Array() {
@@ -122,16 +119,18 @@ public class MovementNode extends Node {
 
     public ObjectAnimator upMovement() {
         //get nodes original coordinates
-        randomVector3Array();
-        Random random = new Random();
-        int rnCoord = random.nextInt(10) + 1;
+      //  randomVector3Array();
+        //Random random = new Random();
+        //int rnCoord = random.nextInt(10) + 1;
+        down = new Vector3(-.07f, 0.08f, -734f);
+
         Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
-        down = randomVector3Array().get(rnCoord);
-        Vector3 originalNodePosition = node.getLocalPosition();
+       // down = randomVector3Array().get(rnCoord);
+        Vector3 originalNodePosition = this.node.getLocalPosition();
 
         ObjectAnimator objectAnimator = new ObjectAnimator();
         objectAnimator.setAutoCancel(true);
-        objectAnimator.setTarget(node);
+        objectAnimator.setTarget(this.node);
         objectAnimator.setPropertyName("localPosition");
 
         objectAnimator.setObjectValues(originalNodePosition, up);
