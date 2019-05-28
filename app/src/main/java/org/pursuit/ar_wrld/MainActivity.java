@@ -10,12 +10,16 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +45,6 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
-import org.pursuit.ar_wrld.GameSessionPopup.GameSessionInfo;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView weakWeapon;
     private ImageView medWeapon;
     private WeaponsAvailable weaponSelection;
+    private TextView gameInfoTv;
     private int weaponDamage;
     private boolean isWeakWeaponChosen;
     private boolean isMedWeaponChosen;
@@ -103,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         audioSetup();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
+
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
@@ -110,6 +115,14 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
+        Animation startFromBottom = new TranslateAnimation(0,0,100f,0);
+        startFromBottom.setDuration(8000);
+
+        Animation exitToBottom = new TranslateAnimation(0,0,1f,0);
+        exitToBottom.setDuration(3000);
+
+
+        gameInfoTv.setAnimation(startFromBottom);
 
         // If user misses their shot account here
         onTapForMissInteraction();
@@ -199,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv = findViewById(R.id.damage_for_med_weapon);
         weakWeapon = findViewById(R.id.weak_weapon);
         medWeapon = findViewById(R.id.med_weapon);
+        gameInfoTv = findViewById(R.id.game_info_textview);
     }
 
     private void spawningAliens() {
