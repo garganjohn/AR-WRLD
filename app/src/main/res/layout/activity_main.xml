@@ -121,11 +121,11 @@
     <TextView
         android:id="@+id/game_info_textview"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="75dp"
         android:layout_marginBottom="104dp"
         android:background="#72000000"
         android:fontFamily="@font/aansa"
-        android:text="Game info will be displayed here"
+        android:padding="8dp"
         android:textColor="#fff"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

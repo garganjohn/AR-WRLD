@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView medWeapon;
     private WeaponsAvailable weaponSelection;
     private TextView gameInfoTv;
+    private boolean isUserTimeWarned = false;
     private int weaponDamage;
     private boolean isWeakWeaponChosen;
     private boolean isMedWeaponChosen;
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         weaponSetup();
         getStringRes();
         audioSetup();
+        setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
 
@@ -118,8 +120,7 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        gameInfoPopup();
-
+        gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
         spawningAliens();
@@ -127,10 +128,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupGameInfo(){
         startFromBottom = new TranslateAnimation(0,0,600f,0);
-        startFromBottom.setDuration(3000);
+        startFromBottom.setDuration(1000);
 
         exitToBottom = new TranslateAnimation(0,0,0,600f);
-        exitToBottom.setDuration(3000);
+        exitToBottom.setDuration(2000);
 
         startFromBottom.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                gameInfoTv.setAnimation(exitToBottom);
+                exitAnimationTimer.start();
             }
 
             @Override
@@ -152,12 +153,12 @@ public class MainActivity extends AppCompatActivity {
         exitToBottom.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                
+
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
+                gameInfoTv.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -166,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        exitAnimationTimer = new CountDownTimer(10000,1000) {
+        exitAnimationTimer = new CountDownTimer(6000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -174,13 +175,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                gameInfoTv.setAnimation(exitToBottom);
+                gameInfoTv.startAnimation(exitToBottom);
             }
         };
     }
 
-    private void gameInfoPopup() {
-        gameInfoTv.setAnimation(startFromBottom);
+    private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
+        gameInfoTv.setText(stringToDisplay);
+        if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
+        if (isWarning) gameInfoTv.setTextColor(getResources().getColor(R.color.warningColor));
+        gameInfoTv.startAnimation(startFromBottom);
+
     }
 
     private void audioSetup() {
@@ -530,8 +535,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
-                Log.d(TAG, "onTimerTick: "+timeLeftInMilliseconds);
                 updateTimer();
+                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
+                    isUserTimeWarned = true;
+                    gameInfoPopup(R.string.timer_warning, true);
+                }
             }
 
             @Override
