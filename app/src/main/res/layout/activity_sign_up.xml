@@ -23,6 +23,12 @@
         android:hint="@string/user_password"
         android:inputType="textPassword" />
 
+    <TextView
+        android:id="@+id/password_requirement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/note_passwrod_requirement" />
+
     <Button
         android:id="@+id/btn_signup"
         android:layout_width="fill_parent"
@@ -40,6 +46,7 @@
         android:gravity="center"
         android:text="Already a Member? Log In!"
         android:textSize="16sp" />
+
 
     <ProgressBar
         android:id="@+id/progressBar"

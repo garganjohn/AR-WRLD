@@ -25,6 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText emailId;
     private EditText passwordCheck;
+    private TextView passwordRequirement;
     private Button signupBtn;
     private TextView toLogIn;
     private FirebaseAuth firebaseAuth;
@@ -39,6 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
         emailId = findViewById(R.id.input_email);
         progressBar = findViewById(R.id.progressBar);
         passwordCheck = findViewById(R.id.input_password);
+        passwordRequirement = findViewById(R.id.password_requirement);
         toLogIn = findViewById(R.id.login_page);
 
         signupBtn = findViewById(R.id.btn_signup);
