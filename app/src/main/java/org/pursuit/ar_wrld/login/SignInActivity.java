@@ -65,7 +65,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
         createNewAcct = findViewById(R.id.sign_in_text);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.sign_in_progressbar);
 
         signInButton = findViewById(R.id.button_login);
 
@@ -96,12 +96,12 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 return;
             }
 
-            progressBar.setVisibility(View.VISIBLE);
+            if (progressBar.getVisibility() == View.GONE) progressBar.setVisibility(View.VISIBLE);
 
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignInActivity.this, task -> {
 
-                        progressBar.setVisibility(View.GONE);
+                       if (progressBar.getVisibility() == View.VISIBLE) progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
                             // there was an error

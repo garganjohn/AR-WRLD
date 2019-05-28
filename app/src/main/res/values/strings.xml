@@ -1,4 +1,6 @@
 <resources>
+    <string name="game_intro">Hurry, defeat the martians before they take over the world! \n Tap the martians to defeat them \n HINT: Find clocks to increase your time</string>
+    <string name="timer_warning">HURRY! Only 10 seconds left before they overtake you</string>
     <string name="app_name">AR-WRLD</string>
     <string name="msg_for_user">Tap to destory martians</string>
     <string name="countdown_timer">00:00</string>
@@ -23,5 +25,8 @@
         <item>Medium</item>
         <item>Hard</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

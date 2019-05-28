@@ -45,7 +45,6 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 
-
 sceneform.asset('sampledata/CUPIC_FYINGSAUCER.obj',
         'default',
         'sampledata/CUPIC_FYINGSAUCER.sfa',

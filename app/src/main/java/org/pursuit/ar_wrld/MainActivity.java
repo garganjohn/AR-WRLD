@@ -2,6 +2,7 @@ package org.pursuit.ar_wrld;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,12 +11,17 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -77,9 +83,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView weakWeapon;
     private ImageView medWeapon;
     private WeaponsAvailable weaponSelection;
+    private TextView gameInfoTv;
+    private boolean isUserTimeWarned = false;
     private int weaponDamage;
     private boolean isWeakWeaponChosen;
     private boolean isMedWeaponChosen;
+    private Animation startFromBottom;
+    private Animation exitToBottom;
+    private CountDownTimer exitAnimationTimer;
     Button shootingButton;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
@@ -100,7 +111,9 @@ public class MainActivity extends AppCompatActivity {
         weaponSetup();
         getStringRes();
         audioSetup();
+        setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+
 
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -109,10 +122,72 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-
+        gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
         spawningAliens();
+    }
+
+    private void setupGameInfo(){
+        startFromBottom = new TranslateAnimation(0,0,600f,0);
+        startFromBottom.setDuration(1000);
+
+        exitToBottom = new TranslateAnimation(0,0,0,600f);
+        exitToBottom.setDuration(2000);
+
+        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                exitAnimationTimer.start();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                gameInfoTv.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        exitAnimationTimer = new CountDownTimer(6000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                gameInfoTv.startAnimation(exitToBottom);
+            }
+        };
+    }
+
+    private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
+        gameInfoTv.setText(stringToDisplay);
+        if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
+        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
+        gameInfoTv.startAnimation(startFromBottom);
+
     }
 
     private void audioSetup() {
@@ -198,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv = findViewById(R.id.damage_for_med_weapon);
         weakWeapon = findViewById(R.id.weak_weapon);
         medWeapon = findViewById(R.id.med_weapon);
+        gameInfoTv = findViewById(R.id.game_info_textview);
     }
 
     private void spawningAliens() {
@@ -219,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
                     isMedEnemyAdded[0] = true;
-                    Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
                     medAlienSpawn.startTimer();
                 }
             }
@@ -402,6 +477,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 anchorNode.removeChild(node);
 
+
                 if (whichEnemy == GameInformation.EASY_ENEMY){
                     scoreNumber += 1000;
                 }
@@ -438,7 +514,6 @@ public class MainActivity extends AppCompatActivity {
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
-                Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
 
@@ -462,8 +537,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
-                Log.d(TAG, "onTimerTick: "+timeLeftInMilliseconds);
                 updateTimer();
+                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
+                    isUserTimeWarned = true;
+                    gameInfoPopup(R.string.timer_warning, true);
+                }
             }
 
             @Override

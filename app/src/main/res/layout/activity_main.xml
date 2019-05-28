@@ -118,6 +118,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/game_info_textview"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginBottom="104dp"
+        android:background="#72000000"
+        android:fontFamily="@font/aansa"
+        android:padding="8dp"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
+
     <!--<LinearLayout-->
         <!--android:id="@+id/gallery_layout"-->
         <!--android:layout_width="match_parent"-->
