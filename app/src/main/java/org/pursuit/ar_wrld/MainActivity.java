@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
+
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     Button shootingButton;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
-
+    private AudioLoader audioLoader;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -388,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode(objectAnimation);
+        MovementNode anchorNode = new MovementNode(objectAnimation,audioLoader);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);

@@ -1,6 +1,8 @@
 package org.pursuit.ar_wrld.movement;
 
 import android.animation.ObjectAnimator;
+import android.media.MediaPlayer;
+import android.os.Message;
 import android.view.animation.LinearInterpolator;
 
 import com.google.ar.sceneform.AnchorNode;
@@ -10,6 +12,7 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.R;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -138,6 +141,7 @@ public class MovementNode extends AnchorNode {
 
     public ObjectAnimator upMovment() {
         //get nodes original coordinates
+
         Vector3 originalNodePosition = this.getLocalPosition();
         Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
 
@@ -175,10 +179,20 @@ public class MovementNode extends AnchorNode {
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
         objectAnimator.setDuration(5000);
+
         objectAnimator.start();
 
         return objectAnimator;
 
 
     }
+    public void initializeMediaPlayer() {
+
+        audioLoader = MediaPlayer.create(this, R.raw.explosion8bit);
+        audioLoader.setLooping(true);
+        audioLoader.seekTo(0);
+        audioLoader.setVolume(0.5f, 0.5f);
+
+    }
+
 }
