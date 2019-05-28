@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -47,6 +48,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.Effects.HitMarker;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -98,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
     private AudioLoader audioLoader;
+    private HitMarker hitMarker;
+    private float xPos;
+    private float yPos;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -386,11 +391,12 @@ public class MainActivity extends AppCompatActivity {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
+
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode(objectAnimation,audioLoader);
+        MovementNode anchorNode = new MovementNode(objectAnimation);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -473,7 +479,9 @@ public class MainActivity extends AppCompatActivity {
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
+                onTouchEvent(motionEvent);
                 laserSound();
+
             } else {
                 anchorNode.removeChild(node);
 
@@ -695,10 +703,23 @@ public class MainActivity extends AppCompatActivity {
         audioSetup();
         audioLoader.explodeSound();
     }
-    public void laserSound(){
+
+    public void laserSound() {
 
         audioSetup();
         audioLoader.laserSound();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        //return super.onTouchEvent(event);
+        int action = event.getActionMasked();
+        xPos = event.getX();
+        yPos = event.getY();
+        hitMarker = new HitMarker(xPos, yPos);
+
+        return true;
+
     }
 
 
