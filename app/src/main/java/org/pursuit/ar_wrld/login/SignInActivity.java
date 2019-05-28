@@ -96,12 +96,20 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 return;
             }
 
+<<<<<<< HEAD
             if (progressBar.getVisibility() == View.GONE) progressBar.setVisibility(View.VISIBLE);
+=======
+//            progressBar.setVisibility(View.VISIBLE);
+>>>>>>> 279431657cc38a319acf27907ccb0fe50f30e379
 
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignInActivity.this, task -> {
 
+<<<<<<< HEAD
                        if (progressBar.getVisibility() == View.VISIBLE) progressBar.setVisibility(View.GONE);
+=======
+//                        progressBar.setVisibility(View.GONE);
+>>>>>>> 279431657cc38a319acf27907ccb0fe50f30e379
 
                         if (task.isSuccessful()) {
                             // there was an error

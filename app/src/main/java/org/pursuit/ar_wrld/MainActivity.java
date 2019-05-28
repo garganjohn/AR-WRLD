@@ -386,12 +386,11 @@ public class MainActivity extends AppCompatActivity {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
-
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode(objectAnimation);
+        MovementNode anchorNode = new MovementNode(objectAnimation,audioLoader);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -536,6 +535,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
+
+                Log.d(TAG, "onTimerTick: " + timeLeftInMilliseconds);
+
                 updateTimer();
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
@@ -698,5 +700,6 @@ public class MainActivity extends AppCompatActivity {
         audioSetup();
         audioLoader.laserSound();
     }
+
 
 }
