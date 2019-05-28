@@ -30,5 +30,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="note_passwrod_requirement">Note: Password must have 6 characters or more!</string>
+    <string name="logout">LogOut</string>
 
 </resources>
