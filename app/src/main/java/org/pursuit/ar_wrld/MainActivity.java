@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode(objectAnimation,audioLoader);
+        MovementNode anchorNode = new MovementNode(objectAnimation);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);

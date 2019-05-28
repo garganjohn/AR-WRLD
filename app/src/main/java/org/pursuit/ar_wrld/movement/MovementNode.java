@@ -2,6 +2,7 @@ package org.pursuit.ar_wrld.movement;
 
 import android.animation.ObjectAnimator;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Message;
 import android.view.animation.LinearInterpolator;
 
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MovementNode extends AnchorNode {
-    public MovementNode(ObjectAnimator objectAnimator,AudioLoader audioLoader) {
+    public MovementNode(ObjectAnimator objectAnimator) {
         this.objectAnimator = objectAnimator;
-        this.audioLoader = audioLoader;
+
         this.node = getNode();
     }
 
@@ -184,14 +185,6 @@ public class MovementNode extends AnchorNode {
 
         return objectAnimator;
 
-
-    }
-    public void initializeMediaPlayer() {
-
-        audioLoader = MediaPlayer.create(this, R.raw.explosion8bit);
-        audioLoader.setLooping(true);
-        audioLoader.seekTo(0);
-        audioLoader.setVolume(0.5f, 0.5f);
 
     }
 
