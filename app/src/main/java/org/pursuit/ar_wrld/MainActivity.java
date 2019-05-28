@@ -2,6 +2,7 @@ package org.pursuit.ar_wrld;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -183,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
         gameInfoTv.setText(stringToDisplay);
         if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning) gameInfoTv.setTextColor(getResources().getColor(R.color.warningColor));
+        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
         gameInfoTv.startAnimation(startFromBottom);
 
     }
