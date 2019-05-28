@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -43,15 +45,20 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private SignInButton button;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+
     @Override
     protected void onStart() {
+        FirebaseApp.initializeApp(this);
+
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
-
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firebaseAuth = FirebaseAuth.getInstance();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
@@ -61,8 +68,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         progressBar = findViewById(R.id.progressBar);
 
         signInButton = findViewById(R.id.button_login);
-
-        firebaseAuth = FirebaseAuth.getInstance();
 
         createNewAcct.setOnClickListener(new View.OnClickListener() {
             @Override
