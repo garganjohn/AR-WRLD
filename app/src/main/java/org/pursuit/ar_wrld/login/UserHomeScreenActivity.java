@@ -23,6 +23,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private TextView usernameTextView;
     private TextView userscoreTextView;
 
+    private static final String USER_NAME = "username";
+    private static final String USER_SCORE = "userscore";
+
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser user;
