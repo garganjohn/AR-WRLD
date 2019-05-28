@@ -17,5 +17,11 @@
     <string name="practice">Practice</string>
     <string name="play">Play</string>
     <string name="top_players">Top Players</string>
+    <string name="choose_a_level">Choose a level</string>
+    <string-array name="level_array">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
 
 </resources>
