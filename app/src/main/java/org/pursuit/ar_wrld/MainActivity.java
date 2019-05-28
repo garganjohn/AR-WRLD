@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     private int weaponDamage;
     private boolean isWeakWeaponChosen;
     private boolean isMedWeaponChosen;
+    private Animation startFromBottom;
+    private Animation exitToBottom;
+    private CountDownTimer exitAnimationTimer;
     Button shootingButton;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
@@ -115,18 +118,69 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        Animation startFromBottom = new TranslateAnimation(0,0,100f,0);
-        startFromBottom.setDuration(8000);
-
-        Animation exitToBottom = new TranslateAnimation(0,0,1f,0);
-        exitToBottom.setDuration(3000);
-
-
-        gameInfoTv.setAnimation(startFromBottom);
+        gameInfoPopup();
 
         // If user misses their shot account here
         onTapForMissInteraction();
         spawningAliens();
+    }
+
+    private void setupGameInfo(){
+        startFromBottom = new TranslateAnimation(0,0,600f,0);
+        startFromBottom.setDuration(3000);
+
+        exitToBottom = new TranslateAnimation(0,0,0,600f);
+        exitToBottom.setDuration(3000);
+
+        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                gameInfoTv.setAnimation(exitToBottom);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        exitAnimationTimer = new CountDownTimer(10000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                gameInfoTv.setAnimation(exitToBottom);
+            }
+        };
+    }
+
+    private void gameInfoPopup() {
+        gameInfoTv.setAnimation(startFromBottom);
     }
 
     private void audioSetup() {
