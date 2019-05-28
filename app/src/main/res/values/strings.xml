@@ -14,6 +14,15 @@
     <string name="failed">Attempt Unsuccessful!</string>
     <string name="med_weapon_info">Damage: 3 \n Ammo: %d</string>
     <string name="damage_weak_weapon">Damage: 1 \n Ammo: ∞</string>
+    <string name="practice">Practice</string>
+    <string name="play">Play</string>
+    <string name="top_players">Top Players</string>
+    <string name="choose_a_level">Choose a level</string>
+    <string-array name="level_array">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
