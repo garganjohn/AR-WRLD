@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
@@ -23,6 +25,7 @@ public class DatabaseActivity extends AppCompatActivity {
     private static final String USER_SCORE = "userscore";
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DocumentReference noteRF = db.collection("mARtians").document("Practice Score");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,7 @@ public class DatabaseActivity extends AppCompatActivity {
         //get userscore from argame play
 
         String name = "";
-        int score = 0;
+        String score = "";
 
         Map<String, Object> note = new HashMap<>();
         note.put(USER_NAME, name);
@@ -51,5 +54,19 @@ public class DatabaseActivity extends AppCompatActivity {
                     Log.d(TAG, e.toString());
                 });
 
+    }
+
+    public void loadScore(){
+        noteRF.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()){
+                        String playerName = documentSnapshot.getString(USER_NAME);
+                        String playeScore = documentSnapshot.getString(USER_SCORE);
+
+                    }else{
+                        Toast.makeText(DatabaseActivity.this, "Document doesn't exist", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(DatabaseActivity.this, "Error!", Toast.LENGTH_SHORT).show());
     }
 }
