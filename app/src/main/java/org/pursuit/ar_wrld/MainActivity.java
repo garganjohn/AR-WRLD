@@ -45,6 +45,10 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
+    private ImageView upArrow;
+    private ImageView downArrow;
+    private ImageView leftArrow;
+    private ImageView rightArrow;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -182,6 +186,13 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv = findViewById(R.id.damage_for_med_weapon);
         weakWeapon = findViewById(R.id.weak_weapon);
         medWeapon = findViewById(R.id.med_weapon);
+
+        upArrow = findViewById(R.id.up_marker);
+        downArrow = findViewById(R.id.down_marker);
+        rightArrow = findViewById(R.id.left_marker);
+        leftArrow = findViewById(R.id.right_marker);
+        ModelLocationIndicator mli = new ModelLocationIndicator(upArrow, downArrow, rightArrow, leftArrow);
+
     }
 
     private void spawningAliens() {
