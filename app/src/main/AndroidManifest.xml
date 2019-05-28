@@ -34,7 +34,6 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".database.DatabaseActivity" />
 
         <meta-data
             android:name="com.google.ar.core"
