@@ -58,13 +58,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         });
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseAuth.signOut();
-                startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
+        logoutButton.setOnClickListener(v -> {
+            firebaseAuth.signOut();
+            startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
 
-            }
         });
     }
 
