@@ -309,22 +309,20 @@ public class MainActivity extends AppCompatActivity {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
-
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
         MovementNode anchorNode = new MovementNode(objectAnimation);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-        node.setParent(anchorNode);
-        movementNode.upMovement();
-        node.getScaleController().setMinScale(0.025f);
-        node.getScaleController().setMaxScale(0.5f);
+        node.getScaleController().setMinScale(0.25f);
+        node.getScaleController().setMaxScale(1.0f);
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
+        node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
@@ -336,19 +334,22 @@ public class MainActivity extends AppCompatActivity {
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY) {
+        if (whichEnemy == GameInformation.EASY_ENEMY){
             modelLoader.setNumofLivesModel0(3);
-        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
+        }
+        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
             modelLoader.setNumofLivesModel0(6);
-        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
+        }
+        else if (whichEnemy == GameInformation.HARD_ENEMY){
             modelLoader.setNumofLivesModel0(10);
-        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
+        }
+        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
-            Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
+            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
         }
 
-
+        arFragment.getArSceneView().getScene().addChild(anchorNode);
         //Rotates the model every frame
         //Second parameter in Quaternion.axisAngle() measures speed of rotation
         arFragment.getArSceneView().getScene().addOnUpdateListener(new Scene.OnUpdateListener() {
@@ -371,7 +372,6 @@ public class MainActivity extends AppCompatActivity {
         setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
-
 
     public void onException(Throwable throwable) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
