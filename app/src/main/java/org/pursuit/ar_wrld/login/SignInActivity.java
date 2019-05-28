@@ -49,7 +49,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     protected void onStart() {
         FirebaseApp.initializeApp(this);
-
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
@@ -68,6 +67,12 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         progressBar = findViewById(R.id.sign_in_progressbar);
 
         signInButton = findViewById(R.id.button_login);
+        button = findViewById(R.id.sign_in_google);
+
+        if(firebaseAuth.getCurrentUser() != null){
+            startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
+            finish();
+        }
 
         createNewAcct.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,13 +81,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             }
         });
 
-        button = findViewById(R.id.sign_in_google);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+        button.setOnClickListener(v -> signIn());
 
         signInButton.setOnClickListener(v -> {
             String email = inputEmail.getText().toString();
@@ -117,11 +116,14 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                     });
         });
 
-        firebaseAuthListener = firebaseAuth -> {
-            if (firebaseAuth.getCurrentUser() != null) {
-                startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
-            }
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    SignInActivity.this.startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
+                }
 
+            }
         };
 
 
