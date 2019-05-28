@@ -131,11 +131,11 @@ public class MainActivity extends AppCompatActivity {
         spawningAliens();
     }
 
-    private void setupGameInfo(){
-        startFromBottom = new TranslateAnimation(0,0,600f,0);
+    private void setupGameInfo() {
+        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
         startFromBottom.setDuration(1000);
 
-        exitToBottom = new TranslateAnimation(0,0,0,600f);
+        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
         exitToBottom.setDuration(2000);
 
         startFromBottom.setAnimationListener(new Animation.AnimationListener() {
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        exitAnimationTimer = new CountDownTimer(6000,1000) {
+        exitAnimationTimer = new CountDownTimer(6000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -188,21 +188,22 @@ public class MainActivity extends AppCompatActivity {
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
         gameInfoTv.setText(stringToDisplay);
         if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
+        if (isWarning)
+            gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
         gameInfoTv.startAnimation(startFromBottom);
 
     }
 
     private void audioSetup() {
-        AudioLoader audioLoader = new AudioLoader(getApplicationContext());
-        audioLoader.setShootingSound(R.raw.laser_sound);
+        audioLoader = new AudioLoader(getApplicationContext());
+
     }
 
     private void onTapForMissInteraction() {
         arFragment.getArSceneView().getScene().setOnTouchListener(new Scene.OnTouchListener() {
             @Override
             public boolean onSceneTouch(HitTestResult hitTestResult, MotionEvent motionEvent) {
-                if (!isOutOfAmmo() && isMedWeaponChosen){
+                if (!isOutOfAmmo() && isMedWeaponChosen) {
                     shootMedWeapon();
                     setMedAmmoTv();
                 }
@@ -222,12 +223,12 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv.setText(medAmmoCounter);
     }
 
-    private boolean isOutOfAmmo(){
+    private boolean isOutOfAmmo() {
         return weaponSelection.getMedWeaponAmmo() == 0;
     }
 
     private void shootMedWeapon() {
-        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo()-1);
+        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo() - 1);
     }
 
     private void weaponSetup() {
@@ -237,22 +238,22 @@ public class MainActivity extends AppCompatActivity {
         weaponDamage = weaponSelection.getWeakWeaponDamage();
     }
 
-    private void weaponSwitch(){
-        if (!isWeakWeaponChosen){
+    private void weaponSwitch() {
+        if (!isWeakWeaponChosen) {
             weakWeapon.setAlpha(0.125f);
-        }else {
+        } else {
             weaponDamage = weaponSelection.getWeakWeaponDamage();
             weakWeapon.setAlpha(1f);
         }
-        if (!isMedWeaponChosen){
+        if (!isMedWeaponChosen) {
             medWeapon.setAlpha(0.125f);
-        }else {
+        } else {
             weaponDamage = weaponSelection.getMedWeaponDamage();
             medWeapon.setAlpha(1f);
         }
     }
 
-    private void setWeaponListener(){
+    private void setWeaponListener() {
         weakWeapon.setOnClickListener(v -> {
             isWeakWeaponChosen = true;
             isMedWeaponChosen = false;
@@ -343,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.med_weapon_info,weaponSelection.getMedWeaponAmmo());
+        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -385,6 +386,7 @@ public class MainActivity extends AppCompatActivity {
         View vw = findViewById(android.R.id.content);
         return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
     }
+
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
@@ -410,19 +412,16 @@ public class MainActivity extends AppCompatActivity {
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY){
+        if (whichEnemy == GameInformation.EASY_ENEMY) {
             modelLoader.setNumofLivesModel0(3);
-        }
-        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
             modelLoader.setNumofLivesModel0(6);
-        }
-        else if (whichEnemy == GameInformation.HARD_ENEMY){
+        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
             modelLoader.setNumofLivesModel0(10);
-        }
-        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
-            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
+            Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -475,11 +474,12 @@ public class MainActivity extends AppCompatActivity {
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
+                laserSound();
             } else {
                 anchorNode.removeChild(node);
 
 
-                if (whichEnemy == GameInformation.EASY_ENEMY){
+                if (whichEnemy == GameInformation.EASY_ENEMY) {
                     scoreNumber += 1000;
                 } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
                     scoreNumber += 2500;
@@ -508,6 +508,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 numOfModels--;
+                shootSound();
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -536,7 +537,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
-                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
+                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
                     gameInfoPopup(R.string.timer_warning, true);
                 }
@@ -651,95 +652,6 @@ public class MainActivity extends AppCompatActivity {
         if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
-//    private void objectMovement(TransformableNode node) {
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f,0.03f,0.0f, Path.Direction.CCW);
-//        objectAnimation = new ObjectAnimator();
-//        objectAnimation.setAutoCancel(true);
-//        objectAnimation.setTarget(node);
-//        objectAnimation.ofObject(node,"worldPosition",new Vector3Evaluator(),path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//        * create parameters that account for when the animatuion is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimation.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimation.setEvaluator(new Vector3Evaluator());
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimation.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimation.setDuration(5000);
-//        objectAnimation.start();
-//
-//
-//    }
-
-
-//    private void getNodeCoordinates(Node node){
-//
-//        float x = node.getWorldPosition().x;
-//        float y = node.getWorldPosition().y;
-//        float z = node.getWorldPosition().z;
-//        Path path = new Path();
-//        path.moveTo(x + 0, y+ 0);
-//        path.lineTo(x + 0.20f , y + 0.40f);path.lineTo(x + 0.40f, y + 0.90f);
-//        ObjectAnimator objectAnimator =
-//                ObjectAnimator.ofObject(node, "transformationSystem",new Vector3Evaluator(),path);
-//        objectAnimator.setDuration(3000);
-//        objectAnimator.start();
-//
-//
-//
-//    }
-
-
-//    private void objectMovement(TransformableNode node) {
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f,0.03f,0.0f, Path.Direction.CCW);
-//        objectAnimation = new ObjectAnimator();
-//        objectAnimation.setAutoCancel(true);
-//        objectAnimation.setTarget(node);
-//        objectAnimation.ofObject(node,"worldPosition",new Vector3Evaluator(),path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//        * create parameters that account for when the animatuion is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimation.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimation.setEvaluator(new Vector3Evaluator());
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimation.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimation.setDuration(5000);
-//        objectAnimation.start();
-//
-//
-//    }
-
 
     private void getNodeCoordinates(Node node) {
 
@@ -756,55 +668,8 @@ public class MainActivity extends AppCompatActivity {
         objectAnimator.start();
 
 
-//=======
-//        private void objectMovement (TransformableNode node){
-//            randomVector3Array();
-//            Random random = new Random();
-//            int coordinateOption = random.nextInt(10) + 1;
-//
-//            objectAnimation = new ObjectAnimator();
-//            objectAnimation.setAutoCancel(true);
-//            objectAnimation.setTarget(node);
-//            AnchorNode endNode = new AnchorNode();
-//            endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//            // All the positions should be world positions
-//            // The first position is the start, and the second is the end.
-//            objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//
-//            // Use setWorldPosition to position andy.
-//            objectAnimation.setPropertyName("worldPosition");
-//
-//            // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//            // vector3.  The default is to use lerp.
-//            objectAnimation.setEvaluator(new Vector3Evaluator());
-//            // This makes the animation linear (smooth and uniform).
-//            objectAnimation.setInterpolator(new LinearInterpolator());
-//            // Duration in ms of the animation.
-//            objectAnimation.setDuration(5000);
-//            objectAnimation.start();
-//
-//
-//        }
-
-//        private ArrayList<Vector3> randomVector3Array () {
-//            Random random = new Random();
-//            vector3List = new ArrayList<>();
-//            float xVector;
-//            float yVector;
-//            float zVector;
-//            for (int i = 0; i < 12; i++) {
-//
-//                xVector = random.nextFloat();
-//                yVector = random.nextFloat();
-//                zVector = random.nextFloat();
-//
-//
-//                vector3List.add(new Vector3(xVector, yVector, zVector));
-//            }
-//
-//            return vector3List;
-//
     }
+
     private ArrayList<Vector3> randomVector3Array() {
         Random random = new Random();
         vector3List = new ArrayList<>();
@@ -822,6 +687,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return vector3List;
+    }
+
+    public void shootSound() {
+        audioSetup();
+        audioLoader.explodeSound();
+    }
+    public void laserSound(){
+
+        audioSetup();
+        audioLoader.laserSound();
     }
 
 }
