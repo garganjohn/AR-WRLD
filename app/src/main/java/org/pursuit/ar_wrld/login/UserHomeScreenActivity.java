@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
@@ -18,9 +20,12 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private Button practiceButton;
     private Button playButton;
     private Button logoutButton;
+    private TextView usernameTextView;
+    private TextView userscoreTextView;
 
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
+    FirebaseUser user;
 
     @Override
     protected void onStart() {
@@ -33,10 +38,19 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_screen);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        usernameTextView = findViewById(R.id.user_name);
+        userscoreTextView = findViewById(R.id.user_score);
         levelSpinner = findViewById(R.id.level_spinner);
         practiceButton = findViewById(R.id.practice_button);
         playButton = findViewById(R.id.play_button);
         logoutButton = findViewById(R.id.logout_button);
+
+        if(firebaseAuth.getCurrentUser() != null ){
+            user = firebaseAuth.getCurrentUser();
+            updateUI(user);
+        }
 
         playButton.setOnClickListener(v -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
@@ -52,5 +66,12 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public  void updateUI (FirebaseUser user){
+        if(user != null){
+            String name = user.getDisplayName();
+            usernameTextView.setText(name);
+        }
     }
 }
