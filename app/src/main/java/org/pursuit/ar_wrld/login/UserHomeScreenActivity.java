@@ -30,18 +30,17 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser user;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        firebaseAuth.addAuthStateListener(authStateListener);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_screen);
 
-        firebaseAuth = FirebaseAuth.getInstance();
 
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
@@ -50,10 +49,13 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         playButton = findViewById(R.id.play_button);
         logoutButton = findViewById(R.id.logout_button);
 
-        if(firebaseAuth.getCurrentUser() != null ){
-            user = firebaseAuth.getCurrentUser();
-            updateUI(user);
-        }
+//        firebaseAuth = FirebaseAuth.getInstance();
+
+
+//        if(firebaseAuth.getCurrentUser() != null ){
+//            user = firebaseAuth.getCurrentUser();
+//            updateUI(user);
+//        }
 
         playButton.setOnClickListener(v -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
@@ -62,16 +64,16 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
 
         logoutButton.setOnClickListener(v -> {
-            firebaseAuth.signOut();
+//            firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
 
         });
     }
 
-    public  void updateUI (FirebaseUser user){
-        if(user != null){
-            String name = user.getDisplayName();
-            usernameTextView.setText(name);
-        }
-    }
+//    public  void updateUI (FirebaseUser user){
+//        if(user != null){
+//            String name = user.getDisplayName();
+//            usernameTextView.setText(name);
+//        }
+//    }
 }
