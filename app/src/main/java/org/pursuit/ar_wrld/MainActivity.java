@@ -45,6 +45,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
+    private ModelLocationIndicator mli;
     private ImageView upArrow;
     private ImageView downArrow;
     private ImageView leftArrow;
@@ -191,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         downArrow = findViewById(R.id.down_marker);
         rightArrow = findViewById(R.id.left_marker);
         leftArrow = findViewById(R.id.right_marker);
-        ModelLocationIndicator mli = new ModelLocationIndicator(upArrow, downArrow, rightArrow, leftArrow);
+        mli = new ModelLocationIndicator(upArrow, downArrow, rightArrow, leftArrow);
 
     }
 
@@ -316,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
 
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
-
+        mli.indicate(vector);
         //TODO put location logic here
 
 
@@ -380,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
+                mli.cancelAnimator();
 
                 if (whichEnemy == GameInformation.EASY_ENEMY) {
                     scoreNumber += 1000;

@@ -18,6 +18,7 @@ import org.pursuit.ar_wrld.R;
 public class ModelLocationIndicator {
     private static final String TAG = "model location";
     private Vector3 modelNodePosition;
+    private ObjectAnimator animator;
     private TransformableNode modelNode;
     private TransformableNode markerNode;
     private ArFragment arFragment;
@@ -44,14 +45,38 @@ public class ModelLocationIndicator {
 
 
     //TODO take in vector upon opbj inst. and then decide which arrow to indicate
-    private void indicate(Vector3 vector) {
-
-        ObjectAnimator animator = new ObjectAnimator().ofInt(imageView, "backgroundColor", Color.RED, Color.BLUE);
-        animator.setDuration(1500);
-        animator.setEvaluator(new ArgbEvaluator());
-        animator.setRepeatMode(Animation.REVERSE);
-        animator.setRepeatCount(Animation.INFINITE);
-        animator.start();
+    public void indicate(Vector3 vector) {
+        if (vector.z < 0) {
+            animator = new ObjectAnimator().ofInt(downArrow, "backgroundColor", Color.RED, Color.BLUE);
+            animator.setDuration(500);
+            animator.setStartDelay(1000);
+            animator.setEvaluator(new ArgbEvaluator());
+            animator.setRepeatMode(Animation.REVERSE);
+            animator.setRepeatCount(Animation.ABSOLUTE);
+            animator.start();
+        }
+        if (vector.x < 0) {
+            animator = new ObjectAnimator().ofInt(leftArrow, "backgroundColor", Color.RED, Color.BLUE);
+            animator.setDuration(500);
+            animator.setStartDelay(1000);
+            animator.setEvaluator(new ArgbEvaluator());
+            animator.setRepeatMode(Animation.REVERSE);
+            animator.setRepeatCount(Animation.ABSOLUTE);
+            animator.start();
+        }
+        if (0 < vector.x) {
+            animator = new ObjectAnimator().ofInt(rightArrow, "backgroundColor", Color.RED, Color.BLUE);
+            animator.setDuration(500);
+            animator.setStartDelay(1000);
+            animator.setEvaluator(new ArgbEvaluator());
+            animator.setRepeatMode(Animation.REVERSE);
+            animator.setRepeatCount(Animation.ABSOLUTE);
+            animator.start();
+        }
+    }
+//TODO cancel and reset arrow that's blinking
+    public void cancelAnimator() {
+        animator.cancel();
     }
 
 
