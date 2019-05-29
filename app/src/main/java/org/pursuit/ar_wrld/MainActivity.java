@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private Animation startFromBottom;
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
+    private String difficulty;
     Button shootingButton;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
     // Index of the current animation playing.
     private MovementNode movementNode;
     private int nextAnimation;
+
+    public MainActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
