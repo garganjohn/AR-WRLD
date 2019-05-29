@@ -74,12 +74,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             finish();
         }
 
-        createNewAcct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
-            }
-        });
+        createNewAcct.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, SignUpActivity.class)));
 
         button.setOnClickListener(v -> signIn());
 
@@ -116,14 +111,11 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                     });
         });
 
-        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {
-                    SignInActivity.this.startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
-                }
-
+        firebaseAuthListener = firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser() != null) {
+                SignInActivity.this.startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
             }
+
         };
 
 
