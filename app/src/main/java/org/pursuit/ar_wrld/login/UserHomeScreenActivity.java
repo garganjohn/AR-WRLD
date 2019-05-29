@@ -29,8 +29,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String spinnerValue = levelSpinner.getSelectedItem().toString();
+                MainActivity mainActivity = new MainActivity(spinnerValue);
+                Intent intent = new Intent();
                 startActivity(new Intent(UserHomeScreenActivity.this, MainActivity.class));
-
             }
         });
     }
