@@ -168,7 +168,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
-            Intent goToIntent = new Intent(SignInActivity.this, DatabaseActivity.class);
+            Intent goToIntent = new Intent(SignInActivity.this, UserHomeScreenActivity.class);
             startActivity(goToIntent);
             Toast.makeText(getApplicationContext(), "Hello " + acct.getDisplayName(), Toast.LENGTH_SHORT).show();
             //statusTextView.setText("Hello, " + acct.getDisplayName());
