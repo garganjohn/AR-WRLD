@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -41,6 +42,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private EditText inputPassword;
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
+    private TextView forgotTextview;
 
     private SignInButton button;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -65,6 +67,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         inputPassword = findViewById(R.id.password);
         createNewAcct = findViewById(R.id.sign_in_text);
         progressBar = findViewById(R.id.sign_in_progressbar);
+        forgotTextview = findViewById(R.id.forgot_password);
 
         signInButton = findViewById(R.id.button_login);
         button = findViewById(R.id.sign_in_google);
@@ -159,13 +162,24 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
     }
 
-    private void signIn() {
+    public void signIn() {
         Intent signInIntent =
                 Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    public void resetPassword(){
+        forgotTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+    }
+
+
+
+    public void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             Intent goToIntent = new Intent(SignInActivity.this, UserHomeScreenActivity.class);
