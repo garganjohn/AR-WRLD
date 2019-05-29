@@ -67,7 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="#70000000"
-        android:fontFamily="@font/aansa"
         android:padding="8dp"
         android:text="@string/aliens_remaining_string"
         android:textColor="#fff"

@@ -50,7 +50,6 @@ sceneform.asset('sampledata/CUPIC_FYINGSAUCER.obj',
         'sampledata/CUPIC_FYINGSAUCER.sfa',
         'src/main/assets/CUPIC_FYINGSAUCER')
 
-
 sceneform.asset('sampledata/model.obj',
         'default',
         'sampledata/model.sfa',

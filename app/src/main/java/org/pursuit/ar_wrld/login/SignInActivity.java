@@ -49,7 +49,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     @Override
     protected void onStart() {
         FirebaseApp.initializeApp(this);
-
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
