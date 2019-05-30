@@ -20,6 +20,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/user_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
         android:id="@+id/user_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

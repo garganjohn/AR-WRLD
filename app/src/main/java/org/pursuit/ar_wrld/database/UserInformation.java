@@ -1,14 +1,16 @@
 package org.pursuit.ar_wrld.database;
 
 public class UserInformation {
-    public String username;
-    public int userscore;
+    private String username;
+    private int userscore;
+    private String usertitle;
 
     public UserInformation(){}
 
-    public UserInformation(String username, int userscore) {
+    public UserInformation(String username, int userscore, String usertitle) {
         this.username = username;
         this.userscore = userscore;
+        this.usertitle = usertitle;
     }
 
     public String getUsername() {
@@ -25,5 +27,13 @@ public class UserInformation {
 
     public void setUserscore(int userscore) {
         this.userscore = userscore;
+    }
+
+    public String getUsertitle() {
+        return usertitle;
+    }
+
+    public void setUsertitle(String usertitle) {
+        this.usertitle = usertitle;
     }
 }

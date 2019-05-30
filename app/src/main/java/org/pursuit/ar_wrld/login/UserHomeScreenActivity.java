@@ -23,6 +23,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private Button logoutButton;
     private TextView usernameTextView;
     private TextView userscoreTextView;
+    private TextView userTitleTextView;
 
     private static final String USER_NAME = "username";
     private static final String USER_SCORE = "userscore";
@@ -50,6 +51,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
+        userTitleTextView = findViewById(R.id.user_title);
         levelSpinner = findViewById(R.id.level_spinner);
         practiceButton = findViewById(R.id.practice_button);
         playButton = findViewById(R.id.play_button);
