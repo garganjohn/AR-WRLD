@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.database.UserInformation;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -45,57 +46,47 @@ public class SignUpActivity extends AppCompatActivity {
 
         signupBtn = findViewById(R.id.btn_signup);
 
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
-                startActivity(intent);
-            }
+        signupBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
+            startActivity(intent);
         });
 
         firebaseAuth = FirebaseAuth.getInstance();
 
 
-        signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = emailId.getText().toString();
-                String password = passwordCheck.getText().toString();
+        signupBtn.setOnClickListener(v -> {
+            String email = emailId.getText().toString();
+            String password = passwordCheck.getText().toString();
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter Email Id", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                progressBar.setVisibility(View.VISIBLE);
-
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                progressBar.setVisibility(View.GONE);
-
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                                    Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(SignUpActivity.this, "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                        });
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(getApplicationContext(), "Enter Email Id", Toast.LENGTH_SHORT).show();
+                return;
             }
+            if (TextUtils.isEmpty(password)) {
+                Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            progressBar.setVisibility(View.VISIBLE);
+
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(SignUpActivity.this, task -> {
+
+                        progressBar.setVisibility(View.GONE);
+
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
         });
 
 
