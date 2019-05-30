@@ -130,13 +130,14 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
-        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
-            Log.d(TAG, "onCreate: ");
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
+            gameInfoPopup(R.string.boss_level,false);
             spawningAliens(true);
-        } else {
+        }
+        else {
+            gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
     }
@@ -198,8 +199,7 @@ public class MainActivity extends AppCompatActivity {
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
         gameInfoTv.setText(stringToDisplay);
         if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning)
-            gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
+        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
         gameInfoTv.startAnimation(startFromBottom);
 
     }
@@ -512,6 +512,8 @@ public class MainActivity extends AppCompatActivity {
                     scoreNumber += 2500;
                 } else if (whichEnemy == GameInformation.HARD_ENEMY) {
                     scoreNumber += 5000;
+                }else if (whichEnemy == GameInformation.BOSS_ENEMY){
+                    scoreNumber += 25000;
                 }
 
                 if (isTimerModel) {

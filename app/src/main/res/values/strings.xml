@@ -20,6 +20,7 @@
     <string name="play">Play</string>
     <string name="top_players">Top Players</string>
     <string name="choose_a_level">Choose a level</string>
+    <string name="boss_level">This enemy looks strong, destroy it before it has a chance to take over the world! \n HINT: Switch weapons below to defeat it quicker</string>
     <string-array name="level_array">
         <item>EASY</item>
         <item>MEDIUM</item>
