@@ -5,12 +5,15 @@ import android.animation.ObjectAnimator;
 import android.view.animation.LinearInterpolator;
 
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.QuaternionEvaluator;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
+
+import org.pursuit.ar_wrld.Effects.AudioLoader;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -24,12 +27,23 @@ public class MovementNode extends AnchorNode {
     private ObjectAnimator objectAnimator;
 
     private Node node;
+
+    public ArSceneView getArSceneView() {
+        return arSceneView;
+    }
+
+    public void setArSceneView(ArSceneView arSceneView) {
+        this.arSceneView = arSceneView;
+    }
+
+    private ArSceneView arSceneView;
     private Vector3 up;
     private Vector3 down;
     private Vector3 forward;
     private Vector3 left;
     private Vector3 right;
     private Vector3 back;
+    private AudioLoader audioLoader;
     private ArrayList<Vector3> vector3List;
 
     public Node getNode() {
@@ -39,6 +53,8 @@ public class MovementNode extends AnchorNode {
     @Override
     public void onUpdate(FrameTime frameTime) {
         super.onUpdate(frameTime);
+
+
         if (objectAnimator == null) {
             return;
 
@@ -141,6 +157,11 @@ public class MovementNode extends AnchorNode {
 //        objectAnimator.start();
 //
 //
+    }
+    private void collisionSpace(){
+
+        node.getCollisionShape();
+
     }
 
 }

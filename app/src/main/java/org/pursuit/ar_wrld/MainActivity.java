@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     // Controls animation playback.
     private ModelAnimator animator;
     // Index of the current animation playing.
-    private MovementNode movementNode;
+    private MovementNode anchorNode;
     private int nextAnimation;
 
     @Override
@@ -131,20 +131,19 @@ public class MainActivity extends AppCompatActivity {
         gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
-        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
             Log.d(TAG, "onCreate: ");
             spawningAliens(true);
-        }
-        else {
+        } else {
             spawningAliens(false);
         }
     }
 
-    private void setupGameInfo(){
-        startFromBottom = new TranslateAnimation(0,0,600f,0);
+    private void setupGameInfo() {
+        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
         startFromBottom.setDuration(1000);
 
-        exitToBottom = new TranslateAnimation(0,0,0,600f);
+        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
         exitToBottom.setDuration(2000);
 
         startFromBottom.setAnimationListener(new Animation.AnimationListener() {
@@ -181,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        exitAnimationTimer = new CountDownTimer(6000,1000) {
+        exitAnimationTimer = new CountDownTimer(6000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -197,13 +196,14 @@ public class MainActivity extends AppCompatActivity {
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
         gameInfoTv.setText(stringToDisplay);
         if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
+        if (isWarning)
+            gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
         gameInfoTv.startAnimation(startFromBottom);
 
     }
 
     private void audioSetup() {
-         audioLoader = new AudioLoader(getApplicationContext());
+        audioLoader = new AudioLoader(getApplicationContext());
 
     }
 
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
         rightArrow = findViewById(R.id.left_marker);
         leftArrow = findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
-      
+
         gameInfoTv = findViewById(R.id.game_info_textview);
 
     }
@@ -296,11 +296,10 @@ public class MainActivity extends AppCompatActivity {
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
 
-        if (isBoss){
+        if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
-            loadModel(anchorNode.getAnchor(),Uri.parse(GameInformation.BOSS_ENEMY),GameInformation.BOSS_ENEMY);
-        }
-        else {
+            loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
+        } else {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
@@ -408,6 +407,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+        if (anchorNode != null) {
+            ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
+            for (Node node : overlappedNodes) {
+                if (node instanceof MovementNode ) {
+                    Toast.makeText(this,"Collision!",Toast.LENGTH_SHORT).show();
+                    // May want to use a flag to check that the node wasn't overlapping the previous frame.
+                    // Play sound if overlapping started.
+                }
+            }
+        }
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -418,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode();
+        anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -442,21 +451,17 @@ public class MainActivity extends AppCompatActivity {
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY){
+        if (whichEnemy == GameInformation.EASY_ENEMY) {
             modelLoader.setNumofLivesModel0(2);
-        }
-        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
             modelLoader.setNumofLivesModel0(3);
-        }
-        else if (whichEnemy == GameInformation.HARD_ENEMY){
+        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
             modelLoader.setNumofLivesModel0(4);
-        }
-        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
             Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
-        }
-        else if (whichEnemy == GameInformation.BOSS_ENEMY){
+        } else if (whichEnemy == GameInformation.BOSS_ENEMY) {
             modelLoader.setNumofLivesModel0(30);
         }
 
@@ -508,7 +513,7 @@ public class MainActivity extends AppCompatActivity {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
-                if (whichEnemy == GameInformation.EASY_ENEMY){
+                if (whichEnemy == GameInformation.EASY_ENEMY) {
 
                     scoreNumber += 1000;
                 } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
@@ -560,8 +565,8 @@ public class MainActivity extends AppCompatActivity {
                 });
         return;
     }
-  
-    public void startGameTimer(){
+
+    public void startGameTimer() {
         backgroundMusic();
 
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
@@ -569,7 +574,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
-                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
+                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
                     gameInfoPopup(R.string.timer_warning, true);
                 }
@@ -682,11 +687,12 @@ public class MainActivity extends AppCompatActivity {
         audioLoader.laserSound();
     }
 
-    public void backgroundMusic(){
+    public void backgroundMusic() {
         audioSetup();
         audioLoader.backGroundMusic();
     }
-    public void stopAudio(){
+
+    public void stopAudio() {
         audioLoader.stopAudio();
     }
 
