@@ -87,7 +87,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             String email = inputEmail.getText().toString();
             final String password = inputPassword.getText().toString();
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(getApplicationContext(), "Please enter email id", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_email_message), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(password)) {
