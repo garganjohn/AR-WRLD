@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 
@@ -25,6 +26,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
     private static final String USER_NAME = "username";
     private static final String USER_SCORE = "userscore";
+    public static final String EASY_STRING = "EASY";
+    public static final String MEDIUM_STRING = "MEDIUM";
+    public static final String HARD_STRING = "HARD";
+    public static final String BOSS_LEVEL = "BOSS";
+
 
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
@@ -59,8 +65,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         playButton.setOnClickListener(v -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
-            startActivity(new Intent(UserHomeScreenActivity.this, MainActivity.class));
-
+            Intent intent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
+            intent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
+            startActivity(intent);
         });
 
         logoutButton.setOnClickListener(v -> {

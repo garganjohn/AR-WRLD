@@ -6,9 +6,7 @@ public interface GameInformation {
     String EASY_ENEMY = "CUPIC_FYINGSAUCER.sfb";
     String MEDIUM_ENEMY = "donut.sfb";
     String HARD_ENEMY = "spaceship.sfb";
+    String BOSS_ENEMY = "FlyingSacuer.sfb";
     String TIME_INCREASE_MODEL = "1345 Analog Clock.sfb";
-    String EASY_DIFFICULTY = "EASY";
-    String MEDIUM_DIFFICULTY = "MEDIUM";
-    String HARD_DIFFICULTY = "HARD";
-
+    String GAME_DIFFICULTY = "GAME DIFFICULTY";
 }

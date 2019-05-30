@@ -68,6 +68,7 @@
         android:layout_marginTop="8dp"
         android:background="#70000000"
         android:padding="8dp"
+        android:fontFamily="@font/aansa"
         android:text="@string/aliens_remaining_string"
         android:textColor="#fff"
         android:textSize="16sp"
@@ -89,6 +90,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/timer_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/timer_black_white"
+        app:layout_constraintEnd_toStartOf="@id/timer_textview"
+        app:layout_constraintTop_toTopOf="@id/timer_textview"
+        app:layout_constraintBottom_toBottomOf="@id/timer_textview"/>
+
     <TextView
         android:id="@+id/timer_textview"
         android:layout_width="wrap_content"
@@ -107,6 +117,7 @@
         android:id="@+id/msg_for_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/aansa"
         android:background="#F51720"
         android:text=""
         android:textAlignment="center"

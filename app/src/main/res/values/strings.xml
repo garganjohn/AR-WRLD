@@ -21,9 +21,10 @@
     <string name="top_players">Top Players</string>
     <string name="choose_a_level">Choose a level</string>
     <string-array name="level_array">
-        <item>Easy</item>
-        <item>Medium</item>
-        <item>Hard</item>
+        <item>EASY</item>
+        <item>MEDIUM</item>
+        <item>HARD</item>
+        <item>BOSS</item>
     </string-array>
     <string name="forgot_password">Forgot Password?</string>
     <string name="note_passwrod_requirement">Note: Password must have 6 characters or more!</string>

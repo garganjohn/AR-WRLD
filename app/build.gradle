@@ -69,3 +69,9 @@ sceneform.asset('sampledata/sphere_spaceship/spaceship.obj',
         'default',
         'sampledata/sphere_spaceship/spaceship.sfa',
         'src/main/assets/spaceship')
+
+
+sceneform.asset('sampledata/boss_saucer/FlyingSacuer.obj',
+        'default',
+        'sampledata/boss_saucer/FlyingSacuer.sfa',
+        'src/main/assets/FlyingSacuer')
