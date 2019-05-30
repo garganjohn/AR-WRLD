@@ -478,6 +478,7 @@ public class MainActivity extends AppCompatActivity {
 
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
+                laserSound();
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
@@ -515,6 +516,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 numOfModels--;
+                shootSound();
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -538,12 +540,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startGameTimer(){
+        backgroundMusic();
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
-                backgroundMusic();
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
                     isUserTimeWarned = true;
                     gameInfoPopup(R.string.timer_warning, true);
@@ -553,6 +555,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
+                stopAudio();
                 showDialog();
                 new Hourglass(3000, 1000) {
                     @Override
@@ -563,7 +566,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTimerFinish() {
                         goToResultPage();
-                        stopAudio();
+
                     }
                 }.startTimer();
             }
