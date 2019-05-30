@@ -47,38 +47,40 @@ public class ModelLocationIndicator {
     //TODO take in vector upon opbj inst. and then decide which arrow to indicate
     public void indicate(Vector3 vector) {
         if (vector.z < 0) {
-            animator = new ObjectAnimator().ofInt(downArrow, "backgroundColor", Color.RED, Color.BLUE);
-            animator.setDuration(500);
+            animator = new ObjectAnimator().ofInt(downArrow, "backgroundColor", Color.RED, Color.TRANSPARENT);
+            animator.setDuration(1500);
             animator.setStartDelay(1000);
             animator.setEvaluator(new ArgbEvaluator());
             animator.setRepeatMode(Animation.REVERSE);
             animator.setRepeatCount(Animation.ABSOLUTE);
             animator.start();
+            //downArrow.setBackgroundColor(Color.TRANSPARENT);
         }
         if (vector.x < 0) {
-            animator = new ObjectAnimator().ofInt(leftArrow, "backgroundColor", Color.RED, Color.BLUE);
-            animator.setDuration(500);
+            animator = new ObjectAnimator().ofInt(leftArrow, "backgroundColor", Color.RED, Color.TRANSPARENT);
+            animator.setDuration(1500);
             animator.setStartDelay(1000);
             animator.setEvaluator(new ArgbEvaluator());
             animator.setRepeatMode(Animation.REVERSE);
             animator.setRepeatCount(Animation.ABSOLUTE);
             animator.start();
+            //leftArrow.setBackgroundColor(Color.TRANSPARENT);
         }
         if (0 < vector.x) {
-            animator = new ObjectAnimator().ofInt(rightArrow, "backgroundColor", Color.RED, Color.BLUE);
-            animator.setDuration(500);
+            animator = new ObjectAnimator().ofInt(rightArrow, "backgroundColor", Color.RED, Color.TRANSPARENT);
+            animator.setDuration(1500);
             animator.setStartDelay(1000);
             animator.setEvaluator(new ArgbEvaluator());
             animator.setRepeatMode(Animation.REVERSE);
             animator.setRepeatCount(Animation.ABSOLUTE);
             animator.start();
+            //rightArrow.setBackgroundColor(Color.TRANSPARENT);
         }
     }
-//TODO cancel and reset arrow that's blinking
+
+    //TODO cancel and reset arrow that's blinking
     public void cancelAnimator() {
         animator.cancel();
     }
-
-
 }
 
