@@ -47,6 +47,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer exitAnimationTimer;
     private String difficulty;
     Button shootingButton;
+    private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
 
@@ -108,13 +110,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        shootingButton = findViewById(R.id.shooting_button);
+        difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
         getStringRes();
         audioSetup();
         setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-
 
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -126,7 +128,13 @@ public class MainActivity extends AppCompatActivity {
         gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
-        spawningAliens();
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
+            Log.d(TAG, "onCreate: ");
+            spawningAliens(true);
+        }
+        else {
+            spawningAliens(false);
+        }
     }
 
     private void setupGameInfo(){
@@ -192,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void audioSetup() {
-        AudioLoader audioLoader = new AudioLoader(getApplicationContext());
-        audioLoader.setShootingSound(R.raw.laser_sound);
+         audioLoader = new AudioLoader(getApplicationContext());
+
     }
 
     private void onTapForMissInteraction() {
@@ -277,62 +285,83 @@ public class MainActivity extends AppCompatActivity {
         gameInfoTv = findViewById(R.id.game_info_textview);
     }
 
-    private void spawningAliens() {
-        final boolean[] isMedEnemyAdded = {false};
-        final boolean[] isHardEnemyAdded = {false};
+    private void spawningAliens(boolean isBoss) {
+
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
-        easyAlienSpawn = new Hourglass(2000, 1000) {
-            @Override
-            public void onTimerTick(long timeRemaining) {
 
-            }
+        if (isBoss){
+            Log.d(TAG, "spawningAliens: ");
+            loadModel(anchorNode.getAnchor(),Uri.parse(GameInformation.BOSS_ENEMY),GameInformation.BOSS_ENEMY);
+        }
+        else {
+            final boolean[] isMedEnemyAdded = {false};
+            final boolean[] isHardEnemyAdded = {false};
 
-            @Override
-            public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+            easyAlienSpawn = new Hourglass(2000, 1000) {
+                @Override
+                public void onTimerTick(long timeRemaining) {
 
-                easyAlienSpawn.startTimer();
-
-                if (scoreNumber > 10000 && !isMedEnemyAdded[0]){
-                    isMedEnemyAdded[0] = true;
-                    medAlienSpawn.startTimer();
                 }
-            }
-        };
 
-        medAlienSpawn = new Hourglass(3000, 1000) {
-            @Override
-            public void onTimerTick(long timeRemaining) {
+                @Override
+                public void onTimerFinish() {
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
-            }
+                    easyAlienSpawn.startTimer();
 
-            @Override
-            public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-                medAlienSpawn.startTimer();
+                    if (scoreNumber > 5000 && !isMedEnemyAdded[0]) {
+                        isMedEnemyAdded[0] = true;
+                        medAlienSpawn.startTimer();
+                    }
+                }
+            };
 
-                if (scoreNumber > 25000 && !isHardEnemyAdded[0]){
-                    isHardEnemyAdded[0] = true;
+            medAlienSpawn = new Hourglass(3000, 1000) {
+                @Override
+                public void onTimerTick(long timeRemaining) {
+
+                }
+
+                @Override
+                public void onTimerFinish() {
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                    medAlienSpawn.startTimer();
+
+                    if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
+                        isHardEnemyAdded[0] = true;
+                        hardAlienSpawn.startTimer();
+                    }
+                }
+            };
+
+            hardAlienSpawn = new Hourglass(6000, 1000) {
+                @Override
+                public void onTimerTick(long timeRemaining) {
+
+                }
+
+                @Override
+                public void onTimerFinish() {
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
                     hardAlienSpawn.startTimer();
                 }
+            };
+
+            switch (difficulty) {
+                case UserHomeScreenActivity.EASY_STRING:
+                    easyAlienSpawn.startTimer();
+                    break;
+                case UserHomeScreenActivity.MEDIUM_STRING:
+                    medAlienSpawn.startTimer();
+                    break;
+                case UserHomeScreenActivity.HARD_STRING:
+                    hardAlienSpawn.setTime(2000);
+                    hardAlienSpawn.startTimer();
+                    break;
             }
-        };
+        }
 
-        hardAlienSpawn = new Hourglass(6000, 1000) {
-            @Override
-            public void onTimerTick(long timeRemaining) {
-
-            }
-
-            @Override
-            public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
-                hardAlienSpawn.startTimer();
-            }
-        };
-
-        easyAlienSpawn.startTimer();
         startGameTimer();
     }
 
@@ -386,9 +415,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
-        Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode(objectAnimation);
+        MovementNode anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -402,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
-        anchorNode.upMovment();
+        anchorNode.randomMovement();
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
 
@@ -410,18 +438,21 @@ public class MainActivity extends AppCompatActivity {
         boolean isTimerModel = false;
 
         if (whichEnemy == GameInformation.EASY_ENEMY){
-            modelLoader.setNumofLivesModel0(3);
+            modelLoader.setNumofLivesModel0(2);
         }
         else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
-            modelLoader.setNumofLivesModel0(6);
+            modelLoader.setNumofLivesModel0(3);
         }
         else if (whichEnemy == GameInformation.HARD_ENEMY){
-            modelLoader.setNumofLivesModel0(10);
+            modelLoader.setNumofLivesModel0(4);
         }
         else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
             Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
+        }
+        else if (whichEnemy == GameInformation.BOSS_ENEMY){
+            modelLoader.setNumofLivesModel0(30);
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -474,6 +505,7 @@ public class MainActivity extends AppCompatActivity {
 
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
+                laserSound();
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
@@ -511,6 +543,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 numOfModels--;
+                shootSound();
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -534,6 +567,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startGameTimer(){
+        backgroundMusic();
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
@@ -548,6 +582,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
+                stopAudio();
                 showDialog();
                 new Hourglass(3000, 1000) {
                     @Override
@@ -558,6 +593,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTimerFinish() {
                         goToResultPage();
+
                     }
                 }.startTimer();
             }
@@ -644,167 +680,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+
     }
 
-//    private void objectMovement(TransformableNode node) {
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f,0.03f,0.0f, Path.Direction.CCW);
-//        objectAnimation = new ObjectAnimator();
-//        objectAnimation.setAutoCancel(true);
-//        objectAnimation.setTarget(node);
-//        objectAnimation.ofObject(node,"worldPosition",new Vector3Evaluator(),path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//        * create parameters that account for when the animatuion is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimation.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimation.setEvaluator(new Vector3Evaluator());
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimation.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimation.setDuration(5000);
-//        objectAnimation.start();
-//
-//
-//    }
-
-
-//    private void getNodeCoordinates(Node node){
-//
-//        float x = node.getWorldPosition().x;
-//        float y = node.getWorldPosition().y;
-//        float z = node.getWorldPosition().z;
-//        Path path = new Path();
-//        path.moveTo(x + 0, y+ 0);
-//        path.lineTo(x + 0.20f , y + 0.40f);path.lineTo(x + 0.40f, y + 0.90f);
-//        ObjectAnimator objectAnimator =
-//                ObjectAnimator.ofObject(node, "transformationSystem",new Vector3Evaluator(),path);
-//        objectAnimator.setDuration(3000);
-//        objectAnimator.start();
-//
-//
-//
-//    }
-
-
-//    private void objectMovement(TransformableNode node) {
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f,0.03f,0.0f, Path.Direction.CCW);
-//        objectAnimation = new ObjectAnimator();
-//        objectAnimation.setAutoCancel(true);
-//        objectAnimation.setTarget(node);
-//        objectAnimation.ofObject(node,"worldPosition",new Vector3Evaluator(),path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//        * create parameters that account for when the animatuion is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimation.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimation.setEvaluator(new Vector3Evaluator());
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimation.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimation.setDuration(5000);
-//        objectAnimation.start();
-//
-//
-//    }
-
-
-    private void getNodeCoordinates(Node node) {
-
-        float x = node.getWorldPosition().x;
-        float y = node.getWorldPosition().y;
-        float z = node.getWorldPosition().z;
-        Path path = new Path();
-        path.moveTo(x + 0, y + 0);
-        path.lineTo(x + 0.20f, y + 0.40f);
-        path.lineTo(x + 0.40f, y + 0.90f);
-        ObjectAnimator objectAnimator =
-                ObjectAnimator.ofObject(node, "transformationSystem", new Vector3Evaluator(), path);
-        objectAnimator.setDuration(3000);
-        objectAnimator.start();
-
-
-//=======
-//        private void objectMovement (TransformableNode node){
-//            randomVector3Array();
-//            Random random = new Random();
-//            int coordinateOption = random.nextInt(10) + 1;
-//
-//            objectAnimation = new ObjectAnimator();
-//            objectAnimation.setAutoCancel(true);
-//            objectAnimation.setTarget(node);
-//            AnchorNode endNode = new AnchorNode();
-//            endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//            // All the positions should be world positions
-//            // The first position is the start, and the second is the end.
-//            objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//
-//            // Use setWorldPosition to position andy.
-//            objectAnimation.setPropertyName("worldPosition");
-//
-//            // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//            // vector3.  The default is to use lerp.
-//            objectAnimation.setEvaluator(new Vector3Evaluator());
-//            // This makes the animation linear (smooth and uniform).
-//            objectAnimation.setInterpolator(new LinearInterpolator());
-//            // Duration in ms of the animation.
-//            objectAnimation.setDuration(5000);
-//            objectAnimation.start();
-//
-//
-//        }
-
-//        private ArrayList<Vector3> randomVector3Array () {
-//            Random random = new Random();
-//            vector3List = new ArrayList<>();
-//            float xVector;
-//            float yVector;
-//            float zVector;
-//            for (int i = 0; i < 12; i++) {
-//
-//                xVector = random.nextFloat();
-//                yVector = random.nextFloat();
-//                zVector = random.nextFloat();
-//
-//
-//                vector3List.add(new Vector3(xVector, yVector, zVector));
-//            }
-//
-//            return vector3List;
-//
+    public void shootSound() {
+        audioSetup();
+        audioLoader.explodeSound();
     }
+
+    public void laserSound() {
+
+        audioSetup();
+        audioLoader.laserSound();
+    }
+
+    public void backgroundMusic(){
+        audioSetup();
+        audioLoader.backGroundMusic();
+    }
+    public void stopAudio(){
+        audioLoader.stopAudio();
+    }
+
 }

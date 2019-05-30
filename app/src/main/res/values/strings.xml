@@ -21,12 +21,24 @@
     <string name="top_players">Top Players</string>
     <string name="choose_a_level">Choose a level</string>
     <string-array name="level_array">
-        <item>Easy</item>
-        <item>Medium</item>
-        <item>Hard</item>
+        <item>EASY</item>
+        <item>MEDIUM</item>
+        <item>HARD</item>
+        <item>BOSS</item>
     </string-array>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="note_passwrod_requirement">Note: Password must have 6 characters or more!</string>
+    <string name="logout">LogOut</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="error_string">Error! </string>
+    <string name="msg_for_resetting_password">You told us you forgot your password.
+        \nIf you really did, please insert your email below, click the Reset Password button and an email will be sent to you.
+        \nIf you didn\'t mean to reset your password, you can just ignore this email and your password will not change.</string>
+    <string name="insert_email_message">Please insert an email!</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

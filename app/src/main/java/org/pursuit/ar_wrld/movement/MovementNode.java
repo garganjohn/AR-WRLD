@@ -1,12 +1,14 @@
 package org.pursuit.ar_wrld.movement;
 
 import android.animation.ObjectAnimator;
-import android.graphics.Path;
+
 import android.view.animation.LinearInterpolator;
 
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.math.Quaternion;
+import com.google.ar.sceneform.math.QuaternionEvaluator;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
 
@@ -14,12 +16,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MovementNode extends AnchorNode {
-    public MovementNode(ObjectAnimator objectAnimator) {
+    public MovementNode() {
         this.objectAnimator = objectAnimator;
         this.node = getNode();
     }
 
     private ObjectAnimator objectAnimator;
+
     private Node node;
     private Vector3 up;
     private Vector3 down;
@@ -33,10 +36,6 @@ public class MovementNode extends AnchorNode {
         return node;
     }
 
-    public ObjectAnimator getObjectAnimator() {
-        return objectAnimator;
-    }
-
     @Override
     public void onUpdate(FrameTime frameTime) {
         super.onUpdate(frameTime);
@@ -44,133 +43,104 @@ public class MovementNode extends AnchorNode {
             return;
 
         }
-        upMovment();
+        randomMovement();
+        //createAnimator(true);
     }
-
-    private ArrayList<Vector3> randomVector3Array() {
-        Random random = new Random();
-        vector3List = new ArrayList<>();
-        up = node.getUp();
-        down = node.getDown();
-        forward = node.getForward();
-
-        float xVector;
-        float yVector;
-        float zVector;
-        for (int i = 0; i < 12; i++) {
-
-            xVector = random.nextFloat();
-            yVector = random.nextFloat();
-            zVector = random.nextFloat();
-
-
-            vector3List.add(new Vector3(xVector, yVector, zVector));
-        }
-
-        return vector3List;
-    }
-
-//    private ObjectAnimator startRandomMovement() {
-//        //get nodes original coordinates
-//        Vector3 originalNodePosition = node.getWorldPosition();
-//
-//        //RandomArray of Coordinates are instantiated
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f, 0.03f, 0.0f, Path.Direction.CCW);
-//
-//        ObjectAnimator objectAnimator = new ObjectAnimator();
-//        objectAnimator.setAutoCancel(true);
-//        objectAnimator.setTarget(node);
-//        objectAnimator.ofObject(node, "worldPosition", new Vector3Evaluator(), path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimator.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//         * create parameters that account for when the animation is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimator.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimator.setEvaluator(new Vector3Evaluator());
-//        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-//        objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimator.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimator.setDuration(5000);
-//        objectAnimator.start();
-//
-//        return objectAnimator;
-//
-//
-//    }
-
-//    private void startAnimatio() {
-//        if (objectAnimator != null) {
-//            return;
-//        }
-//        objectAnimator = startRandomMovement(node);
-//    }
 
     public void addOffset(float x, float y, float z) {
-        float posX = this.getLocalPosition().x + x;
+        float posX = this.node.getLocalPosition().x + x;
         float posY = this.getLocalPosition().y + y;
         float posZ = this.getLocalPosition().z + z;
         this.setLocalPosition(new Vector3(posX, posY, posZ));
     }
 
-   public ObjectAnimator upMovment() {
+    public ObjectAnimator randomMovement() {
         //get nodes original coordinates
         Vector3 originalNodePosition = this.getLocalPosition();
+        //set new coordinates
         Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
-
-        //RandomArray of Coordinates are instantiated
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f, 0.03f, 0.0f, Path.Direction.CCW);
-
+        Vector3 left = new Vector3(0.700f, 0.5f, -0.300f);
+        Vector3 down = new Vector3(-0.5f, -0.5f, -0.5f);
         ObjectAnimator objectAnimator = new ObjectAnimator();
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
         objectAnimator.setPropertyName("localPosition");
-        // objectAnimator.ofObject(this, "localPosition", new Vector3Evaluator(), up);
-        // AnchorNode endNode = new AnchorNode();
-        // All the positions should be world positions
-        // The first position is the start, and the second is the end.e
-        objectAnimator.setEvaluator(new Vector3Evaluator());
-        objectAnimator.setObjectValues(originalNodePosition, up);
-        /*long duration = objectAnimation.getTotalDuration();
-         * create parameters that account for when the animation is done and then start a new one */
 
-        // Use setWorldPosition to position andy.
-//        objectAnimator.setPropertyName("worldPosition");
+        //requires the setter name of what you are manipulating
 
-        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-        // vector3.  The default is to use lerp.
+        //evaluator of what values your are passing
+
+        //set multiple coordinates to be called one after the other
+        objectAnimator.setObjectValues(originalNodePosition, up, left, down, originalNodePosition);
         objectAnimator.setEvaluator(new Vector3Evaluator());
+        //animation happens forever
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
-        objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
+        //animation is the called in reverse
+        objectAnimator.setRepeatMode(ObjectAnimator.REVERSE);
         // This makes the animation linear (smooth and uniform).
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
-        objectAnimator.setDuration(5000);
+        objectAnimator.setDuration(6000);
+
         objectAnimator.start();
 
         return objectAnimator;
 
 
     }
+
+
+    public ObjectAnimator createAnimator(boolean clockwise) {
+        // Node's setLocalRotation method accepts Quaternions as parameters.
+        // First, set up orientations that will animate a circle.
+        Quaternion[] orientations = new Quaternion[4];
+        // Rotation to apply first, to tilt its axis.
+        Quaternion baseOrientation = Quaternion.axisAngle(new Vector3(1.0f, 0f, 0.0f),0.03f );
+        for (int i = 0; i < orientations.length; i++) {
+            float angle = i * 360 / (orientations.length - 1);
+            if (clockwise) {
+                angle = 360 - angle;
+            }
+            Quaternion orientation = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f),25.19f );
+            orientations[i] = Quaternion.multiply(baseOrientation, orientation);
+        }
+
+        objectAnimator = new ObjectAnimator();
+        // Cast to Object[] to make sure the varargs overload is called.
+        objectAnimator.setObjectValues((Object[]) orientations);
+
+        // Next, give it the localRotation property.
+        objectAnimator.setPropertyName("localRotation");
+
+        // Use Sceneform's QuaternionEvaluator.
+        objectAnimator.setEvaluator(new QuaternionEvaluator());
+
+        //  Allow objectAnimator to repeat forever
+        objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        objectAnimator.setRepeatMode(ObjectAnimator.RESTART);
+        objectAnimator.setInterpolator(new LinearInterpolator());
+        objectAnimator.setAutoCancel(true);
+
+        return objectAnimator;
+
+    }
+
+
+    private void getNodeCoordinates(Node node) {
+//
+//        float x = node.getWorldPosition().x;
+//        float y = node.getWorldPosition().y;
+//        float z = node.getWorldPosition().z;
+//        Path path = new Path();
+//        path.moveTo(x + 0, y + 0);
+//        path.lineTo(x + 0.20f, y + 0.40f);
+//        path.lineTo(x + 0.40f, y + 0.90f);
+//        ObjectAnimator objectAnimator =
+//                ObjectAnimator.ofObject(node, "transformationSystem", new Vector3Evaluator(), path);
+//        objectAnimator.setDuration(3000);
+//        objectAnimator.start();
+//
+//
+    }
+
 }
