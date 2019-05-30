@@ -17,45 +17,23 @@ import org.pursuit.ar_wrld.R;
 
 public class ModelLocationIndicator {
     private static final String TAG = "model location";
-    private Vector3 modelNodePosition;
     private ObjectAnimator animator;
-    private TransformableNode modelNode;
     private TransformableNode markerNode;
-    private ArFragment arFragment;
-    private ImageView upArrow;
-    private ImageView downArrow;
+
     private ImageView leftArrow;
     private ImageView rightArrow;
 
-    public ModelLocationIndicator(ImageView up, ImageView down, ImageView left, ImageView right) {
-        this.upArrow = up;
-        this.downArrow = down;
+    public ModelLocationIndicator(ImageView left, ImageView right) {
+
         this.leftArrow = left;
         this.rightArrow = right;
     }
 
-    public void pickMarkers() {
-        float holder = modelNodePosition.y + 0.5f;
-        Vector3 markerNodePosition = new Vector3(modelNodePosition.x, holder, modelNodePosition.z);
-        markerNode = new TransformableNode(arFragment.getTransformationSystem());
-        markerNode.setParent(modelNode);
-        markerNode.setLocalPosition(markerNodePosition);
-        Log.d(TAG, "addMarkerToModel: ");
-    }
+
 
 
     //TODO take in vector upon opbj inst. and then decide which arrow to indicate
     public void indicate(Vector3 vector) {
-        if (vector.z < 0) {
-            animator = new ObjectAnimator().ofInt(downArrow, "backgroundColor", Color.RED, Color.TRANSPARENT);
-            animator.setDuration(1500);
-            animator.setStartDelay(1000);
-            animator.setEvaluator(new ArgbEvaluator());
-            animator.setRepeatMode(Animation.REVERSE);
-            animator.setRepeatCount(Animation.ABSOLUTE);
-            animator.start();
-            //downArrow.setBackgroundColor(Color.TRANSPARENT);
-        }
         if (vector.x < 0) {
             animator = new ObjectAnimator().ofInt(leftArrow, "backgroundColor", Color.RED, Color.TRANSPARENT);
             animator.setDuration(1500);
@@ -74,7 +52,6 @@ public class ModelLocationIndicator {
             animator.setRepeatMode(Animation.REVERSE);
             animator.setRepeatCount(Animation.ABSOLUTE);
             animator.start();
-            //rightArrow.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 

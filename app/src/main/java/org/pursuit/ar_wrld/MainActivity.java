@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
     private ModelLocationIndicator mli;
-    private ImageView upArrow;
-    private ImageView downArrow;
     private ImageView leftArrow;
     private ImageView rightArrow;
     private TextView scorekeepingTv;
@@ -188,11 +186,9 @@ public class MainActivity extends AppCompatActivity {
         weakWeapon = findViewById(R.id.weak_weapon);
         medWeapon = findViewById(R.id.med_weapon);
 
-        upArrow = findViewById(R.id.up_marker);
-        downArrow = findViewById(R.id.down_marker);
         rightArrow = findViewById(R.id.left_marker);
         leftArrow = findViewById(R.id.right_marker);
-        mli = new ModelLocationIndicator(upArrow, downArrow, rightArrow, leftArrow);
+        mli = new ModelLocationIndicator(rightArrow, leftArrow);
 
     }
 
