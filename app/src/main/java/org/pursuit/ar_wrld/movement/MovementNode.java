@@ -125,4 +125,22 @@ public class MovementNode extends AnchorNode {
 
     }
 
+
+    private void getNodeCoordinates(Node node) {
+//
+//        float x = node.getWorldPosition().x;
+//        float y = node.getWorldPosition().y;
+//        float z = node.getWorldPosition().z;
+//        Path path = new Path();
+//        path.moveTo(x + 0, y + 0);
+//        path.lineTo(x + 0.20f, y + 0.40f);
+//        path.lineTo(x + 0.40f, y + 0.90f);
+//        ObjectAnimator objectAnimator =
+//                ObjectAnimator.ofObject(node, "transformationSystem", new Vector3Evaluator(), path);
+//        objectAnimator.setDuration(3000);
+//        objectAnimator.start();
+//
+//
+    }
+
 }

@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer exitAnimationTimer;
     private String difficulty;
     Button shootingButton;
+    private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
 
@@ -195,8 +196,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void audioSetup() {
-        AudioLoader audioLoader = new AudioLoader(getApplicationContext());
-        audioLoader.setShootingSound(R.raw.laser_sound);
+         audioLoader = new AudioLoader(getApplicationContext());
+
     }
 
     private void onTapForMissInteraction() {
@@ -542,6 +543,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
+                backgroundMusic();
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
                     isUserTimeWarned = true;
                     gameInfoPopup(R.string.timer_warning, true);
@@ -561,6 +563,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTimerFinish() {
                         goToResultPage();
+                        stopAudio();
                     }
                 }.startTimer();
             }
@@ -656,158 +659,23 @@ public class MainActivity extends AppCompatActivity {
         if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
-//    private void objectMovement(TransformableNode node) {
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f,0.03f,0.0f, Path.Direction.CCW);
-//        objectAnimation = new ObjectAnimator();
-//        objectAnimation.setAutoCancel(true);
-//        objectAnimation.setTarget(node);
-//        objectAnimation.ofObject(node,"worldPosition",new Vector3Evaluator(),path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//        * create parameters that account for when the animatuion is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimation.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimation.setEvaluator(new Vector3Evaluator());
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimation.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimation.setDuration(5000);
-//        objectAnimation.start();
-//
-//
-//    }
-
-
-//    private void getNodeCoordinates(Node node){
-//
-//        float x = node.getWorldPosition().x;
-//        float y = node.getWorldPosition().y;
-//        float z = node.getWorldPosition().z;
-//        Path path = new Path();
-//        path.moveTo(x + 0, y+ 0);
-//        path.lineTo(x + 0.20f , y + 0.40f);path.lineTo(x + 0.40f, y + 0.90f);
-//        ObjectAnimator objectAnimator =
-//                ObjectAnimator.ofObject(node, "transformationSystem",new Vector3Evaluator(),path);
-//        objectAnimator.setDuration(3000);
-//        objectAnimator.start();
-//
-//
-//
-//    }
-
-
-//    private void objectMovement(TransformableNode node) {
-//        randomVector3Array();
-//        Random random = new Random();
-//        int coordinateOption = random.nextInt(10) + 1;
-//        Vector3 previousPosition = node.getWorldPosition();
-//        //Implementing a path
-//        Path path = new Path();
-//        path.addCircle(0.4f,0.03f,0.0f, Path.Direction.CCW);
-//        objectAnimation = new ObjectAnimator();
-//        objectAnimation.setAutoCancel(true);
-//        objectAnimation.setTarget(node);
-//        objectAnimation.ofObject(node,"worldPosition",new Vector3Evaluator(),path);
-//        AnchorNode endNode = new AnchorNode();
-//        endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//        // All the positions should be world positions
-//        // The first position is the start, and the second is the end.
-//        objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//        /*long duration = objectAnimation.getTotalDuration();
-//        * create parameters that account for when the animatuion is done and then start a new one */
-//
-//        // Use setWorldPosition to position andy.
-//        objectAnimation.setPropertyName("worldPosition");
-//
-//        // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//        // vector3.  The default is to use lerp.
-//        objectAnimation.setEvaluator(new Vector3Evaluator());
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimation.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimation.setDuration(5000);
-//        objectAnimation.start();
-//
-//
-//    }
-
-
-    private void getNodeCoordinates(Node node) {
-
-        float x = node.getWorldPosition().x;
-        float y = node.getWorldPosition().y;
-        float z = node.getWorldPosition().z;
-        Path path = new Path();
-        path.moveTo(x + 0, y + 0);
-        path.lineTo(x + 0.20f, y + 0.40f);
-        path.lineTo(x + 0.40f, y + 0.90f);
-        ObjectAnimator objectAnimator =
-                ObjectAnimator.ofObject(node, "transformationSystem", new Vector3Evaluator(), path);
-        objectAnimator.setDuration(3000);
-        objectAnimator.start();
-
-
-//=======
-//        private void objectMovement (TransformableNode node){
-//            randomVector3Array();
-//            Random random = new Random();
-//            int coordinateOption = random.nextInt(10) + 1;
-//
-//            objectAnimation = new ObjectAnimator();
-//            objectAnimation.setAutoCancel(true);
-//            objectAnimation.setTarget(node);
-//            AnchorNode endNode = new AnchorNode();
-//            endNode.setWorldPosition(new Vector3(randomVector3Array().get(coordinateOption)));
-//            // All the positions should be world positions
-//            // The first position is the start, and the second is the end.
-//            objectAnimation.setObjectValues(node.getWorldPosition(), endNode.getWorldPosition());
-//
-//            // Use setWorldPosition to position andy.
-//            objectAnimation.setPropertyName("worldPosition");
-//
-//            // The Vector3Evaluator is used to evaluator 2 vector3 and return the next
-//            // vector3.  The default is to use lerp.
-//            objectAnimation.setEvaluator(new Vector3Evaluator());
-//            // This makes the animation linear (smooth and uniform).
-//            objectAnimation.setInterpolator(new LinearInterpolator());
-//            // Duration in ms of the animation.
-//            objectAnimation.setDuration(5000);
-//            objectAnimation.start();
-//
-//
-//        }
-
-//        private ArrayList<Vector3> randomVector3Array () {
-//            Random random = new Random();
-//            vector3List = new ArrayList<>();
-//            float xVector;
-//            float yVector;
-//            float zVector;
-//            for (int i = 0; i < 12; i++) {
-//
-//                xVector = random.nextFloat();
-//                yVector = random.nextFloat();
-//                zVector = random.nextFloat();
-//
-//
-//                vector3List.add(new Vector3(xVector, yVector, zVector));
-//            }
-//
-//            return vector3List;
-//
+    public void shootSound() {
+        audioSetup();
+        audioLoader.explodeSound();
     }
+
+    public void laserSound() {
+
+        audioSetup();
+        audioLoader.laserSound();
+    }
+
+    public void backgroundMusic(){
+        audioSetup();
+        audioLoader.backGroundMusic();
+    }
+    public void stopAudio(){
+        audioLoader.stopAudio();
+    }
+
 }
