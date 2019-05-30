@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -112,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        showActionBar();
+
         difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
@@ -119,8 +122,6 @@ public class MainActivity extends AppCompatActivity {
         audioSetup();
         setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-
-        
 
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -141,11 +142,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupGameInfo(){
-        startFromBottom = new TranslateAnimation(0,0,600f,0);
+    private void setupGameInfo() {
+        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
         startFromBottom.setDuration(1000);
 
-        exitToBottom = new TranslateAnimation(0,0,0,600f);
+        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
         exitToBottom.setDuration(2000);
 
         startFromBottom.setAnimationListener(new Animation.AnimationListener() {
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        exitAnimationTimer = new CountDownTimer(6000,1000) {
+        exitAnimationTimer = new CountDownTimer(6000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -204,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void audioSetup() {
-         audioLoader = new AudioLoader(getApplicationContext());
+        audioLoader = new AudioLoader(getApplicationContext());
 
     }
 
@@ -287,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
         rightArrow = findViewById(R.id.left_marker);
         leftArrow = findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
-      
+
         gameInfoTv = findViewById(R.id.game_info_textview);
 
     }
@@ -297,11 +298,10 @@ public class MainActivity extends AppCompatActivity {
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
 
-        if (isBoss){
+        if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
-            loadModel(anchorNode.getAnchor(),Uri.parse(GameInformation.BOSS_ENEMY),GameInformation.BOSS_ENEMY);
-        }
-        else {
+            loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
+        } else {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
@@ -443,21 +443,17 @@ public class MainActivity extends AppCompatActivity {
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY){
+        if (whichEnemy == GameInformation.EASY_ENEMY) {
             modelLoader.setNumofLivesModel0(2);
-        }
-        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
             modelLoader.setNumofLivesModel0(3);
-        }
-        else if (whichEnemy == GameInformation.HARD_ENEMY){
+        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
             modelLoader.setNumofLivesModel0(4);
-        }
-        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
+        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
             Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
-        }
-        else if (whichEnemy == GameInformation.BOSS_ENEMY){
+        } else if (whichEnemy == GameInformation.BOSS_ENEMY) {
             modelLoader.setNumofLivesModel0(30);
         }
 
@@ -509,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
-                if (whichEnemy == GameInformation.EASY_ENEMY){
+                if (whichEnemy == GameInformation.EASY_ENEMY) {
 
                     scoreNumber += 1000;
                 } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
@@ -563,8 +559,8 @@ public class MainActivity extends AppCompatActivity {
                 });
         return;
     }
-  
-    public void startGameTimer(){
+
+    public void startGameTimer() {
         backgroundMusic();
 
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
@@ -572,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
-                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
+                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
                     gameInfoPopup(R.string.timer_warning, true);
                 }
@@ -685,12 +681,17 @@ public class MainActivity extends AppCompatActivity {
         audioLoader.laserSound();
     }
 
-    public void backgroundMusic(){
+    public void backgroundMusic() {
         audioSetup();
         audioLoader.backGroundMusic();
     }
-    public void stopAudio(){
+
+    public void stopAudio() {
         audioLoader.stopAudio();
     }
 
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.show();
+    }
 }
