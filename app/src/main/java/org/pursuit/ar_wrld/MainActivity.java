@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
     Button shootingButton;
-    private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
     private AudioLoader audioLoader;
     private HitMarker hitMarker;
@@ -388,7 +387,7 @@ public class MainActivity extends AppCompatActivity {
         numOfModels++;
         Log.d(TAG, "addNodeToScene: IN THIS METHOD");
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode(objectAnimation);
+        MovementNode anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -557,12 +556,15 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onTimerFinish() {
+                        audioLoader.stopAudio();
                         goToResultPage();
                     }
                 }.startTimer();
             }
         };
         startGame.startTimer();
+        backgroundMusic();
+
     }
 
     public void updateTimer() {
@@ -700,6 +702,14 @@ public class MainActivity extends AppCompatActivity {
 
         audioSetup();
         audioLoader.laserSound();
+    }
+
+    public void backgroundMusic(){
+        audioSetup();
+        audioLoader.backGroundMusic();
+    }
+    public void stopAudio(){
+        audioLoader.stopAudio();
     }
 
     @Override

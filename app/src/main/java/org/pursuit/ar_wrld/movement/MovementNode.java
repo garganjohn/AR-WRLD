@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MovementNode extends AnchorNode {
-    public MovementNode(ObjectAnimator objectAnimator) {
+    public MovementNode() {
         this.objectAnimator = objectAnimator;
         this.node = getNode();
     }
@@ -56,20 +56,23 @@ public class MovementNode extends AnchorNode {
 
     public ObjectAnimator randomMovement() {
         //get nodes original coordinates
-        Vector3 originalNodePosition = this.getWorldPosition();
+        Vector3 originalNodePosition = this.getLocalPosition();
         //set new coordinates
         Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
         Vector3 left = new Vector3(0.700f, 0.5f, -0.300f);
         Vector3 down = new Vector3(-0.5f, -0.5f, -0.5f);
-       objectAnimator = new ObjectAnimator();
+        ObjectAnimator objectAnimator = new ObjectAnimator();
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
+        objectAnimator.setPropertyName("localPosition");
+
         //requires the setter name of what you are manipulating
-        objectAnimator.setPropertyName("worldPosition");
+
         //evaluator of what values your are passing
-        objectAnimator.setEvaluator(new Vector3Evaluator());
+
         //set multiple coordinates to be called one after the other
         objectAnimator.setObjectValues(originalNodePosition, up, left, down, originalNodePosition);
+        objectAnimator.setEvaluator(new Vector3Evaluator());
         //animation happens forever
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         //animation is the called in reverse

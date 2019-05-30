@@ -77,4 +77,18 @@ public class AudioLoader {
 
 
     }
+    public void backGroundMusic(){
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer = MediaPlayer.create(context, R.raw.backgroundmusic);
+        mediaPlayer.seekTo(0);
+        mediaPlayer.setVolume(20f,20f);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
+
+    }
+
+    public void stopAudio(){
+
+        mediaPlayer.release();
+    }
 }
