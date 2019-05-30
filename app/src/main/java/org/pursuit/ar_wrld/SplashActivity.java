@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import org.pursuit.ar_wrld.login.SignInActivity;
+
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_LENGTH = 1000;
 
@@ -15,7 +17,7 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             /* Create an Intent that will start the Menu-Activity. */
-            Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
+            Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
             SplashActivity.this.startActivity(mainIntent);
             SplashActivity.this.finish();
         }, SPLASH_LENGTH);

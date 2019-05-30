@@ -1,17 +1,27 @@
 package org.pursuit.ar_wrld;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Path;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,21 +34,26 @@ import com.google.ar.core.Plane;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
+import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
@@ -72,25 +87,38 @@ public class MainActivity extends AppCompatActivity {
     private ImageView weakWeapon;
     private ImageView medWeapon;
     private WeaponsAvailable weaponSelection;
+    private TextView gameInfoTv;
+    private boolean isUserTimeWarned = false;
     private int weaponDamage;
     private boolean isWeakWeaponChosen;
     private boolean isMedWeaponChosen;
+    private Animation startFromBottom;
+    private Animation exitToBottom;
+    private CountDownTimer exitAnimationTimer;
+    private String difficulty;
     Button shootingButton;
+    private AudioLoader audioLoader;
+    private ObjectAnimator objectAnimation;
+    private ArrayList<Vector3> vector3List;
 
 
     // Controls animation playback.
     private ModelAnimator animator;
     // Index of the current animation playing.
+    private MovementNode movementNode;
     private int nextAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
         getStringRes();
         audioSetup();
+        setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
         scorekeepingTv.setText(scoreString);
@@ -100,14 +128,83 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
+        gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
-        spawningAliens();
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
+            Log.d(TAG, "onCreate: ");
+            spawningAliens(true);
+        }
+        else {
+            spawningAliens(false);
+        }
+    }
+
+    private void setupGameInfo(){
+        startFromBottom = new TranslateAnimation(0,0,600f,0);
+        startFromBottom.setDuration(1000);
+
+        exitToBottom = new TranslateAnimation(0,0,0,600f);
+        exitToBottom.setDuration(2000);
+
+        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                exitAnimationTimer.start();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                gameInfoTv.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        exitAnimationTimer = new CountDownTimer(6000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                gameInfoTv.startAnimation(exitToBottom);
+            }
+        };
+    }
+
+    private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
+        gameInfoTv.setText(stringToDisplay);
+        if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
+        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
+        gameInfoTv.startAnimation(startFromBottom);
+
     }
 
     private void audioSetup() {
-        AudioLoader audioLoader = new AudioLoader(getApplicationContext());
-        audioLoader.setShootingSound(R.raw.laser_sound);
+         audioLoader = new AudioLoader(getApplicationContext());
+
     }
 
     private void onTapForMissInteraction() {
@@ -189,70 +286,94 @@ public class MainActivity extends AppCompatActivity {
         rightArrow = findViewById(R.id.left_marker);
         leftArrow = findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
+      
+        gameInfoTv = findViewById(R.id.game_info_textview);
 
     }
 
-    private void spawningAliens() {
-        final boolean[] isMedEnemyAdded = {false};
-        final boolean[] isHardEnemyAdded = {false};
+    private void spawningAliens(boolean isBoss) {
+
         AnchorNode anchorNode = new AnchorNode();
         anchorNode.setWorldPosition(new Vector3(0, 0, 0));
-        easyAlienSpawn = new Hourglass(2000, 1000) {
-            @Override
-            public void onTimerTick(long timeRemaining) {
 
-            }
+        if (isBoss){
+            Log.d(TAG, "spawningAliens: ");
+            loadModel(anchorNode.getAnchor(),Uri.parse(GameInformation.BOSS_ENEMY),GameInformation.BOSS_ENEMY);
+        }
+        else {
+            final boolean[] isMedEnemyAdded = {false};
+            final boolean[] isHardEnemyAdded = {false};
 
-            @Override
-            public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+            easyAlienSpawn = new Hourglass(2000, 1000) {
+                @Override
+                public void onTimerTick(long timeRemaining) {
 
-                easyAlienSpawn.startTimer();
-
-                if (scoreNumber > 10000 && !isMedEnemyAdded[0]) {
-                    isMedEnemyAdded[0] = true;
-                    Toast.makeText(MainActivity.this, "Med Enemy coming in", Toast.LENGTH_SHORT).show();
-                    medAlienSpawn.startTimer();
                 }
-            }
-        };
 
-        medAlienSpawn = new Hourglass(3000, 1000) {
-            @Override
-            public void onTimerTick(long timeRemaining) {
 
-            }
+                @Override
+                public void onTimerFinish() {
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
-            @Override
-            public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-                medAlienSpawn.startTimer();
+                    easyAlienSpawn.startTimer();
 
-                if (scoreNumber > 25000 && !isHardEnemyAdded[0]) {
-                    isHardEnemyAdded[0] = true;
+                    if (scoreNumber > 5000 && !isMedEnemyAdded[0]) {
+                        isMedEnemyAdded[0] = true;
+                        medAlienSpawn.startTimer();
+                    }
+                }
+            };
+
+            medAlienSpawn = new Hourglass(3000, 1000) {
+                @Override
+                public void onTimerTick(long timeRemaining) {
+
+                }
+
+                @Override
+                public void onTimerFinish() {
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                    medAlienSpawn.startTimer();
+
+                    if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
+                        isHardEnemyAdded[0] = true;
+                        hardAlienSpawn.startTimer();
+                    }
+                }
+            };
+
+            hardAlienSpawn = new Hourglass(6000, 1000) {
+                @Override
+                public void onTimerTick(long timeRemaining) {
+
+                }
+
+                @Override
+                public void onTimerFinish() {
+                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
                     hardAlienSpawn.startTimer();
                 }
+            };
+
+            switch (difficulty) {
+                case UserHomeScreenActivity.EASY_STRING:
+                    easyAlienSpawn.startTimer();
+                    break;
+                case UserHomeScreenActivity.MEDIUM_STRING:
+                    medAlienSpawn.startTimer();
+                    break;
+                case UserHomeScreenActivity.HARD_STRING:
+                    hardAlienSpawn.setTime(2000);
+                    hardAlienSpawn.startTimer();
+                    break;
             }
-        };
+        }
 
-        hardAlienSpawn = new Hourglass(6000, 1000) {
-            @Override
-            public void onTimerTick(long timeRemaining) {
-
-            }
-
-            @Override
-            public void onTimerFinish() {
-                loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
-                hardAlienSpawn.startTimer();
-            }
-        };
-
-        easyAlienSpawn.startTimer();
         startGameTimer();
     }
 
 
+    @SuppressLint("StringFormatInvalid")
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
@@ -296,8 +417,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
-        Log.d(TAG, "addNodeToScene: IN THIS METHOD");
-        AnchorNode anchorNode = new AnchorNode();
+        // AnchorNode anchorNode = new AnchorNode();
+        MovementNode anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -311,6 +432,7 @@ public class MainActivity extends AppCompatActivity {
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
+        anchorNode.randomMovement();
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
         mli.indicate(vector);
@@ -320,16 +442,22 @@ public class MainActivity extends AppCompatActivity {
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY) {
+        if (whichEnemy == GameInformation.EASY_ENEMY){
+            modelLoader.setNumofLivesModel0(2);
+        }
+        else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
             modelLoader.setNumofLivesModel0(3);
-        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
-            modelLoader.setNumofLivesModel0(6);
-        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
-            modelLoader.setNumofLivesModel0(10);
-        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
+        }
+        else if (whichEnemy == GameInformation.HARD_ENEMY){
+            modelLoader.setNumofLivesModel0(4);
+        }
+        else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
             Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
+        }
+        else if (whichEnemy == GameInformation.BOSS_ENEMY){
+            modelLoader.setNumofLivesModel0(30);
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -374,12 +502,14 @@ public class MainActivity extends AppCompatActivity {
 
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
+                laserSound();
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
-                if (whichEnemy == GameInformation.EASY_ENEMY) {
+                if (whichEnemy == GameInformation.EASY_ENEMY){
+
                     scoreNumber += 1000;
                 } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
                     scoreNumber += 2500;
@@ -408,11 +538,11 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 numOfModels--;
+                shootSound();
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
-                Toast.makeText(this, "Enemy Eliminated", Toast.LENGTH_SHORT).show();
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
 
@@ -430,19 +560,25 @@ public class MainActivity extends AppCompatActivity {
                 });
         return;
     }
+  
+    public void startGameTimer(){
+        backgroundMusic();
 
-    public void startGameTimer() {
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
                 timeLeftInMilliseconds = timeRemaining;
-                Log.d(TAG, "onTimerTick: " + timeLeftInMilliseconds);
                 updateTimer();
+                if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned){
+                    isUserTimeWarned = true;
+                    gameInfoPopup(R.string.timer_warning, true);
+                }
             }
 
             @Override
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
+                stopAudio();
                 showDialog();
                 new Hourglass(3000, 1000) {
                     @Override
@@ -453,6 +589,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onTimerFinish() {
                         goToResultPage();
+
                     }
                 }.startTimer();
             }
@@ -519,12 +656,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+
     }
+
+    public void shootSound() {
+        audioSetup();
+        audioLoader.explodeSound();
+    }
+
+    public void laserSound() {
+
+        audioSetup();
+        audioLoader.laserSound();
+    }
+
+    public void backgroundMusic(){
+        audioSetup();
+        audioLoader.backGroundMusic();
+    }
+    public void stopAudio(){
+        audioLoader.stopAudio();
+    }
+
 }

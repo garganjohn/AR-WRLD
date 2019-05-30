@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -21,6 +23,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -39,51 +42,52 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private EditText inputPassword;
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
+    private TextView forgotTextview;
 
     private SignInButton button;
     FirebaseAuth.AuthStateListener firebaseAuthListener;
 
+
     @Override
     protected void onStart() {
+        FirebaseApp.initializeApp(this);
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
-
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        firebaseAuth = FirebaseAuth.getInstance();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
         inputEmail = findViewById(R.id.email);
         inputPassword = findViewById(R.id.password);
         createNewAcct = findViewById(R.id.sign_in_text);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.sign_in_progressbar);
+        forgotTextview = findViewById(R.id.forgot_password);
 
         signInButton = findViewById(R.id.button_login);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        createNewAcct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
-            }
-        });
-
         button = findViewById(R.id.sign_in_google);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+
+        if(firebaseAuth.getCurrentUser() != null){
+            startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
+            finish();
+        }
+
+        forgotTextview.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, ResetPasswordActivity.class)));
+
+        createNewAcct.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, SignUpActivity.class)));
+
+        button.setOnClickListener(v -> signIn());
 
         signInButton.setOnClickListener(v -> {
             String email = inputEmail.getText().toString();
             final String password = inputPassword.getText().toString();
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(getApplicationContext(), "Please enter email id", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.insert_email_message), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(password)) {
@@ -91,12 +95,12 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 return;
             }
 
-            progressBar.setVisibility(View.VISIBLE);
+            if (progressBar.getVisibility() == View.GONE) progressBar.setVisibility(View.VISIBLE);
 
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignInActivity.this, task -> {
 
-                        progressBar.setVisibility(View.GONE);
+                       if (progressBar.getVisibility() == View.VISIBLE) progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
                             // there was an error
@@ -114,7 +118,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         firebaseAuthListener = firebaseAuth -> {
             if (firebaseAuth.getCurrentUser() != null) {
-                startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
+                SignInActivity.this.startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
             }
 
         };
@@ -157,19 +161,19 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
 
-
     }
 
-    private void signIn() {
+    public void signIn() {
         Intent signInIntent =
                 Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+
+    public void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
-            Intent goToIntent = new Intent(SignInActivity.this, DatabaseActivity.class);
+            Intent goToIntent = new Intent(SignInActivity.this, UserHomeScreenActivity.class);
             startActivity(goToIntent);
             Toast.makeText(getApplicationContext(), "Hello " + acct.getDisplayName(), Toast.LENGTH_SHORT).show();
             //statusTextView.setText("Hello, " + acct.getDisplayName());

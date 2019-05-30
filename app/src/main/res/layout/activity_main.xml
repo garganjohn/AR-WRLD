@@ -11,15 +11,7 @@
         android:name="com.google.ar.sceneform.ux.ArFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-
-    <!--<Button-->
-    <!--android:id="@+id/shooting_button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="shoot"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintRight_toRightOf="parent" />-->
+  
     <TextView
         android:id="@+id/damage_for_med_weapon"
         android:layout_width="wrap_content"
@@ -67,8 +59,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="#70000000"
-        android:fontFamily="@font/aansa"
         android:padding="8dp"
+        android:fontFamily="@font/aansa"
         android:text="@string/aliens_remaining_string"
         android:textColor="#fff"
         android:textSize="16sp"
@@ -90,6 +82,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/timer_image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/timer_black_white"
+        app:layout_constraintEnd_toStartOf="@id/timer_textview"
+        app:layout_constraintTop_toTopOf="@id/timer_textview"
+        app:layout_constraintBottom_toBottomOf="@id/timer_textview"/>
+
     <TextView
         android:id="@+id/timer_textview"
         android:layout_width="wrap_content"
@@ -108,6 +109,7 @@
         android:id="@+id/msg_for_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/aansa"
         android:background="#F51720"
         android:text=""
         android:textAlignment="center"
@@ -117,7 +119,6 @@
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
     <ImageView
         android:id="@+id/left_marker"
@@ -136,5 +137,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/game_info_textview"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_marginBottom="104dp"
+        android:background="#72000000"
+        android:fontFamily="@font/aansa"
+        android:padding="8dp"
+        android:textColor="#fff"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
 
 </android.support.constraint.ConstraintLayout>

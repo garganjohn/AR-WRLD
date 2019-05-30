@@ -1,4 +1,6 @@
 <resources>
+    <string name="game_intro">Hurry, defeat the martians before they take over the world! \n Tap the martians to defeat them \n HINT: Find clocks to increase your time</string>
+    <string name="timer_warning">HURRY! Only 10 seconds left before they overtake you</string>
     <string name="app_name">AR-WRLD</string>
     <string name="msg_for_user">Tap to destory martians</string>
     <string name="countdown_timer">00:00</string>
@@ -14,5 +16,29 @@
     <string name="failed">Attempt Unsuccessful!</string>
     <string name="med_weapon_info">Damage: 3 \n Ammo: %d</string>
     <string name="damage_weak_weapon">Damage: 1 \n Ammo: ∞</string>
+    <string name="practice">Practice</string>
+    <string name="play">Play</string>
+    <string name="top_players">Top Players</string>
+    <string name="choose_a_level">Choose a level</string>
+    <string-array name="level_array">
+        <item>EASY</item>
+        <item>MEDIUM</item>
+        <item>HARD</item>
+        <item>BOSS</item>
+    </string-array>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="note_passwrod_requirement">Note: Password must have 6 characters or more!</string>
+    <string name="logout">LogOut</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="error_string">Error! </string>
+    <string name="msg_for_resetting_password">You told us you forgot your password.
+        \nIf you really did, please insert your email below, click the Reset Password button and an email will be sent to you.
+        \nIf you didn\'t mean to reset your password, you can just ignore this email and your password will not change.</string>
+    <string name="insert_email_message">Please insert an email!</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
