@@ -519,6 +519,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (whichEnemy == GameInformation.HARD_ENEMY){
                     scoreNumber += 5000;
+                }else if (whichEnemy == GameInformation.BOSS_ENEMY){
+                    scoreNumber += 25000;
                 }
 
                 if (isTimerModel){
