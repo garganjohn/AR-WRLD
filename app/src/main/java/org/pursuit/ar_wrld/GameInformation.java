@@ -7,4 +7,5 @@ public interface GameInformation {
     String MEDIUM_ENEMY = "donut.sfb";
     String HARD_ENEMY = "spaceship.sfb";
     String TIME_INCREASE_MODEL = "1345 Analog Clock.sfb";
+    String GAME_DIFFICULTY = "GAME DIFFICULTY";
 }

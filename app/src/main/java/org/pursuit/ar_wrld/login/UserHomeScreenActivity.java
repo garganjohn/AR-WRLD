@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 
@@ -29,9 +30,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String spinnerValue = levelSpinner.getSelectedItem().toString();
-                MainActivity mainActivity = new MainActivity(spinnerValue);
-                Intent intent = new Intent();
-                startActivity(new Intent(UserHomeScreenActivity.this, MainActivity.class));
+                Intent intent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
+                intent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
+                startActivity(intent);
             }
         });
     }

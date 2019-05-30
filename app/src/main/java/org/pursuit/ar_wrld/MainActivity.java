@@ -103,10 +103,6 @@ public class MainActivity extends AppCompatActivity {
     private MovementNode movementNode;
     private int nextAnimation;
 
-    public MainActivity(String difficulty) {
-        this.difficulty = difficulty;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
