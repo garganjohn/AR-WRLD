@@ -49,7 +49,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
-
+import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -60,6 +60,9 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
+    private ModelLocationIndicator mli;
+    private ImageView leftArrow;
+    private ImageView rightArrow;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -109,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        shootingButton = findViewById(R.id.shooting_button);
         difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
@@ -118,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
+        
+
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
@@ -125,14 +129,14 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
         if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
-            Log.d(TAG, "onCreate: ");
+            gameInfoPopup(R.string.boss_level,false);
             spawningAliens(true);
         }
         else {
+            gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
     }
@@ -205,21 +209,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void onTapForMissInteraction() {
-        arFragment.getArSceneView().getScene().setOnTouchListener(new Scene.OnTouchListener() {
-            @Override
-            public boolean onSceneTouch(HitTestResult hitTestResult, MotionEvent motionEvent) {
-                if (!isOutOfAmmo() && isMedWeaponChosen){
-                    shootMedWeapon();
-                    setMedAmmoTv();
-                }
-
-                if (isMedWeaponChosen && isOutOfAmmo()) {
-                    isWeakWeaponChosen = true;
-                    isMedWeaponChosen = false;
-                    weaponSwitch();
-                }
-                return false;
+        arFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> {
+            if (!isOutOfAmmo() && isMedWeaponChosen) {
+                shootMedWeapon();
+                setMedAmmoTv();
             }
+
+            if (isMedWeaponChosen && isOutOfAmmo()) {
+                isWeakWeaponChosen = true;
+                isMedWeaponChosen = false;
+                weaponSwitch();
+            }
+            return false;
         });
     }
 
@@ -228,12 +229,12 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv.setText(medAmmoCounter);
     }
 
-    private boolean isOutOfAmmo(){
+    private boolean isOutOfAmmo() {
         return weaponSelection.getMedWeaponAmmo() == 0;
     }
 
     private void shootMedWeapon() {
-        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo()-1);
+        weaponSelection.setMedWeaponAmmo(weaponSelection.getMedWeaponAmmo() - 1);
     }
 
     private void weaponSetup() {
@@ -243,22 +244,22 @@ public class MainActivity extends AppCompatActivity {
         weaponDamage = weaponSelection.getWeakWeaponDamage();
     }
 
-    private void weaponSwitch(){
-        if (!isWeakWeaponChosen){
+    private void weaponSwitch() {
+        if (!isWeakWeaponChosen) {
             weakWeapon.setAlpha(0.125f);
-        }else {
+        } else {
             weaponDamage = weaponSelection.getWeakWeaponDamage();
             weakWeapon.setAlpha(1f);
         }
-        if (!isMedWeaponChosen){
+        if (!isMedWeaponChosen) {
             medWeapon.setAlpha(0.125f);
-        }else {
+        } else {
             weaponDamage = weaponSelection.getMedWeaponDamage();
             medWeapon.setAlpha(1f);
         }
     }
 
-    private void setWeaponListener(){
+    private void setWeaponListener() {
         weakWeapon.setOnClickListener(v -> {
             isWeakWeaponChosen = true;
             isMedWeaponChosen = false;
@@ -282,7 +283,13 @@ public class MainActivity extends AppCompatActivity {
         medWeaponAmmoTv = findViewById(R.id.damage_for_med_weapon);
         weakWeapon = findViewById(R.id.weak_weapon);
         medWeapon = findViewById(R.id.med_weapon);
+
+        rightArrow = findViewById(R.id.left_marker);
+        leftArrow = findViewById(R.id.right_marker);
+        mli = new ModelLocationIndicator(rightArrow, leftArrow);
+      
         gameInfoTv = findViewById(R.id.game_info_textview);
+
     }
 
     private void spawningAliens(boolean isBoss) {
@@ -303,6 +310,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onTimerTick(long timeRemaining) {
 
                 }
+
 
                 @Override
                 public void onTimerFinish() {
@@ -370,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.med_weapon_info,weaponSelection.getMedWeaponAmmo());
+        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -380,11 +388,6 @@ public class MainActivity extends AppCompatActivity {
             animator = new ModelAnimator(data, modelRenderable);
             animator.start();
         }
-    }
-
-    private void detectHit(Button button) {
-        button.setOnClickListener(v -> {
-        });
     }
 
     private void setUpAR() {
@@ -433,6 +436,9 @@ public class MainActivity extends AppCompatActivity {
         anchorNode.randomMovement();
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
+        mli.indicate(vector);
+        //TODO put location logic here
+
 
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
@@ -449,7 +455,7 @@ public class MainActivity extends AppCompatActivity {
         else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL){
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
-            Log.d(TAG, "addNodeToScene: "+node.getLocalScale());
+            Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
         }
         else if (whichEnemy == GameInformation.BOSS_ENEMY){
             modelLoader.setNumofLivesModel0(30);
@@ -466,15 +472,7 @@ public class MainActivity extends AppCompatActivity {
                 node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
             }
         });
-//        //TODO check for hit detection
-//        shootingButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (node.getWorldPosition().x == 0 && node.getWorldPosition().y == 0 && 0 < node.getWorldPosition().z ){
-//                    Toast.makeText(MainActivity.this, "ENEMY HIT WITH SHOOTING BUTTON", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+
         setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
@@ -509,36 +507,34 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
-
+                mli.cancelAnimator();
 
                 if (whichEnemy == GameInformation.EASY_ENEMY){
+
                     scoreNumber += 1000;
-                }
-                else if (whichEnemy == GameInformation.MEDIUM_ENEMY){
+                } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
                     scoreNumber += 2500;
-                }
-                else if (whichEnemy == GameInformation.HARD_ENEMY){
+                } else if (whichEnemy == GameInformation.HARD_ENEMY) {
                     scoreNumber += 5000;
                 }else if (whichEnemy == GameInformation.BOSS_ENEMY){
                     scoreNumber += 25000;
                 }
 
-                if (isTimerModel){
-                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: "+timeLeftInMilliseconds);
+                if (isTimerModel) {
+                    Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 5000;
                     scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
                     startGameTimer();
-                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:"+timeLeftInMilliseconds);
+                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
                     Toast.makeText(this, "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
-                if (scoreNumber >= scoreTillClockModel){
-                    if (scoreTillClockModel <= 20000){
+                if (scoreNumber >= scoreTillClockModel) {
+                    if (scoreTillClockModel <= 20000) {
                         scoreTillClockModel += 5000;
-                    }
-                    else {
+                    } else {
                         scoreTillClockModel += 10000;
                     }
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
@@ -567,9 +563,10 @@ public class MainActivity extends AppCompatActivity {
                 });
         return;
     }
-
+  
     public void startGameTimer(){
         backgroundMusic();
+
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
@@ -621,43 +618,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void showDialog() {
 
-//        final AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext()).setTitle("Loading...").setMessage("Please wait for your results!");
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(this);
         aBuilder.setMessage("Press Continue to see your results");
-        aBuilder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+        aBuilder.setPositiveButton("Continue", (dialog, which) -> Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show());
         aBuilder.show();
-//        dialog.setPositiveButton(" ", (dialog1, whichButton) -> Toast.makeText(MainActivity.this, "Exiting", Toast.LENGTH_SHORT).show());
-//        final AlertDialog alert = dialog.create();
-//        alert.show();
-
-//        final Handler handler = new Handler();
-//        final Runnable runnable = () -> {
-//            if (alert.isShowing()) {
-//                alert.dismiss();
-//            }
-//        };
-//
-//        alert.setOnDismissListener(dialog12 -> handler.removeCallbacks(runnable));
-//
-//        handler.postDelayed(runnable, 1000);
-
     }
 
     public void goToResultPage() {
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
+
     //Random X coordinates will be between -.3 to .8f
     //Radnom Y coordinates will be between -.5 to .5
     public float randomCoordinates(boolean isX) {
         Random random = new Random();
 
-        if (isX){
+        if (isX) {
             float min = -.5f;
             float max = .6f;
             return (min + random.nextFloat() * (max - min));
@@ -672,7 +649,7 @@ public class MainActivity extends AppCompatActivity {
         Float minFloat = .7f;
         Float maxFloat = 1f;
         //Location behind user
-        if (new Random().nextInt(2) == 0){
+        if (new Random().nextInt(2) == 0) {
             return minFloat + random.nextFloat() * (maxFloat - minFloat);
         }
         //Location infront of user
