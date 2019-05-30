@@ -28,10 +28,13 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="note_passwrod_requirement">Note: Password must have 6 characters or more!</string>
     <string name="logout">LogOut</string>
-    <string name="reset">Reset Password</string>
+    <string name="reset_password">Reset Password</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="msg_for_resetting_password">You told us you forgot your password.
+        \nIf you really did, please insert your email below, click the Reset Password button and an email will be sent to you.
+        \nIf you didn\'t mean to reset your password, you can just ignore this email and your password will not change.</string>
 
 
 </resources>

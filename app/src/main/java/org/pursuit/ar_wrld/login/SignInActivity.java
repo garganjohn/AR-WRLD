@@ -77,6 +77,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             finish();
         }
 
+        forgotTextview.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, ResetPasswordActivity.class)));
+
         createNewAcct.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, SignUpActivity.class)));
 
         button.setOnClickListener(v -> signIn());
@@ -159,7 +161,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
 
-
     }
 
     public void signIn() {
@@ -167,16 +168,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
-    public void resetPassword(){
-        forgotTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
-    }
-
 
 
     public void handleSignInResult(GoogleSignInResult result) {
