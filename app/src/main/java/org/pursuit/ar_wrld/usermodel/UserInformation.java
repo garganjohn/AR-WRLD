@@ -1,4 +1,4 @@
-package org.pursuit.ar_wrld.database;
+package org.pursuit.ar_wrld.usermodel;
 
 public class UserInformation {
     private String username;

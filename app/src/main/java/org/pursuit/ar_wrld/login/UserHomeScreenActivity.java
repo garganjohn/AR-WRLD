@@ -52,6 +52,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_screen);
+        firebaseAuth = FirebaseAuth.getInstance();
 
 
         usernameTextView = findViewById(R.id.user_name);
@@ -62,7 +63,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         playButton = findViewById(R.id.play_button);
         logoutButton = findViewById(R.id.logout_button);
 
-//        firebaseAuth = FirebaseAuth.getInstance();
 
 
 //        if(firebaseAuth.getCurrentUser() != null ){
@@ -80,7 +80,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
 
         logoutButton.setOnClickListener(v -> {
-//            firebaseAuth.signOut();
+            firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
 
         });

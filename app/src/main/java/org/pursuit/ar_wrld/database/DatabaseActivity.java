@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld.database;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,16 +16,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.pursuit.ar_wrld.GameInformation;
+import org.pursuit.ar_wrld.login.SignUpActivity;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
+
 public class DatabaseActivity extends AppCompatActivity {
 
     private static final String TAG = "DB";
-    private static final String USER_NAME = "username";
-    private static final String USER_SCORE = "userscore";
+    private SharedPreferences sharedPreferences;
+    private String playerName;
+    private int playerScore;
 
     FirebaseAuth firebaseAuth;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -33,7 +39,16 @@ public class DatabaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        saveScore();
+        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, MODE_PRIVATE);
+
+        if(sharedPreferences.contains(USERNAME_KEY)){
+            playerName = sharedPreferences.getString(USERNAME_KEY, "");
+        }
+        if(sharedPreferences.contains(GameInformation.USER_SCORE_KEY)){
+            playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0);
+        }
+
 
 //        FirebaseDatabase.getInstance().getReference("mARtians")
 //                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -43,6 +58,7 @@ public class DatabaseActivity extends AppCompatActivity {
 //
 //            }
 //        });
+        //        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
 
     }
 
@@ -53,12 +69,12 @@ public class DatabaseActivity extends AppCompatActivity {
         //get username from userhomescreenactivity
         //get userscore from argame play
 
-        String name = "";
-        String score = "";
-
-        Map<String, Object> note = new HashMap<>();
-        note.put(USER_NAME, name);
-        note.put(USER_SCORE, score);
+//        String name = "";
+//        String score = "";
+//
+//        Map<String, Object> note = new HashMap<>();
+//        note.put(USER_NAME, name);
+//        note.put(USER_SCORE, score);
 
 
     }
