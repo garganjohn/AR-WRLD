@@ -49,6 +49,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.movement.ModelSpeed;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
@@ -454,14 +455,17 @@ public class MainActivity extends AppCompatActivity {
         if (whichEnemy == GameInformation.EASY_ENEMY) {
             modelLoader.setNumofLivesModel0(2);
         } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
+           anchorNode.speedSetting(5000);
             modelLoader.setNumofLivesModel0(3);
         } else if (whichEnemy == GameInformation.HARD_ENEMY) {
+            anchorNode.speedSetting(2000);
             modelLoader.setNumofLivesModel0(4);
         } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
             modelLoader.setNumofLivesModel0(1);
             isTimerModel = true;
             Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
         } else if (whichEnemy == GameInformation.BOSS_ENEMY) {
+            anchorNode.speedSetting(1500);
             modelLoader.setNumofLivesModel0(30);
         }
 

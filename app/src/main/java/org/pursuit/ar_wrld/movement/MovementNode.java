@@ -19,32 +19,32 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MovementNode extends AnchorNode {
+
     public MovementNode() {
-        this.objectAnimator = objectAnimator;
-        this.node = getNode();
+        this.node = node;
     }
 
     private ObjectAnimator objectAnimator;
-
     private Node node;
+    private ModelSpeed modelSpeed;
 
-    public ArSceneView getArSceneView() {
-        return arSceneView;
+    public ModelSpeed getModelSpeed() {
+        return modelSpeed;
     }
 
-    public void setArSceneView(ArSceneView arSceneView) {
-        this.arSceneView = arSceneView;
+    public void setModelSpeed(ModelSpeed modelSpeed) {
+        this.modelSpeed = modelSpeed;
     }
+//    private Vector3 up;
+//    private Vector3 down;
+//    private Vector3 forward;
+//    private Vector3 left;
+//    private Vector3 right;
+//    private Vector3 back;
+//    private AudioLoader audioLoader;
+//    private ArrayList<Vector3> vector3List;
+    private Long speedMultiplier = 6000L;
 
-    private ArSceneView arSceneView;
-    private Vector3 up;
-    private Vector3 down;
-    private Vector3 forward;
-    private Vector3 left;
-    private Vector3 right;
-    private Vector3 back;
-    private AudioLoader audioLoader;
-    private ArrayList<Vector3> vector3List;
 
     public Node getNode() {
         return node;
@@ -59,6 +59,7 @@ public class MovementNode extends AnchorNode {
             return;
 
         }
+
         randomMovement();
         //createAnimator(true);
     }
@@ -71,6 +72,7 @@ public class MovementNode extends AnchorNode {
     }
 
     public ObjectAnimator randomMovement() {
+
         //get nodes original coordinates
         Vector3 originalNodePosition = this.getLocalPosition();
         //set new coordinates
@@ -96,7 +98,7 @@ public class MovementNode extends AnchorNode {
         // This makes the animation linear (smooth and uniform).
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
-        objectAnimator.setDuration(6000);
+        objectAnimator.setDuration(speedMultiplier);
 
         objectAnimator.start();
 
@@ -111,13 +113,13 @@ public class MovementNode extends AnchorNode {
         // First, set up orientations that will animate a circle.
         Quaternion[] orientations = new Quaternion[4];
         // Rotation to apply first, to tilt its axis.
-        Quaternion baseOrientation = Quaternion.axisAngle(new Vector3(1.0f, 0f, 0.0f),0.03f );
+        Quaternion baseOrientation = Quaternion.axisAngle(new Vector3(1.0f, 0f, 0.0f), 0.03f);
         for (int i = 0; i < orientations.length; i++) {
             float angle = i * 360 / (orientations.length - 1);
             if (clockwise) {
                 angle = 360 - angle;
             }
-            Quaternion orientation = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f),25.19f );
+            Quaternion orientation = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), 25.19f);
             orientations[i] = Quaternion.multiply(baseOrientation, orientation);
         }
 
@@ -158,10 +160,15 @@ public class MovementNode extends AnchorNode {
 //
 //
     }
-    private void collisionSpace(){
+
+    private void collisionSpace() {
 
         node.getCollisionShape();
 
     }
 
+    public void speedSetting(long setSpeed){
+        speedMultiplier = setSpeed;
+
+    }
 }
