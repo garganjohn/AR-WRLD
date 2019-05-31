@@ -7,7 +7,7 @@
     <string name="time_up_msg">Time\'s Up!</string>
     <string name="score_text">Score: %d</string>
     <string name="default_score_text">Score :</string>
-    <string name="aliens_remaining_string">x: %d</string>
+    <string name="aliens_remaining_string">X %d</string>
     <string name="user_image">User Image</string>
     <string name="user_email">Email</string>
     <string name="user_password">Password</string>
