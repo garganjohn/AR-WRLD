@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="warningColor">#E00000</color>
     <color name="status_navbar_color">#000B19</color>
+    <color name="neutral_hit">#000</color>
 </resources>
