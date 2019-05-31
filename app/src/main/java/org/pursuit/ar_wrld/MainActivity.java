@@ -50,6 +50,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
@@ -126,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
         audioSetup();
         setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
+
 
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);

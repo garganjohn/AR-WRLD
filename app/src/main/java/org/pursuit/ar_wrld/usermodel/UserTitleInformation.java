@@ -1,6 +1,7 @@
 package org.pursuit.ar_wrld.usermodel;
 
 public interface UserTitleInformation {
+    String TITLE_SHAREDPREF_KEY = "title_sharepref_key";
     String MAD_TAPPING_SKILLS = "I can do this in my sleep!";
     String DOPE = "Man, you've made things so easy, haven't you?";
     String PROBLEM_SOLVED = "Saving the city is no big deal!";
