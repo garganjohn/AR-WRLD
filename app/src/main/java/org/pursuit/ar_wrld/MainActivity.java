@@ -542,15 +542,19 @@ public class MainActivity extends AppCompatActivity {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
-                if (whichEnemy == GameInformation.EASY_ENEMY) {
-
-                    scoreNumber += 1000;
-                } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
-                    scoreNumber += 2500;
-                } else if (whichEnemy == GameInformation.HARD_ENEMY) {
-                    scoreNumber += 5000;
-                }else if (whichEnemy == GameInformation.BOSS_ENEMY){
-                    scoreNumber += 25000;
+                switch (whichEnemy) {
+                    case GameInformation.EASY_ENEMY:
+                        scoreNumber += 1000;
+                        break;
+                    case GameInformation.MEDIUM_ENEMY:
+                        scoreNumber += 2500;
+                        break;
+                    case GameInformation.HARD_ENEMY:
+                        scoreNumber += 5000;
+                        break;
+                    case GameInformation.BOSS_ENEMY:
+                        scoreNumber += 25000;
+                        break;
                 }
 
                 if (isTimerModel) {
