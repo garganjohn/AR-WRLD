@@ -97,10 +97,14 @@ public class MainActivity extends AppCompatActivity {
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
     private String difficulty;
+    private CountDownTimer hitChangeColor;
+    private CountDownTimer backToOriginalColor;
+    private int repitionForColors = 0;
     Button shootingButton;
     private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
+    View view;
 
 
     // Controls animation playback.
@@ -114,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showActionBar();
-
+        view = findViewById(R.id.background_for_ar_view);
         difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
@@ -194,6 +198,36 @@ public class MainActivity extends AppCompatActivity {
                 gameInfoTv.startAnimation(exitToBottom);
             }
         };
+
+        hitChangeColor = new CountDownTimer(20,2000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
+            }
+
+            @Override
+            public void onFinish() {
+                backToOriginalColor.start();
+            }
+        };
+
+        backToOriginalColor = new CountDownTimer(20,2000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
+            }
+
+            @Override
+            public void onFinish() {
+                repitionForColors++;
+                if (repitionForColors < 5)
+                hitChangeColor.start();
+                else {
+                    repitionForColors = 0;
+                    view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
+                }
+            }
+        };
     }
 
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
@@ -221,6 +255,9 @@ public class MainActivity extends AppCompatActivity {
                 isMedWeaponChosen = false;
                 weaponSwitch();
             }
+
+            hitChangeColor.start();
+
             return false;
         });
     }
