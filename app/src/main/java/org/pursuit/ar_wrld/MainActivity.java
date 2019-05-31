@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
+    View view;
 
 
     // Controls animation playback.
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showActionBar();
-
+        view = findViewById(R.id.background_for_ar_view);
         difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
@@ -221,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
                 isMedWeaponChosen = false;
                 weaponSwitch();
             }
+
+            view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary));
             return false;
         });
     }
