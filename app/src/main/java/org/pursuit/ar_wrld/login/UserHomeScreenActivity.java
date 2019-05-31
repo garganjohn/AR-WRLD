@@ -1,6 +1,8 @@
 package org.pursuit.ar_wrld.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,8 @@ import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 
+import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
+
 public class UserHomeScreenActivity extends AppCompatActivity {
 
     private Spinner levelSpinner;
@@ -24,9 +28,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private TextView usernameTextView;
     private TextView userscoreTextView;
     private TextView userTitleTextView;
+    private SharedPreferences sharedPreferences;
 
-    private static final String USER_NAME = "username";
-    private static final String USER_SCORE = "userscore";
+//    public static final String USER_NAME = "username";
+//    public static final String USER_SCORE = "userscore";
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
     public static final String HARD_STRING = "HARD";
@@ -65,6 +70,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 //            updateUI(user);
 //        }
 
+        retrieveUsername();
+
         playButton.setOnClickListener(v -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
             Intent intent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
@@ -77,6 +84,14 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
 
         });
+    }
+
+    public void retrieveUsername(){
+        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
+        if(sharedPreferences.contains(USERNAME_KEY)){
+            usernameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
+        }
+
     }
 
 //    public  void updateUI (FirebaseUser user){

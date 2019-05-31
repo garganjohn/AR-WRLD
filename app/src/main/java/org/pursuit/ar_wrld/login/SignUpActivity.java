@@ -1,6 +1,7 @@
 package org.pursuit.ar_wrld.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import org.pursuit.ar_wrld.database.UserInformation;
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText emailId;
+    private EditText username;
     private EditText passwordCheck;
     private TextView passwordRequirement;
     private Button signupBtn;
@@ -32,12 +34,17 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private static final String TAG = "SIGNUP_PAGE";
     private ProgressBar progressBar;
+    private SharedPreferences sharedPreferences;
+    public static final String USERNAME_KEY = "Username Preferences";
+    public static final String MYSHAREDPREF = "myPref";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        username = findViewById(R.id.input_username);
         emailId = findViewById(R.id.input_email);
         progressBar = findViewById(R.id.progressBar);
         passwordCheck = findViewById(R.id.input_password);
@@ -55,9 +62,14 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         signupBtn.setOnClickListener(v -> {
+            String userName = username.getText().toString();
             String email = emailId.getText().toString();
             String password = passwordCheck.getText().toString();
 
+            if (TextUtils.isEmpty(userName)) {
+                Toast.makeText(getApplicationContext(), "Enter Username", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (TextUtils.isEmpty(email)) {
                 Toast.makeText(getApplicationContext(), "Enter Email Id", Toast.LENGTH_SHORT).show();
                 return;
@@ -90,6 +102,14 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
 
+        saveUsername();
+    }
+
+    public void saveUsername(){
+        String userName = username.getText().toString();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USERNAME_KEY, userName);
+        editor.commit();
     }
 
 }
