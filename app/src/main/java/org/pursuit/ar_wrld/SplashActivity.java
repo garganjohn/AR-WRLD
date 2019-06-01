@@ -21,9 +21,9 @@ public class SplashActivity extends AppCompatActivity {
         changeStatusBarColor();
 
         new Handler().postDelayed(() -> {
-            Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
-//            Intent tempIntent = new Intent(SplashActivity.this, ClassPickForUser.class);
-            SplashActivity.this.startActivity(mainIntent);
+//            Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
+            Intent tempIntent = new Intent(SplashActivity.this, ClassPickForUser.class);
+            SplashActivity.this.startActivity(tempIntent);
             SplashActivity.this.finish();
         }, SPLASH_LENGTH);
     }
