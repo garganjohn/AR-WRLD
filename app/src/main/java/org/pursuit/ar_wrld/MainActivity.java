@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 30000;
+    private long timeLeftInMilliseconds = 60000;
     int numOfModels = 0;
     private int scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -491,26 +491,27 @@ public class MainActivity extends AppCompatActivity {
         mli.indicate(vector);
         //TODO put location logic here
 
-
         ModelLoader modelLoader = new ModelLoader();
         boolean isTimerModel = false;
 
-        if (whichEnemy == GameInformation.EASY_ENEMY) {
-            modelLoader.setNumofLivesModel0(2);
-        } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
-           anchorNode.speedSetting(5000);
-            modelLoader.setNumofLivesModel0(3);
-        } else if (whichEnemy == GameInformation.HARD_ENEMY) {
-            anchorNode.speedSetting(2000);
-            modelLoader.setNumofLivesModel0(4);
-        } else if (whichEnemy == GameInformation.TIME_INCREASE_MODEL) {
-            modelLoader.setNumofLivesModel0(1);
-            isTimerModel = true;
-            Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
-        } else if (whichEnemy == GameInformation.BOSS_ENEMY) {
-            anchorNode.speedSetting(1500);
-
-            modelLoader.setNumofLivesModel0(30);
+        switch (whichEnemy) {
+            case GameInformation.EASY_ENEMY:
+                modelLoader.setNumofLivesModel0(2);
+                break;
+            case GameInformation.MEDIUM_ENEMY:
+                modelLoader.setNumofLivesModel0(3);
+                break;
+            case GameInformation.HARD_ENEMY:
+                modelLoader.setNumofLivesModel0(4);
+                break;
+            case GameInformation.TIME_INCREASE_MODEL:
+                modelLoader.setNumofLivesModel0(1);
+                isTimerModel = true;
+                Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
+                break;
+            case GameInformation.BOSS_ENEMY:
+                modelLoader.setNumofLivesModel0(30);
+                break;
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
@@ -686,14 +687,14 @@ public class MainActivity extends AppCompatActivity {
         startActivity(goToResultPageIntent);
     }
 
-    //Random X coordinates will be between -.3 to .8f
+    //Random X coordinates will be between -.2 to .4f
     //Radnom Y coordinates will be between -.5 to .5
     public float randomCoordinates(boolean isX) {
         Random random = new Random();
 
         if (isX) {
             float min = -.5f;
-            float max = .6f;
+            float max = .4f;
             return (min + random.nextFloat() * (max - min));
         }
 
