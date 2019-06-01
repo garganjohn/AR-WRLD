@@ -13,10 +13,13 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.jakewharton.rxbinding.view.RxView;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
 
@@ -60,18 +63,16 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         retrieveUsername();
 
-        playButton.setOnClickListener(v -> {
+        RxView.clicks(playButton).throttleFirst(1000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
             Intent intent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
             intent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
             startActivity(intent);
         });
-
-        logoutButton.setOnClickListener(v -> {
+        RxView.clicks(logoutButton).throttleFirst(500, TimeUnit.MILLISECONDS).subscribe(empty -> {
             firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
             finish();
-
         });
     }
 

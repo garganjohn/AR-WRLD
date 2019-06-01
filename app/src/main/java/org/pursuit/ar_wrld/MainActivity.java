@@ -134,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     private void setupGameInfo() {
         startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
         startFromBottom.setDuration(1000);
