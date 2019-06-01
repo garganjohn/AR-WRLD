@@ -1,49 +1,81 @@
 package org.pursuit.ar_wrld;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.pursuit.ar_wrld.login.SignInActivity;
+import org.pursuit.ar_wrld.login.SignUpActivity;
+import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
+
+import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
+
 public class ResultPage extends AppCompatActivity {
 
     private TextView nameTextView;
     private TextView scoreTextView;
+    private Button playAgainButton;
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser user;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
+    private SharedPreferences sharedPreferences;
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        firebaseAuth.addAuthStateListener(authStateListener);
+//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultpage);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
         nameTextView = findViewById(R.id.player_name);
         scoreTextView = findViewById(R.id.player_score);
+        playAgainButton = findViewById(R.id.playagain_button);
 
+        retrieveUsername();
+        retrieveUserScore();
 
-        if(firebaseAuth.getCurrentUser() != null ){
-            user = firebaseAuth.getCurrentUser();
-            updateUI(user);
-        }
+        playAgainButton.setOnClickListener(v -> {
+            startActivity(new Intent(ResultPage.this, MainActivity.class));
+            finish();
+        });
+
+//        if(firebaseAuth.getCurrentUser() != null ){
+//            user = firebaseAuth.getCurrentUser();
+//            updateUI(user);
+//        }
 
     }
 
-    public  void updateUI (FirebaseUser user){
-        if(user != null){
-            String name = user.getDisplayName();
-            nameTextView.setText(name);
+    private void retrieveUsername() {
+        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(USERNAME_KEY)) {
+            nameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
         }
     }
+
+    private void retrieveUserScore() {
+        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
+            scoreTextView.setText(sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0));
+        }
+    }
+
+//    public  void updateUI (FirebaseUser user){
+//        if(user != null){
+//            String name = user.getDisplayName();
+//            nameTextView.setText(name);
+//        }
 }
+

@@ -38,11 +38,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         resetPasswordButton.setOnClickListener(v -> {
             String userEmail = useremailInput.getText().toString();
 
-            if(TextUtils.isEmpty(userEmail)){
+            if (TextUtils.isEmpty(userEmail)) {
                 Toast.makeText(ResetPasswordActivity.this, getString(R.string.insert_email_message), Toast.LENGTH_SHORT).show();
             } else {
                 firebaseAuth.sendPasswordResetEmail(userEmail).addOnCompleteListener(task -> {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Toast.makeText(ResetPasswordActivity.this, "Please check your email if you want to reset your password!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(ResetPasswordActivity.this, SignInActivity.class));
                     } else {
