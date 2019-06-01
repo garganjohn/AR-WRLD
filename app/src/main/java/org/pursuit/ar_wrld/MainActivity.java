@@ -60,6 +60,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
+import static org.pursuit.ar_wrld.GameInformation.USER_SCORE_KEY;
+
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
