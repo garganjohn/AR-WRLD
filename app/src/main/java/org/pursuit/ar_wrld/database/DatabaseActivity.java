@@ -6,23 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
-import org.pursuit.ar_wrld.login.SignUpActivity;
 import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
-import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
-
-import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
 
 public class DatabaseActivity extends AppCompatActivity {
 
