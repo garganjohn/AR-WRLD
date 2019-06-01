@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         arFragment = null;
+        stopAudio();
         audioLoader = null;
         this.finish();
 
