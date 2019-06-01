@@ -20,4 +20,8 @@ class Weapon {
     public void setAmmo(int ammo) {
         this.ammo = ammo;
     }
+
+    public void setDamageDone(int damageDone) {
+        this.damageDone = damageDone;
+    }
 }

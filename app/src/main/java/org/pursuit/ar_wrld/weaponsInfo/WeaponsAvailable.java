@@ -24,4 +24,6 @@ public class WeaponsAvailable {
     public void setMedWeaponAmmo(int ammo){
         medWeapon.setAmmo(ammo);
     }
+
+    public void setMedWeaponDamage(int damage){medWeapon.setDamageDone(damage);}
 }

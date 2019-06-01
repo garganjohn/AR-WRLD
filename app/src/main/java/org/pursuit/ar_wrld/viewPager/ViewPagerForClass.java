@@ -86,8 +86,8 @@ public class ViewPagerForClass extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                vpl.goToUserHome();
                 sharedPreferences.edit().putString(GameInformation.GAME_PERK_KEY, whichGamePerk).apply();
+                vpl.goToUserHome();
             }
         });
     }
