@@ -2,26 +2,18 @@ package org.pursuit.ar_wrld;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Path;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,12 +28,10 @@ import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -50,17 +40,13 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
-import org.pursuit.ar_wrld.movement.ModelSpeed;
-import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
-import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
+import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
-
-import static org.pursuit.ar_wrld.GameInformation.USER_SCORE_KEY;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
