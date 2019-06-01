@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
+    private int startingMedAmmo = 25;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 45000;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
     private String scoreString;
     private String aliensLeftString;
     private String medAmmoCounter;
+    private String medDamageCounter;
+    private String medDamageString;
+    private String medAmmoString;
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
@@ -127,8 +131,9 @@ public class MainActivity extends AppCompatActivity {
         getStringRes();
         audioSetup();
         setupGameInfo();
+        setMedAmmoTv();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
 
         scorekeepingTv.setText(scoreString);
@@ -147,6 +152,22 @@ public class MainActivity extends AppCompatActivity {
         else {
             gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
+        }
+
+        applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
+    }
+
+    private void applyPerkToUser(String whichPerk) {
+        if (whichPerk == null){
+            return;
+        }
+        if (whichPerk.equals(GameInformation.MORE_AMMO_PERK)){
+            weaponSelection.setMedWeaponAmmo(startingMedAmmo+(startingMedAmmo / 2));
+            setMedAmmoTv();
+        }
+        if (whichPerk.equals(GameInformation.MORE_DAMAGE_PERK)){
+            weaponSelection.setMedWeaponDamage(5);
+            setMedAmmoTv();
         }
     }
 
@@ -268,7 +289,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setMedAmmoTv() {
-        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
+        medDamageString = Integer.toString(weaponSelection.getMedWeaponDamage());
+        medAmmoString = Integer.toString(weaponSelection.getMedWeaponAmmo());
+        medAmmoCounter = getString(R.string.med_weapon_info, medDamageString, medAmmoString);
         medWeaponAmmoTv.setText(medAmmoCounter);
     }
 
@@ -283,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
     private void weaponSetup() {
         medWeapon.setAlpha(0.125f);
         setWeaponListener();
-        weaponSelection = new WeaponsAvailable(25);
+        weaponSelection = new WeaponsAvailable(startingMedAmmo);
         weaponDamage = weaponSelection.getWeakWeaponDamage();
     }
 
@@ -420,7 +443,6 @@ public class MainActivity extends AppCompatActivity {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -580,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
-                    timeLeftInMilliseconds += 5000;
+                    timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
