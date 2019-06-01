@@ -693,8 +693,8 @@ public class MainActivity extends AppCompatActivity {
         Random random = new Random();
 
         if (isX) {
-            float min = -.5f;
-            float max = .4f;
+            float min = -.3f;
+            float max = .3f;
             return (min + random.nextFloat() * (max - min));
         }
 
@@ -707,9 +707,9 @@ public class MainActivity extends AppCompatActivity {
         Float minFloat = .7f;
         Float maxFloat = 1f;
         //Location behind user
-        if (new Random().nextInt(2) == 0) {
-            return minFloat + random.nextFloat() * (maxFloat - minFloat);
-        }
+//        if (new Random().nextInt(2) == 0) {
+//            return minFloat + random.nextFloat() * (maxFloat - minFloat);
+//        }
         //Location infront of user
         return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
     }

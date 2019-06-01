@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import org.pursuit.ar_wrld.login.SignInActivity;
+import org.pursuit.ar_wrld.viewPager.ClassPickForUser;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_LENGTH = 1500;
@@ -21,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
             Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
+//            Intent tempIntent = new Intent(SplashActivity.this, ClassPickForUser.class);
             SplashActivity.this.startActivity(mainIntent);
             SplashActivity.this.finish();
         }, SPLASH_LENGTH);
