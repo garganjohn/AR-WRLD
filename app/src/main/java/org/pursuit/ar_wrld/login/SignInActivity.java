@@ -72,7 +72,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         signInButton = findViewById(R.id.button_login);
         button = findViewById(R.id.sign_in_google);
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
             finish();
         }
@@ -100,7 +100,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(SignInActivity.this, task -> {
 
-                       if (progressBar.getVisibility() == View.VISIBLE) progressBar.setVisibility(View.GONE);
+                        if (progressBar.getVisibility() == View.VISIBLE)
+                            progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
                             // there was an error
@@ -176,7 +177,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
             Intent goToIntent = new Intent(SignInActivity.this, UserHomeScreenActivity.class);
             startActivity(goToIntent);
             Toast.makeText(getApplicationContext(), "Hello " + acct.getDisplayName(), Toast.LENGTH_SHORT).show();
-            //statusTextView.setText("Hello, " + acct.getDisplayName());
         } else {
         }
     }

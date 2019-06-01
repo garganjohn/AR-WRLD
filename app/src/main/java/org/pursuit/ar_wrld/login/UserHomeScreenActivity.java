@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -29,9 +30,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private TextView userscoreTextView;
     private TextView userTitleTextView;
     private SharedPreferences sharedPreferences;
+    private RecyclerView recyclerView;
 
-//    public static final String USER_NAME = "username";
-//    public static final String USER_SCORE = "userscore";
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
     public static final String HARD_STRING = "HARD";
@@ -40,13 +40,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
-    FirebaseUser user;
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        firebaseAuth.addAuthStateListener(authStateListener);
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +52,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
         userTitleTextView = findViewById(R.id.user_title);
+        recyclerView = findViewById(R.id.top_play_recyclerview);
         levelSpinner = findViewById(R.id.level_spinner);
         practiceButton = findViewById(R.id.practice_button);
         playButton = findViewById(R.id.play_button);
         logoutButton = findViewById(R.id.logout_button);
-
-
-
-//        if(firebaseAuth.getCurrentUser() != null ){
-//            user = firebaseAuth.getCurrentUser();
-//            updateUI(user);
-//        }
 
         retrieveUsername();
 
@@ -82,13 +70,14 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(v -> {
             firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
+            finish();
 
         });
     }
 
-    public void retrieveUsername(){
+    private void retrieveUsername() {
         sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
-        if(sharedPreferences.contains(USERNAME_KEY)){
+        if (sharedPreferences.contains(USERNAME_KEY)) {
             usernameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
         }
 

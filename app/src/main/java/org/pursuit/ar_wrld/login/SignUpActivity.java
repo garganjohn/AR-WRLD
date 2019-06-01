@@ -38,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         username = findViewById(R.id.input_username);
         emailId = findViewById(R.id.input_email);
@@ -51,9 +52,8 @@ public class SignUpActivity extends AppCompatActivity {
         signupBtn.setOnClickListener(v -> {
             Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
             startActivity(intent);
+            finish();
         });
-
-        firebaseAuth = FirebaseAuth.getInstance();
 
 
         signupBtn.setOnClickListener(v -> {
@@ -96,11 +96,10 @@ public class SignUpActivity extends AppCompatActivity {
                     });
         });
 
-
         saveUsername();
     }
 
-    public void saveUsername(){
+    public void saveUsername() {
         String userName = username.getText().toString();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(USERNAME_KEY, userName);
