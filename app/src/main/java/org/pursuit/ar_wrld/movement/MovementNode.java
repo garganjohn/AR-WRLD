@@ -80,7 +80,7 @@ public class MovementNode extends AnchorNode {
         // This makes the animation linear (smooth and uniform).
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
-        objectAnimator.setDuration(6000);
+        objectAnimator.setDuration(100000);
 
         objectAnimator.start();
 

@@ -43,6 +43,8 @@ import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
+import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.Light;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -100,18 +102,20 @@ public class MainActivity extends AppCompatActivity {
     private String difficulty;
     private CountDownTimer hitChangeColor;
     private CountDownTimer backToOriginalColor;
+    TransformableNode node;
     private int repitionForColors = 0;
     Button shootingButton;
     private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
     View view;
+    private Light modelLight = null;
 
 
     // Controls animation playback.
     private ModelAnimator animator;
     // Index of the current animation playing.
-    private MovementNode movementNode;
+    private MovementNode anchorNode;
     private int nextAnimation;
 
     @Override
@@ -139,11 +143,10 @@ public class MainActivity extends AppCompatActivity {
 
         // If user misses their shot account here
         onTapForMissInteraction();
-        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
-            gameInfoPopup(R.string.boss_level,false);
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
+            gameInfoPopup(R.string.boss_level, false);
             spawningAliens(true);
-        }
-        else {
+        } else {
             gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
@@ -202,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        hitChangeColor = new CountDownTimer(20,2000) {
+        hitChangeColor = new CountDownTimer(20, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
@@ -214,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        backToOriginalColor = new CountDownTimer(20,2000) {
+        backToOriginalColor = new CountDownTimer(20, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
@@ -224,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 repitionForColors++;
                 if (repitionForColors < 5)
-                hitChangeColor.start();
+                    hitChangeColor.start();
                 else {
                     repitionForColors = 0;
                     view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
@@ -236,7 +239,8 @@ public class MainActivity extends AppCompatActivity {
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
         gameInfoTv.setText(stringToDisplay);
         if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
+        if (isWarning)
+            gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
         gameInfoTv.startAnimation(startFromBottom);
 
     }
@@ -459,8 +463,8 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode();
-        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+        anchorNode = new MovementNode();
+        node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
         getStringRes();
@@ -472,7 +476,7 @@ public class MainActivity extends AppCompatActivity {
         vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
-
+        setUpLights();
         anchorNode.randomMovement();
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
@@ -540,6 +544,7 @@ public class MainActivity extends AppCompatActivity {
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
                 laserSound();
+                modelBlink(modelLight, 2, 0f, 100000f, 2000);
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
@@ -738,4 +743,38 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
     }
+
+//    Light.builder(Light.Type.POINT)
+//            .setColor(Color(android.graphics.Color.RED))
+//            .setShadowCastingEnabled(true)
+//        .setIntensity(0F)
+//        .build()
+
+
+    private void setUpLights() {
+        modelLight =
+                Light.builder(Light.Type.POINT)
+                        .setFalloffRadius(0.5f)
+                        .setColor(new Color(android.graphics.Color.YELLOW))
+                        .setShadowCastingEnabled(false)
+                        .setIntensity(5f)
+                        .build();
+
+        Vector3 position = anchorNode.getLocalPosition();
+
+
+        Node lightNode = new Node();
+        lightNode.setParent(this.node);
+        lightNode.setLocalPosition(position);
+        lightNode.setLight(modelLight);
+    }
+
+    public void modelBlink(Light receiver, int times, float from, float to, long inMs) {
+        ObjectAnimator intensityAnimator = ObjectAnimator.ofFloat(receiver, "intensity", from, to);
+        intensityAnimator.setDuration(inMs);
+        intensityAnimator.setRepeatCount(times * 2 - 1);
+        intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        intensityAnimator.start();
+    }
+
 }
