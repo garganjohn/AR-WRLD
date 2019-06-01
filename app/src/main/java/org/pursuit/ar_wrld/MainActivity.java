@@ -2,26 +2,18 @@ package org.pursuit.ar_wrld;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Path;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,12 +28,10 @@ import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -50,7 +40,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
-import org.pursuit.ar_wrld.movement.ModelSpeed;
+import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -58,7 +48,6 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
@@ -102,12 +91,9 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer hitChangeColor;
     private CountDownTimer backToOriginalColor;
     private int repitionForColors = 0;
-    Button shootingButton;
     private AudioLoader audioLoader;
-    private ObjectAnimator objectAnimation;
-    private ArrayList<Vector3> vector3List;
-    View view;
-
+    private View mainActBG;
+    private ModelCoordinates modelCoordinates;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -120,7 +106,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         showActionBar();
-        view = findViewById(R.id.background_for_ar_view);
+        modelCoordinates = new ModelCoordinates();
+        mainActBG = findViewById(R.id.background_for_ar_view);
         difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
@@ -206,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         hitChangeColor = new CountDownTimer(20,2000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
+                mainActBG.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
             }
 
             @Override
@@ -218,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         backToOriginalColor = new CountDownTimer(20,2000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
+                mainActBG.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
             }
 
             @Override
@@ -228,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 hitChangeColor.start();
                 else {
                     repitionForColors = 0;
-                    view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
+                    mainActBG.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
                 }
             }
         };
@@ -463,11 +450,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private android.graphics.Point getScreenCenter() {
-        View vw = findViewById(android.R.id.content);
-        return new android.graphics.Point(vw.getWidth() / 2, vw.getHeight() / 2);
-    }
-
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
@@ -481,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
-        vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
+        vector.set(modelCoordinates.randomCoordinates(true), modelCoordinates.randomCoordinates(false), modelCoordinates.randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
@@ -675,7 +657,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showDialog() {
-
         AlertDialog.Builder aBuilder = new AlertDialog.Builder(this);
         aBuilder.setMessage("Press Continue to see your results");
         aBuilder.setPositiveButton("Continue", (dialog, which) -> Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show());
@@ -687,32 +668,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(goToResultPageIntent);
     }
 
-    //Random X coordinates will be between -.2 to .4f
-    //Radnom Y coordinates will be between -.5 to .5
-    public float randomCoordinates(boolean isX) {
-        Random random = new Random();
 
-        if (isX) {
-            float min = -.3f;
-            float max = .3f;
-            return (min + random.nextFloat() * (max - min));
-        }
-
-        return random.nextFloat() - .500f;
-    }
-
-    // Number is displayed between -.7 and -1
-    public static float randomZCoordinates() {
-        Random random = new Random();
-        Float minFloat = .7f;
-        Float maxFloat = 1f;
-        //Location behind user
-//        if (new Random().nextInt(2) == 0) {
-//            return minFloat + random.nextFloat() * (maxFloat - minFloat);
-//        }
-        //Location infront of user
-        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
-    }
 
     @Override
     protected void onPause() {
@@ -738,7 +694,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void laserSound() {
-
         audioSetup();
         audioLoader.laserSound();
     }
