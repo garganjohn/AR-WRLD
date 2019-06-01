@@ -1,6 +1,5 @@
 package org.pursuit.ar_wrld;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,13 +14,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ankushgrover.hourglass.Hourglass;
-import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Plane;
 import com.google.ar.core.TrackingState;
@@ -39,7 +36,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
-import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
@@ -329,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
-            loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
+            loadModel(Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
         } else {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
@@ -343,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTimerFinish() {
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+                    loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
                     easyAlienSpawn.startTimer();
 
@@ -362,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTimerFinish() {
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                    loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
                     medAlienSpawn.startTimer();
 
                     if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
@@ -380,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTimerFinish() {
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                    loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
                     hardAlienSpawn.startTimer();
                 }
             };
@@ -450,7 +447,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
+    public void addNodeToScene(ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
         anchorNode = new MovementNode();
@@ -473,26 +470,26 @@ public class MainActivity extends AppCompatActivity {
         mli.indicate(vector);
         //TODO put location logic here
 
-        ModelLoader modelLoader = new ModelLoader();
+        ModelLives modelLives = new ModelLives();
         boolean isTimerModel = false;
 
         switch (whichEnemy) {
             case GameInformation.EASY_ENEMY:
-                modelLoader.setNumofLivesModel0(2);
+                modelLives.setNumofLivesModel0(2);
                 break;
             case GameInformation.MEDIUM_ENEMY:
-                modelLoader.setNumofLivesModel0(3);
+                modelLives.setNumofLivesModel0(3);
                 break;
             case GameInformation.HARD_ENEMY:
-                modelLoader.setNumofLivesModel0(4);
+                modelLives.setNumofLivesModel0(4);
                 break;
             case GameInformation.TIME_INCREASE_MODEL:
-                modelLoader.setNumofLivesModel0(1);
+                modelLives.setNumofLivesModel0(1);
                 isTimerModel = true;
                 Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
                 break;
             case GameInformation.BOSS_ENEMY:
-                modelLoader.setNumofLivesModel0(30);
+                modelLives.setNumofLivesModel0(30);
                 break;
         }
 
@@ -508,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
+        setNodeListener(node, anchorNode, modelLives, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
 
@@ -522,7 +519,7 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
+    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLives modelLives, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
 
             if (!isOutOfAmmo() && isMedWeaponChosen) {
@@ -536,10 +533,10 @@ public class MainActivity extends AppCompatActivity {
                 weaponSwitch();
             }
 
-            modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
-            if (0 < modelLoader.getNumofLivesModel0()) {
+            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            if (0 < modelLives.getNumofLivesModel0()) {
                 laserSound();
-                Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
@@ -577,7 +574,7 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         scoreTillClockModel += 10000;
                     }
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
+                    loadModel(Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }
 
                 numOfModels--;
@@ -594,12 +591,12 @@ public class MainActivity extends AppCompatActivity {
         node.select();
     }
 
-    public void loadModel(Anchor anchor, Uri uri, String whichEnemy) {
+    public void loadModel(Uri uri, String whichEnemy) {
         ModelRenderable.builder()
                 .setSource(this, uri)
                 .build()
                 .thenAccept(modelRenderable -> {
-                    addNodeToScene(anchor, modelRenderable, whichEnemy);
+                    addNodeToScene(modelRenderable, whichEnemy);
                 });
         return;
     }
