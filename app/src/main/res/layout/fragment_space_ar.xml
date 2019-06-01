@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".SpaceARFragment">
+    tools:context=".SpaceARFragment"
+    android:id="@+id/space_fragment_container">
 
     <fragment
         android:id="@+id/sceneform_fragment"

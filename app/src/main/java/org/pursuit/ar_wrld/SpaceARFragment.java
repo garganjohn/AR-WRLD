@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -62,9 +61,8 @@ public class SpaceARFragment extends ArFragment {
     private static SpaceARFragment instance;
     private String difficulty;
     public static final String DIFFCIULTY_KEY = "DIFFICULTY";
-
-    public static final String TAG = "FINDME";
     private ArFragment arFragment;
+    public static final String TAG = "FINDME";
     private AnchorNode sceneNode;
     private ModelLocationIndicator mli;
     private ImageView leftArrow;
@@ -131,7 +129,7 @@ public class SpaceARFragment extends ArFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        setUpAR();
+
     }
 
     @Override
@@ -141,7 +139,7 @@ public class SpaceARFragment extends ArFragment {
             difficulty = getArguments().getString(DIFFCIULTY_KEY);
         }
         modelCoordinates = new ModelCoordinates();
-
+        setUpAR();
 
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
@@ -178,6 +176,14 @@ public class SpaceARFragment extends ArFragment {
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
+
+    }
+
+    private void setUpAR() {
+        arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.sceneform_fragment);
+        arFragment.getPlaneDiscoveryController().hide();
+        arFragment.getPlaneDiscoveryController().setInstructionView(null);
+        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
     }
 
@@ -463,15 +469,6 @@ public class SpaceARFragment extends ArFragment {
         }
     }
 
-    private void setUpAR() {
-
-        arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.sceneform_fragment);
-//        arFragment.getPlaneDiscoveryController().hide();
-//        arFragment.getPlaneDiscoveryController().setInstructionView(null);
-
-        arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
-
-    }
 
     public void onUpdate(FrameTime frameTime) {
         Frame frame = arFragment.getArSceneView().getArFrame();
