@@ -33,7 +33,8 @@
         <activity android:name=".ResultPage" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:parentActivityName=".login.UserHomeScreenActivity"/>
 
         <meta-data
             android:name="com.google.ar.core"

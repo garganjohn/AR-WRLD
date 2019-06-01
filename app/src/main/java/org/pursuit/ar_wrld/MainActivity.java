@@ -45,10 +45,12 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = "FINDME";
     private ArFragment arFragment;
+    private AnchorNode sceneNode;
     private ModelLocationIndicator mli;
     private ImageView leftArrow;
     private ImageView rightArrow;
@@ -135,11 +137,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        arFragment = null;
+        arFragment.getActivity().getSupportFragmentManager().popBackStack();
         stopAudio();
-        audioLoader = null;
-        this.finish();
+        audioLoader.nullMediaPlayer();
+        super.onBackPressed();
 
     }
 
@@ -330,8 +331,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void spawningAliens(boolean isBoss) {
 
-        AnchorNode anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+        sceneNode = new AnchorNode();
+        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
 
         if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
@@ -458,7 +459,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void addNodeToScene(ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
-        // AnchorNode anchorNode = new AnchorNode();
         anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
@@ -602,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadModel(Uri uri, String whichEnemy) {
         ModelRenderable.builder()
-                .setSource(this, uri)
+                .setSource(getApplicationContext(), uri)
                 .build()
                 .thenAccept(modelRenderable -> {
                     addNodeToScene(modelRenderable, whichEnemy);
