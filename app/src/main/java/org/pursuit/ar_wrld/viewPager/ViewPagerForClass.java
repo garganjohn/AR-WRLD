@@ -1,11 +1,13 @@
 package org.pursuit.ar_wrld.viewPager;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,7 @@ public class ViewPagerForClass extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private String mParam2;
+    private int mParam2;
     private TextView textView;
     private ImageView imageView;
 
@@ -39,11 +41,11 @@ public class ViewPagerForClass extends Fragment {
      * @return A new instance of fragment ViewPagerForClass.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViewPagerForClass newInstance(String param1, String param2) {
+    public static ViewPagerForClass newInstance(String param1, int imageDrawable) {
         ViewPagerForClass fragment = new ViewPagerForClass();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM2, imageDrawable);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,7 +55,7 @@ public class ViewPagerForClass extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam2 = getArguments().getInt(ARG_PARAM2);
         }
     }
 
@@ -67,9 +69,10 @@ public class ViewPagerForClass extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        textView = view.findViewById(R.id.viewpager_textView);
-        imageView = view.findViewById(R.id.viewpager_imageview);
+        textView = view.findViewById(R.id.class_description);
+        imageView = view.findViewById(R.id.class_image);
         textView.setText(mParam1);
+        imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), mParam2));
     }
 
 }

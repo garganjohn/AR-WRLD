@@ -6,24 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".viewPager.ViewPagerForClass">
 
+    <ImageView
+        android:id="@+id/class_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/class_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
-        android:id="@+id/viewpager_textView"
+        android:id="@+id/class_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/viewpager_imageview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/viewpager_imageview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewpager_textView" />
+        app:layout_constraintTop_toBottomOf="@id/class_image" />
 
 </android.support.constraint.ConstraintLayout>
