@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,13 +39,13 @@ public class ResultPage extends AppCompatActivity {
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        retrieveUsername();
+//        retrieveUsername();
         retrieveUserScore();
 
-        playAgainButton.setOnClickListener(v -> {
-            startActivity(new Intent(ResultPage.this, MainActivity.class));
-            finish();
-        });
+//        playAgainButton.setOnClickListener(v -> {
+//            startActivity(new Intent(ResultPage.this, MainActivity.class));
+//            finish();
+//        });
 
     }
 
@@ -55,11 +56,17 @@ public class ResultPage extends AppCompatActivity {
         }
     }
 
-    private void retrieveUserScore() {
-        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
-            scoreTextView.setText(sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0));
-        }
+    public void retrieveUserScore() {
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+//        Log.e("SharedPrefKey: ", GameInformation.SHARED_PREF_KEY);
+        int userScore = sharedPreferences.getInt("test", -1);
+        Log.d("retrieveUserScore: ", userScore +"");
+
+//        if (sharedPreferences.contains("test")) {
+//            scoreTextView.setText(sharedPreferences.getInt("test", 0));
+//            Log.d("retrieveUserScore: ", userScore +"");
+//
+//        }
     }
 
 }

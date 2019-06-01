@@ -41,9 +41,9 @@ public class DatabaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, MODE_PRIVATE);
-        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, MODE_PRIVATE);
+//        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         savePlayerInfo();
         displayScore();
@@ -53,15 +53,15 @@ public class DatabaseActivity extends AppCompatActivity {
 
     public void savePlayerInfo() {
 
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            playerName = sharedPreferences.getString(USERNAME_KEY, "");
-        }
-        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
-            playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0);
-        }
-        if (sharedPreferences.contains(UserTitleInformation.TITLE_SHAREDPREF_KEY)) {
-            playerTitle = sharedPreferences.getString(UserTitleInformation.DOPE, "");
-        }
+//        if (sharedPreferences.contains(USERNAME_KEY)) {
+//            playerName = sharedPreferences.getString(USERNAME_KEY, "");
+//        }
+//        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
+//            playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0);
+//        }
+//        if (sharedPreferences.contains(UserTitleInformation.TITLE_SHAREDPREF_KEY)) {
+//            playerTitle = sharedPreferences.getString(UserTitleInformation.DOPE, "");
+//        }
 
         UserInformation userInformation = new UserInformation(playerName, playerScore, playerTitle);
 
