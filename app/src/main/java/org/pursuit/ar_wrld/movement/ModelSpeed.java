@@ -1,25 +1,25 @@
 package org.pursuit.ar_wrld.movement;
 
 public class ModelSpeed {
-
-
-    private float modelSpeedMultiplier = 1.0f;
-    private float rotationSpeedMultiplier = 1.0f;
-
-    public void setModelSpeedMultiplier(float modelSpeedMultiplier) {
-        this.modelSpeedMultiplier = modelSpeedMultiplier;
-    }
-
-    public float getModelSpeedMultiplier() {
+    public long getModelSpeedMultiplier() {
         return modelSpeedMultiplier;
     }
 
-    public void setRotationSpeedMultiplier(float rotationSpeedMultiplier) {
+    public void setModelSpeedMultiplier(long modelSpeedMultiplier) {
+        this.modelSpeedMultiplier = modelSpeedMultiplier;
+    }
+
+    public long getRotationSpeedMultiplier() {
+        return rotationSpeedMultiplier;
+    }
+
+    public void setRotationSpeedMultiplier(long rotationSpeedMultiplier) {
         this.rotationSpeedMultiplier = rotationSpeedMultiplier;
     }
 
-    public float getRotationSpeedMultiplier() {
-        return rotationSpeedMultiplier;
-    }
+    private long modelSpeedMultiplier = 1000;
+    private long rotationSpeedMultiplier = 1000;
+
+
 }
 

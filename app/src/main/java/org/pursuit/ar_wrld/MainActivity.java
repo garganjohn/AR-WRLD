@@ -50,6 +50,7 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
+import org.pursuit.ar_wrld.movement.ModelSpeed;
 import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     // Controls animation playback.
     private ModelAnimator animator;
     // Index of the current animation playing.
-    private MovementNode movementNode;
+    private MovementNode anchorNode;
     private int nextAnimation;
 
     @Override
@@ -236,7 +237,8 @@ public class MainActivity extends AppCompatActivity {
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
         gameInfoTv.setText(stringToDisplay);
         if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning) gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.warningColor));
+        if (isWarning)
+            gameInfoTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
         gameInfoTv.startAnimation(startFromBottom);
 
     }
@@ -449,6 +451,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+        if (anchorNode != null) {
+            ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
+            for (Node node : overlappedNodes) {
+                if (node instanceof MovementNode ) {
+                    Toast.makeText(this,"Collision!",Toast.LENGTH_SHORT).show();
+                    // May want to use a flag to check that the node wasn't overlapping the previous frame.
+                    // Play sound if overlapping started.
+                }
+            }
+        }
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -459,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
-        MovementNode anchorNode = new MovementNode();
+        anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -549,6 +561,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
+
 
                 switch (whichEnemy) {
                     case GameInformation.EASY_ENEMY:

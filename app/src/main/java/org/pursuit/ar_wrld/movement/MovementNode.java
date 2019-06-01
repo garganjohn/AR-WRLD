@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.view.animation.LinearInterpolator;
 
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
@@ -12,25 +13,38 @@ import com.google.ar.sceneform.math.QuaternionEvaluator;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
 
+import org.pursuit.ar_wrld.Effects.AudioLoader;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class MovementNode extends AnchorNode {
+
     public MovementNode() {
-        this.objectAnimator = objectAnimator;
-        this.node = getNode();
+        this.node = node;
     }
 
     private ObjectAnimator objectAnimator;
-
     private Node node;
-    private Vector3 up;
-    private Vector3 down;
-    private Vector3 forward;
-    private Vector3 left;
-    private Vector3 right;
-    private Vector3 back;
-    private ArrayList<Vector3> vector3List;
+    private ModelSpeed modelSpeed;
+
+    public ModelSpeed getModelSpeed() {
+        return modelSpeed;
+    }
+
+    public void setModelSpeed(ModelSpeed modelSpeed) {
+        this.modelSpeed = modelSpeed;
+    }
+//    private Vector3 up;
+//    private Vector3 down;
+//    private Vector3 forward;
+//    private Vector3 left;
+//    private Vector3 right;
+//    private Vector3 back;
+//    private AudioLoader audioLoader;
+//    private ArrayList<Vector3> vector3List;
+    private Long speedMultiplier = 6000L;
+
 
     public Node getNode() {
         return node;
@@ -39,10 +53,13 @@ public class MovementNode extends AnchorNode {
     @Override
     public void onUpdate(FrameTime frameTime) {
         super.onUpdate(frameTime);
+
+
         if (objectAnimator == null) {
             return;
 
         }
+
         randomMovement();
         //createAnimator(true);
     }
@@ -55,6 +72,7 @@ public class MovementNode extends AnchorNode {
     }
 
     public ObjectAnimator randomMovement() {
+
         //get nodes original coordinates
         Vector3 originalNodePosition = this.getLocalPosition();
         //set new coordinates
@@ -80,7 +98,7 @@ public class MovementNode extends AnchorNode {
         // This makes the animation linear (smooth and uniform).
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
-        objectAnimator.setDuration(6000);
+        objectAnimator.setDuration(speedMultiplier);
 
         objectAnimator.start();
 
@@ -95,13 +113,13 @@ public class MovementNode extends AnchorNode {
         // First, set up orientations that will animate a circle.
         Quaternion[] orientations = new Quaternion[4];
         // Rotation to apply first, to tilt its axis.
-        Quaternion baseOrientation = Quaternion.axisAngle(new Vector3(1.0f, 0f, 0.0f),0.03f );
+        Quaternion baseOrientation = Quaternion.axisAngle(new Vector3(1.0f, 0f, 0.0f), 0.03f);
         for (int i = 0; i < orientations.length; i++) {
             float angle = i * 360 / (orientations.length - 1);
             if (clockwise) {
                 angle = 360 - angle;
             }
-            Quaternion orientation = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f),25.19f );
+            Quaternion orientation = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), 25.19f);
             orientations[i] = Quaternion.multiply(baseOrientation, orientation);
         }
 
@@ -143,4 +161,14 @@ public class MovementNode extends AnchorNode {
 //
     }
 
+    private void collisionSpace() {
+
+        node.getCollisionShape();
+
+    }
+
+    public void speedSetting(long setSpeed){
+        speedMultiplier = setSpeed;
+
+    }
 }
