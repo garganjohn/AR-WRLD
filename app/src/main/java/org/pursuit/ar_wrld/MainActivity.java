@@ -124,11 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
         // If user misses their shot account here
         onTapForMissInteraction();
-        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
-            gameInfoPopup(R.string.boss_level,false);
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
+            gameInfoPopup(R.string.boss_level, false);
             spawningAliens(true);
-        }
-        else {
+        } else {
             gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
@@ -137,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        arFragment = null;
+        audioLoader = null;
+        this.finish();
+
     }
 
     private void setupGameInfo() {
@@ -192,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        hitChangeColor = new CountDownTimer(20,2000) {
+        hitChangeColor = new CountDownTimer(20, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mainActBG.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
@@ -204,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        backToOriginalColor = new CountDownTimer(20,2000) {
+        backToOriginalColor = new CountDownTimer(20, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 mainActBG.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
@@ -214,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 repitionForColors++;
                 if (repitionForColors < 5)
-                hitChangeColor.start();
+                    hitChangeColor.start();
                 else {
                     repitionForColors = 0;
                     mainActBG.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
@@ -443,8 +446,8 @@ public class MainActivity extends AppCompatActivity {
         if (anchorNode != null) {
             ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
             for (Node node : overlappedNodes) {
-                if (node instanceof MovementNode ) {
-                    Toast.makeText(this,"Collision!",Toast.LENGTH_SHORT).show();
+                if (node instanceof MovementNode) {
+                    Toast.makeText(this, "Collision!", Toast.LENGTH_SHORT).show();
                     // May want to use a flag to check that the node wasn't overlapping the previous frame.
                     // Play sound if overlapping started.
                 }
@@ -669,7 +672,6 @@ public class MainActivity extends AppCompatActivity {
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
-
 
 
     @Override
