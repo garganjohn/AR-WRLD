@@ -2,23 +2,27 @@ package org.pursuit.ar_wrld.movement;
 
 import android.animation.ObjectAnimator;
 
+import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.QuaternionEvaluator;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
+import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.Light;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MovementNode extends AnchorNode {
+public class MovementNode extends AnchorNode implements Node.OnTapListener {
 
     public MovementNode() {
         this.node = node;
@@ -27,6 +31,7 @@ public class MovementNode extends AnchorNode {
     private ObjectAnimator objectAnimator;
     private Node node;
     private ModelSpeed modelSpeed;
+    private Light light;
 
     public ModelSpeed getModelSpeed() {
         return modelSpeed;
@@ -35,7 +40,8 @@ public class MovementNode extends AnchorNode {
     public void setModelSpeed(ModelSpeed modelSpeed) {
         this.modelSpeed = modelSpeed;
     }
-//    private Vector3 up;
+
+    //    private Vector3 up;
 //    private Vector3 down;
 //    private Vector3 forward;
 //    private Vector3 left;
@@ -61,7 +67,7 @@ public class MovementNode extends AnchorNode {
         }
 
         randomMovement();
-        //createAnimator(true);
+        setUpLights();
     }
 
     public void addOffset(float x, float y, float z) {
@@ -167,8 +173,49 @@ public class MovementNode extends AnchorNode {
 
     }
 
-    public void speedSetting(long setSpeed){
+    public void speedSetting(long setSpeed) {
         speedMultiplier = setSpeed;
 
+    }
+
+    public void setUpLights() {
+        light =
+                Light.builder(Light.Type.POINT)
+                        .setFalloffRadius(20f)
+                        .setColor(new Color(178, 34, 34))
+                        .setShadowCastingEnabled(false)
+                        .setIntensity(3f)
+                        .build();
+
+        // for (int i = 0; i < 4; i++) {
+        // Sets the color of and creates the light.
+
+
+        // Create node and set its light.
+
+
+//            RotatingNode orbit = new RotatingNode();
+//            orbit.setParent(anchorNode);
+
+        Node lightNode = new Node();
+        lightNode.setParent(this);
+        lightNode.setLocalPosition(this.getLocalPosition());
+        lightNode.setLight(light);
+
+    }
+
+    public void modelBlink(/*Light receiver,*/int times, float from, float to, long inMs) {
+
+        ObjectAnimator intensityAnimator = ObjectAnimator.ofFloat(light, "intensity", from, to);
+        intensityAnimator.setTarget(this.getRenderable());
+        intensityAnimator.setDuration(inMs);
+        intensityAnimator.setRepeatCount(times * 2 - 1);
+        intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        intensityAnimator.start();
+    }
+
+    @Override
+    public void onTap(HitTestResult hitTestResult, MotionEvent motionEvent) {
+        modelBlink(3, 0f, 100000f, 100);
     }
 }

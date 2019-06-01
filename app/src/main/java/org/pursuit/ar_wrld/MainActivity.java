@@ -43,6 +43,8 @@ import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
+import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.Light;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
+    private Light modelLight;
     View view;
 
 
@@ -114,6 +117,8 @@ public class MainActivity extends AppCompatActivity {
     // Index of the current animation playing.
     private MovementNode anchorNode;
     private int nextAnimation;
+    private TransformableNode node;
+    private AnchorNode alienNode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
 
+
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponAmmoTv.setText(medAmmoCounter);
@@ -140,11 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
         // If user misses their shot account here
         onTapForMissInteraction();
-        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
-            gameInfoPopup(R.string.boss_level,false);
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
+            gameInfoPopup(R.string.boss_level, false);
             spawningAliens(true);
-        }
-        else {
+        } else {
             gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
@@ -203,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        hitChangeColor = new CountDownTimer(20,2000) {
+        hitChangeColor = new CountDownTimer(20, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
@@ -215,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        backToOriginalColor = new CountDownTimer(20,2000) {
+        backToOriginalColor = new CountDownTimer(20, 2000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
@@ -225,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish() {
                 repitionForColors++;
                 if (repitionForColors < 5)
-                hitChangeColor.start();
+                    hitChangeColor.start();
                 else {
                     repitionForColors = 0;
                     view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
@@ -337,12 +342,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void spawningAliens(boolean isBoss) {
 
-        AnchorNode anchorNode = new AnchorNode();
-        anchorNode.setWorldPosition(new Vector3(0, 0, 0));
+        alienNode = new AnchorNode();
+        alienNode.setWorldPosition(new Vector3(0, 0, 0));
 
         if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
-            loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
+            loadModel(alienNode.getAnchor(), Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
         } else {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
@@ -356,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTimerFinish() {
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+                    loadModel(alienNode.getAnchor(), Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
 
                     easyAlienSpawn.startTimer();
 
@@ -375,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTimerFinish() {
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                    loadModel(alienNode.getAnchor(), Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
                     medAlienSpawn.startTimer();
 
                     if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
@@ -393,7 +398,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onTimerFinish() {
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                    loadModel(alienNode.getAnchor(), Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
                     hardAlienSpawn.startTimer();
                 }
             };
@@ -451,16 +456,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
-        if (anchorNode != null) {
-            ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
-            for (Node node : overlappedNodes) {
-                if (node instanceof MovementNode ) {
-                    Toast.makeText(this,"Collision!",Toast.LENGTH_SHORT).show();
-                    // May want to use a flag to check that the node wasn't overlapping the previous frame.
-                    // Play sound if overlapping started.
-                }
-            }
-        }
+//        if (anchorNode != null) {
+//            ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
+//            for (Node node : overlappedNodes) {
+//                if (node instanceof MovementNode) {
+//                    Toast.makeText(this, "Collision!", Toast.LENGTH_SHORT).show();
+//                    // May want to use a flag to check that the node wasn't overlapping the previous frame.
+//                    // Play sound if overlapping started.
+//                }
+//            }
+//        }
     }
 
     private android.graphics.Point getScreenCenter() {
@@ -472,7 +477,7 @@ public class MainActivity extends AppCompatActivity {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
         anchorNode = new MovementNode();
-        TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+        node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
         getStringRes();
@@ -482,9 +487,8 @@ public class MainActivity extends AppCompatActivity {
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
-
+        //setUpLights();
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
-
         anchorNode.randomMovement();
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
@@ -557,6 +561,8 @@ public class MainActivity extends AppCompatActivity {
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLoader.getNumofLivesModel0()) {
                 laserSound();
+//                anchorNode.modelBlink(3, 0f, 100000f, 100);
+                //modelBlink(modelLight, 3, 0f, 100000f, 100);
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 anchorNode.removeChild(node);
@@ -618,6 +624,7 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .thenAccept(modelRenderable -> {
                     addNodeToScene(anchor, modelRenderable, whichEnemy);
+
                 });
         return;
     }
@@ -756,4 +763,46 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
     }
+
+
+    private void setUpLights() {
+        modelLight =
+                Light.builder(Light.Type.POINT)
+                        .setFalloffRadius(20f)
+                        .setColor(new Color(178, 34, 34))
+                        .setShadowCastingEnabled(false)
+                        .setIntensity(3f)
+                        .build();
+
+        // for (int i = 0; i < 4; i++) {
+        // Sets the color of and creates the light.
+
+
+        // Create node and set its light.
+
+
+//            RotatingNode orbit = new RotatingNode();
+//            orbit.setParent(anchorNode);
+
+        Node lightNode = new Node();
+        lightNode.setParent(this.node);
+        lightNode.setLocalPosition(node.getLocalPosition());
+        lightNode.setLight(modelLight);
+        //  Check if lights are currently switched on or off, and update accordingly.
+        //lightNode.setEnabled(toggleLights.isChecked());
+
+        // pointlightNodes.add(lightNode);
+        //}
+
+        //isLightingInitialized = true;
+    }
+
+    public void modelBlink(Light receiver, int times, float from, float to, long inMs) {
+        ObjectAnimator intensityAnimator = ObjectAnimator.ofFloat(receiver, "intensity", from, to);
+        intensityAnimator.setDuration(inMs);
+        intensityAnimator.setRepeatCount(times * 2 - 1);
+        intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        intensityAnimator.start();
+    }
+
 }
