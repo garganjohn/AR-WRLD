@@ -17,21 +17,11 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mainActivity_viewPager"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/intro_for_choosing_class_text"
-        app:layout_constraintBottom_toTopOf="@id/confirm_and_go_to_userhomescreen"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
-
-    <Button
-        android:id="@+id/confirm_and_go_to_userhomescreen"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="@string/confirmation"
-        app:layout_constraintTop_toBottomOf="@id/mainActivity_viewPager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>
