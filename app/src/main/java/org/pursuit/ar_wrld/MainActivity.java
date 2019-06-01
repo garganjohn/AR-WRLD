@@ -623,7 +623,7 @@ public class MainActivity extends AppCompatActivity {
                 numOfModels--;
                 shootSound();
                 getStringRes();
-                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).commit();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 scorekeepingTv.setText(scoreString);

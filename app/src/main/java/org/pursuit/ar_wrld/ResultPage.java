@@ -28,11 +28,6 @@ public class ResultPage extends AppCompatActivity {
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser user;
     private SharedPreferences sharedPreferences;
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        firebaseAuth.addAuthStateListener(authStateListener);
-//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,11 +46,6 @@ public class ResultPage extends AppCompatActivity {
             finish();
         });
 
-//        if(firebaseAuth.getCurrentUser() != null ){
-//            user = firebaseAuth.getCurrentUser();
-//            updateUI(user);
-//        }
-
     }
 
     private void retrieveUsername() {
@@ -72,10 +62,5 @@ public class ResultPage extends AppCompatActivity {
         }
     }
 
-//    public  void updateUI (FirebaseUser user){
-//        if(user != null){
-//            String name = user.getDisplayName();
-//            nameTextView.setText(name);
-//        }
 }
 
