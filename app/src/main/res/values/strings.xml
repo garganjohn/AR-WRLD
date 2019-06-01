@@ -2,12 +2,12 @@
     <string name="game_intro">Hurry, defeat the martians before they take over the world! \n Tap the martians to defeat them \n HINT: Find clocks to increase your time</string>
     <string name="timer_warning">HURRY! Only 10 seconds left before they overtake you</string>
     <string name="app_name">AR-WRLD</string>
-    <string name="msg_for_user">Tap to destory martians</string>
+    <string name="msg_for_user">Tap to destroy martians</string>
     <string name="countdown_timer">00:00</string>
     <string name="time_up_msg">Time\'s Up!</string>
     <string name="score_text">Score: %d</string>
     <string name="default_score_text">Score :</string>
-    <string name="aliens_remaining_string">Aliens Remaining: %d</string>
+    <string name="aliens_remaining_string">X %d</string>
     <string name="user_image">User Image</string>
     <string name="user_email">Email</string>
     <string name="user_password">Password</string>
@@ -20,6 +20,7 @@
     <string name="play">Play</string>
     <string name="top_players">Top Players</string>
     <string name="choose_a_level">Choose a level</string>
+    <string name="boss_level">This enemy looks strong, destroy it before it has a chance to take over the world! \n HINT: Switch weapons below to defeat it quicker</string>
     <string-array name="level_array">
         <item>EASY</item>
         <item>MEDIUM</item>
@@ -39,6 +40,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pick_a_username">Pick a username</string>
+    <string name="play_again">Play Again?</string>
 
 
 </resources>

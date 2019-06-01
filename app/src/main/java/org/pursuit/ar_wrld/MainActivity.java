@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -50,6 +51,7 @@ import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.movement.ModelSpeed;
+import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
@@ -97,10 +99,14 @@ public class MainActivity extends AppCompatActivity {
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
     private String difficulty;
+    private CountDownTimer hitChangeColor;
+    private CountDownTimer backToOriginalColor;
+    private int repitionForColors = 0;
     Button shootingButton;
     private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
+    View view;
 
 
     // Controls animation playback.
@@ -113,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        showActionBar();
+        view = findViewById(R.id.background_for_ar_view);
         difficulty = getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY);
         findViews();
         weaponSetup();
@@ -121,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
         audioSetup();
         setupGameInfo();
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
+
 
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -129,13 +138,14 @@ public class MainActivity extends AppCompatActivity {
         vector = new Vector3();
         setUpAR();
 
-        gameInfoPopup(R.string.game_intro, false);
         // If user misses their shot account here
         onTapForMissInteraction();
-        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
-            Log.d(TAG, "onCreate: ");
+        if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)){
+            gameInfoPopup(R.string.boss_level,false);
             spawningAliens(true);
-        } else {
+        }
+        else {
+            gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
     }
@@ -192,6 +202,36 @@ public class MainActivity extends AppCompatActivity {
                 gameInfoTv.startAnimation(exitToBottom);
             }
         };
+
+        hitChangeColor = new CountDownTimer(20,2000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.warningColor));
+            }
+
+            @Override
+            public void onFinish() {
+                backToOriginalColor.start();
+            }
+        };
+
+        backToOriginalColor = new CountDownTimer(20,2000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
+            }
+
+            @Override
+            public void onFinish() {
+                repitionForColors++;
+                if (repitionForColors < 5)
+                hitChangeColor.start();
+                else {
+                    repitionForColors = 0;
+                    view.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.neutral_hit));
+                }
+            }
+        };
     }
 
     private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
@@ -220,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
                 isMedWeaponChosen = false;
                 weaponSwitch();
             }
+
+            hitChangeColor.start();
+
             return false;
         });
     }
@@ -466,6 +509,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
         } else if (whichEnemy == GameInformation.BOSS_ENEMY) {
             anchorNode.speedSetting(1500);
+
             modelLoader.setNumofLivesModel0(30);
         }
 
@@ -517,13 +561,20 @@ public class MainActivity extends AppCompatActivity {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
-                if (whichEnemy == GameInformation.EASY_ENEMY) {
 
-                    scoreNumber += 1000;
-                } else if (whichEnemy == GameInformation.MEDIUM_ENEMY) {
-                    scoreNumber += 2500;
-                } else if (whichEnemy == GameInformation.HARD_ENEMY) {
-                    scoreNumber += 5000;
+                switch (whichEnemy) {
+                    case GameInformation.EASY_ENEMY:
+                        scoreNumber += 1000;
+                        break;
+                    case GameInformation.MEDIUM_ENEMY:
+                        scoreNumber += 2500;
+                        break;
+                    case GameInformation.HARD_ENEMY:
+                        scoreNumber += 5000;
+                        break;
+                    case GameInformation.BOSS_ENEMY:
+                        scoreNumber += 25000;
+                        break;
                 }
 
                 if (isTimerModel) {
@@ -700,4 +751,8 @@ public class MainActivity extends AppCompatActivity {
         audioLoader.stopAudio();
     }
 
+    private void showActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.show();
+    }
 }

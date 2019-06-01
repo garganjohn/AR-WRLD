@@ -1,49 +1,100 @@
 package org.pursuit.ar_wrld.database;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.pursuit.ar_wrld.GameInformation;
+import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.login.SignUpActivity;
+import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
+import org.pursuit.ar_wrld.usermodel.UserInformation;
+import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
+
+import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
 
 public class DatabaseActivity extends AppCompatActivity {
 
     private static final String TAG = "DB";
-    private static final String USER_NAME = "username";
-    private static final String USER_SCORE = "userscore";
+    private SharedPreferences sharedPreferences;
+    private String playerName;
+    private int playerScore;
+    private String playerTitle;
+    private RecyclerView recyclerView;
+    FirebaseRecyclerOptions<UserInformation> userOptions;
+    FirebaseRecyclerAdapter<UserInformation, TopScoreViewHolder> adapter;
 
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("mARtians");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        saveScore();
+        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
+
+        savePlayerInfo();
+        displayScore();
 
 
     }
 
-    public void saveScore(){
+    public void savePlayerInfo() {
 
-        //get username from userhomescreenactivity
-        //get userscore from argame play
+        if (sharedPreferences.contains(USERNAME_KEY)) {
+            playerName = sharedPreferences.getString(USERNAME_KEY, "");
+        }
+        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
+            playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0);
+        }
+        if (sharedPreferences.contains(UserTitleInformation.TITLE_SHAREDPREF_KEY)) {
+            playerTitle = sharedPreferences.getString(UserTitleInformation.DOPE, "");
+        }
 
-        String name = "";
-        String score = "";
+        UserInformation userInformation = new UserInformation(playerName, playerScore, playerTitle);
 
-        Map<String, Object> note = new HashMap<>();
-        note.put(USER_NAME, name);
-        note.put(USER_SCORE, score);
+        myRef.push()
+                .setValue(userInformation);
+
+        adapter.notifyDataSetChanged();
 
 
     }
 
-    public void loadScore(){
+    public void displayScore() {
+        userOptions = new FirebaseRecyclerOptions.Builder<UserInformation>()
+                .setQuery(myRef, UserInformation.class)
+                .build();
+
+        adapter =
+                new FirebaseRecyclerAdapter<UserInformation, TopScoreViewHolder>(userOptions) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull TopScoreViewHolder holder, int position, @NonNull UserInformation model) {
+                        holder.selectedUsername.setText(model.getUsername());
+                        holder.selectedUserTitle.setText(model.getUsertitle());
+                        holder.selectedUserScore.setText(model.getUserscore());
+                    }
+
+                    @NonNull
+                    @Override
+                    public TopScoreViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                        return new TopScoreViewHolder(LayoutInflater.from(getBaseContext()).inflate(R.layout.activity_itemviews, viewGroup, false));
+                    }
+                };
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+
     }
 }
