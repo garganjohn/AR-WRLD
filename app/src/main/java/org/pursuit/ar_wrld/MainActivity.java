@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 60000;
+    private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private int scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
-            easyAlienSpawn = new Hourglass(2000, 1000) {
+            easyAlienSpawn = new Hourglass(4000, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            medAlienSpawn = new Hourglass(3000, 1000) {
+            medAlienSpawn = new Hourglass(5000, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -385,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
-            hardAlienSpawn = new Hourglass(6000, 1000) {
+            hardAlienSpawn = new Hourglass(8000, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
