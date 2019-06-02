@@ -625,6 +625,7 @@ public class SpaceARFragment extends Fragment {
                 laserSound();
                 Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
+                node.setRenderable(null);
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
