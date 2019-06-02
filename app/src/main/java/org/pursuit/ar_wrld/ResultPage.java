@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,16 +24,12 @@ public class ResultPage extends AppCompatActivity {
 
     private TextView nameTextView;
     private TextView scoreTextView;
+    private TextView titleForScore;
     private Button playAgainButton;
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
     FirebaseUser user;
     private SharedPreferences sharedPreferences;
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        firebaseAuth.addAuthStateListener(authStateListener);
-//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,21 +37,16 @@ public class ResultPage extends AppCompatActivity {
         setContentView(R.layout.activity_resultpage);
 
         nameTextView = findViewById(R.id.player_name);
+        titleForScore = findViewById(R.id.title_for_player_score);
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        retrieveUsername();
         retrieveUserScore();
 
         playAgainButton.setOnClickListener(v -> {
             startActivity(new Intent(ResultPage.this, MainActivity.class));
             finish();
         });
-
-//        if(firebaseAuth.getCurrentUser() != null ){
-//            user = firebaseAuth.getCurrentUser();
-//            updateUI(user);
-//        }
 
     }
 
@@ -65,17 +57,18 @@ public class ResultPage extends AppCompatActivity {
         }
     }
 
-    private void retrieveUserScore() {
-        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
-            scoreTextView.setText(sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0));
-        }
+    public void retrieveUserScore() {
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+        scoreTextView.setText(String.valueOf(userScore));
+        Log.d("retrieveUserScore: ", userScore +"");
+
+        /**
+         * if points are zero, update sharedPref with points.
+         *
+         */
+
     }
 
-//    public  void updateUI (FirebaseUser user){
-//        if(user != null){
-//            String name = user.getDisplayName();
-//            nameTextView.setText(name);
-//        }
 }
 

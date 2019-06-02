@@ -18,6 +18,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.viewPager.ClassPickForUser;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +30,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private Button practiceButton;
     private Button playButton;
     private Button logoutButton;
+    private Button pickAPerkButton;
     private TextView usernameTextView;
     private TextView userscoreTextView;
     private TextView userTitleTextView;
@@ -57,18 +59,29 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         userTitleTextView = findViewById(R.id.user_title);
         recyclerView = findViewById(R.id.top_play_recyclerview);
         levelSpinner = findViewById(R.id.level_spinner);
+        pickAPerkButton = findViewById(R.id.pick_a_perk);
         practiceButton = findViewById(R.id.practice_button);
         playButton = findViewById(R.id.play_button);
         logoutButton = findViewById(R.id.logout_button);
 
         retrieveUsername();
-
+      
         RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
-            String spinnerValue = levelSpinner.getSelectedItem().toString();
-            Intent intent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
-            intent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
-            startActivity(intent);
+        pickAPerkButton.setOnClickListener(v -> {
+            Intent perkIntent = new Intent(UserHomeScreenActivity.this, ClassPickForUser.class);
+            startActivity(perkIntent);
+            finish();
+
         });
+
+        playButton.setOnClickListener(v -> {
+            String spinnerValue = levelSpinner.getSelectedItem().toString();
+            Intent playIntent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
+            playIntent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
+            startActivity(playIntent);
+            finish();
+        });
+          
         RxView.clicks(logoutButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
