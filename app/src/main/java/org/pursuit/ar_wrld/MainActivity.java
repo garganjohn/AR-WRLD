@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
     private Animation startFromBottom;
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
-    private String difficulty;
+    private String difficulty = "";
     private CountDownTimer hitChangeColor;
     private CountDownTimer backToOriginalColor;
     private int repitionForColors = 0;
@@ -443,7 +443,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("StringFormatInvalid")
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
