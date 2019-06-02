@@ -692,13 +692,8 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onTimerFinish() {
-<<<<<<< HEAD
                         sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                        gameOver(getString(R.string.game_over_if_timer_runs_out));
-=======
-                        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).commit();
-                        goToResultPage();
->>>>>>> fixed the userscore sharedpref in main activity
+                        gameOver(getString(R.string.game_over_if_timer_runs_out));~
 
                     }
                 }.startTimer();
