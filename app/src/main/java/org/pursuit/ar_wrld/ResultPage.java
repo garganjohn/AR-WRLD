@@ -43,10 +43,10 @@ public class ResultPage extends AppCompatActivity {
 
         retrieveUserScore();
 
-//        playAgainButton.setOnClickListener(v -> {
-//            startActivity(new Intent(ResultPage.this, MainActivity.class));
-//            finish();
-//        });
+        playAgainButton.setOnClickListener(v -> {
+            startActivity(new Intent(ResultPage.this, MainActivity.class));
+            finish();
+        });
 
     }
 
