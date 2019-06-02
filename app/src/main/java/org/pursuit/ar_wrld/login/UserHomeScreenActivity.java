@@ -13,11 +13,14 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.jakewharton.rxbinding.view.RxView;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 import org.pursuit.ar_wrld.viewPager.ClassPickForUser;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
 
@@ -62,7 +65,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
 
         retrieveUsername();
-
+      
+        RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
         pickAPerkButton.setOnClickListener(v -> {
             Intent perkIntent = new Intent(UserHomeScreenActivity.this, ClassPickForUser.class);
             startActivity(perkIntent);
@@ -77,12 +81,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             startActivity(playIntent);
             finish();
         });
-
-        logoutButton.setOnClickListener(v -> {
+          
+        RxView.clicks(logoutButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
             finish();
-
         });
     }
 
