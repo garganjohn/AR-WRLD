@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private int scoreNumber;
-    private int scoreTillClockModel = 2000;
+    private int scoreTillClockModel = 5000;
     private String scoreString;
     private String aliensLeftString;
     private String medAmmoCounter;
@@ -118,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
     // Index of the current animation playing.
     private MovementNode anchorNode;
     private int nextAnimation;
+    private int firstPointThreshold;
+    private int increaseScoreTillClockModelEasy = 5000;
+    private int increaseScoreTillClockModelMed = 15000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         }
         switch (whichPerk){
             case GameInformation.MORE_AMMO_PERK:
-                weaponSelection.setMedWeaponDamage(startingMedAmmo+(startingMedAmmo / 2));
+                weaponSelection.setMedWeaponAmmo(startingMedAmmo+(startingMedAmmo / 2));
                 setMedAmmoTv();
                 break;
             case GameInformation.MORE_DAMAGE_PERK:
@@ -175,6 +178,11 @@ public class MainActivity extends AppCompatActivity {
                 startGame = null;
                 timeLeftInMilliseconds += 20000;
                 startGameTimer();
+                break;
+            case GameInformation.SLOW_TIME_PERK:
+                increaseScoreTillClockModelEasy = 2500;
+                increaseScoreTillClockModelMed = 7500;
+                break;
         }
     }
 
@@ -619,10 +627,11 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if (scoreNumber >= scoreTillClockModel) {
-                    if (scoreTillClockModel <= 20000) {
-                        scoreTillClockModel += 5000;
+                    firstPointThreshold = 20000;
+                    if (scoreTillClockModel <= firstPointThreshold) {
+                        scoreTillClockModel += increaseScoreTillClockModelEasy;
                     } else {
-                        scoreTillClockModel += 10000;
+                        scoreTillClockModel += increaseScoreTillClockModelMed;
                     }
                     loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }

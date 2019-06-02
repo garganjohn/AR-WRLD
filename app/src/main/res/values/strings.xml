@@ -37,8 +37,6 @@
         \nIf you didn\'t mean to reset your password, you can just ignore this email and your password will not change.</string>
     <string name="insert_email_message">Please insert an email!</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_a_username">Pick a username</string>
     <string name="play_again">Play Again?</string>
@@ -48,7 +46,7 @@
     <string name="more_ammo_perk">Need more powerful ammo? Get an additional 50% more ammo for all of your weapons.</string>
     <string name="more_time_perk">Not enough time to destroy the aliens? Your time starts with +20 seconds at the start of every game.</string>
     <string name="slow_time_perk">Feel confident with your shooting? Clocks that appear on screen become more frequent.</string>
-    <string name="more_damage_park">Need some juice to destroy more often? Your weapons do 1 more damage to the enemies.</string>
+    <string name="more_damage_park">Need some juice to destroy more often? Your special weapons do 1 more damage to the enemies.</string>
 
 
 </resources>
