@@ -48,6 +48,7 @@
     <string name="slow_time_perk">Feel confident with your shooting? Clocks that appear on screen become more frequent.</string>
     <string name="more_damage_park">Need some juice to destroy more often? Your special weapons do 1 more damage to the enemies.</string>
     <string name="your_score_is">Your score is</string>
+    <string name="pick_a_perk">Pick a perk</string>
 
 
 </resources>
