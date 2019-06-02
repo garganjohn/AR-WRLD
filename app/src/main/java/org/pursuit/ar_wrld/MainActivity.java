@@ -48,6 +48,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.gameEndsFragments.GameOverFragment;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.movement.ModelSpeed;
@@ -508,6 +509,23 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
+
+        switch (difficulty){
+            case UserHomeScreenActivity.EASY_STRING:
+                if (numOfModels > 9){
+                    goToResultPage();
+                }
+            case UserHomeScreenActivity.MEDIUM_STRING:
+                if (numOfModels > 6){
+                    goToResultPage();
+                }
+            case UserHomeScreenActivity.HARD_STRING:
+                Log.d(TAG, "setNodeListener: "+numOfModels);
+                if (numOfModels > 4){
+                    goToResultPage();
+                }
+        }
+
         anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
@@ -721,8 +739,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToResultPage() {
-        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
-        startActivity(goToResultPageIntent);
+        Log.d(TAG, "goToResultPage: ");
+        GameOverFragment gameOverFragment = GameOverFragment.newInstance("apple","banana");
+        getSupportFragmentManager().beginTransaction().add(R.id.result_container, gameOverFragment).commit();
+
+        
+//        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+//        startActivity(goToResultPageIntent);
     }
 
     //Random X coordinates will be between -.2 to .4f
@@ -794,5 +817,9 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
     }
-    
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
