@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +49,11 @@ public class ResultPage extends AppCompatActivity {
             startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
             finish();
         });
+
+    }
+
+    private void destroyArFragment() {
+        getFragmentManager().popBackStack();
 
     }
 

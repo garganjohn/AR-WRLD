@@ -779,6 +779,7 @@ public class SpaceARFragment extends Fragment {
         instance = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
+        arFragment.onDestroy();
     }
 
 
