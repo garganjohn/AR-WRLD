@@ -43,10 +43,10 @@ public class ResultPage extends AppCompatActivity {
 
         retrieveUserScore();
 
-//        playAgainButton.setOnClickListener(v -> {
-//            startActivity(new Intent(ResultPage.this, MainActivity.class));
-//            finish();
-//        });
+        playAgainButton.setOnClickListener(v -> {
+            startActivity(new Intent(ResultPage.this, MainActivity.class));
+            finish();
+        });
 
     }
 
@@ -62,6 +62,11 @@ public class ResultPage extends AppCompatActivity {
         int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
         scoreTextView.setText(String.valueOf(userScore));
         Log.d("retrieveUserScore: ", userScore +"");
+
+        /**
+         * if points are zero, update sharedPref with points.
+         *
+         */
 
     }
 
