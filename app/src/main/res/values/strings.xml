@@ -39,7 +39,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_a_username">Pick a username</string>
-    <string name="play_again">Play Again?</string>
+    <string name="play_again">Back To Home Page</string>
     <string name="choose_hero_text">Choose your perk for an advantage against the invasion</string>
     <string name="confirmation">Choose this class</string>
 
