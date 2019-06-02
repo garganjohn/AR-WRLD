@@ -1,4 +1,4 @@
-package org.pursuit.ar_wrld.viewPager;
+package org.pursuit.ar_wrld.perks;
 
 public interface ViewPagerListener {
     void goToUserHome();

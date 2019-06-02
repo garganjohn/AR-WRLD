@@ -1,7 +1,6 @@
-package org.pursuit.ar_wrld.viewPager;
+package org.pursuit.ar_wrld.perks;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
 
-public class ViewPagerForClass extends Fragment {
+public class ViewPagerForPerk extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,7 +31,7 @@ public class ViewPagerForClass extends Fragment {
     private ImageView imageView;
     private ViewPagerListener vpl;
 
-    public ViewPagerForClass() {
+    public ViewPagerForPerk() {
         // Required empty public constructor
     }
 
@@ -45,8 +44,8 @@ public class ViewPagerForClass extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ViewPagerForClass newInstance(String param1, int imageDrawable, String whichPerk) {
-        ViewPagerForClass fragment = new ViewPagerForClass();
+    public static ViewPagerForPerk newInstance(String param1, int imageDrawable, String whichPerk) {
+        ViewPagerForPerk fragment = new ViewPagerForPerk();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putInt(ARG_PARAM2, imageDrawable);

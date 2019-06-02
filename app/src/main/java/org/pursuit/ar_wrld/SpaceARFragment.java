@@ -539,16 +539,16 @@ public class SpaceARFragment extends Fragment {
         switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
                 if (numOfModels > 9) {
-                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
+                    goToResultPage();
                 }
             case UserHomeScreenActivity.MEDIUM_STRING:
                 if (numOfModels > 6) {
-                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
+                    goToResultPage();
                 }
             case UserHomeScreenActivity.HARD_STRING:
                 Log.d(TAG, "setNodeListener: " + numOfModels);
                 if (numOfModels > 4) {
-                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
+                    goToResultPage();
                 }
         }
 
@@ -717,7 +717,7 @@ public class SpaceARFragment extends Fragment {
                 countDownText.setText("Time's Up");
                 stopAudio();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                gameOver(getString(R.string.game_over_if_timer_runs_out));
+                goToResultPage();
             }
         };
         startGame.startTimer();
@@ -739,35 +739,38 @@ public class SpaceARFragment extends Fragment {
         countDownText.setText(timeLeftText);
     }
 
-    public void gameOver(String gameOverMessage) {
-        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-
-        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
-        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
-        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
-        if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
-
-        GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
-        //TODO ensure this transaction happens
-        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).replace(R.id.background_for_ar_view, gameOverFragment).commit();
-        new CountDownTimer(5000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                //TODO ensure intent moves to next activity from fragment
-                try {
-                    arFragment.onDestroy();
-                } catch (Exception e) {
-                    Log.d(TAG, "onFinish: " + e.toString());
-                }
-                goToResultPage();
-            }
-        }.start();
-    }
+//    public void gameOver(String gameOverMessage) {
+//
+//        arFragment.onDestroy();
+//
+//        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+//
+//        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+//        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+//        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
+//        if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
+//
+//        GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
+//        //TODO ensure this transaction happens
+//        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).replace(R.id.background_for_ar_view, gameOverFragment).commit();
+//        new CountDownTimer(5000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                //TODO ensure intent moves to next activity from fragment
+//                try {
+//                    arFragment.onDestroy();
+//                } catch (Exception e) {
+//                    Log.d(TAG, "onFinish: " + e.toString());
+//                }
+//                goToResultPage();
+//            }
+//        }.start();
+//    }
 
     public void goToResultPage() {
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);

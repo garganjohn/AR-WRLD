@@ -1,4 +1,4 @@
-package org.pursuit.ar_wrld.viewPager;
+package org.pursuit.ar_wrld.perks;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
@@ -13,7 +13,7 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassPickForUser extends FragmentActivity implements ViewPagerListener{
+public class PerkPickForUser extends FragmentActivity implements ViewPagerListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +22,10 @@ public class ClassPickForUser extends FragmentActivity implements ViewPagerListe
 
         List<Fragment> fragmentList = new ArrayList<>();
 
-        fragmentList.add(ViewPagerForClass.newInstance(getResources().getString(R.string.more_ammo_perk), R.drawable.ammo_perk, GameInformation.MORE_AMMO_PERK));
-        fragmentList.add(ViewPagerForClass.newInstance(getResources().getString(R.string.more_time_perk), R.drawable.clock_perk, GameInformation.MORE_TIME_PERK));
-        fragmentList.add(ViewPagerForClass.newInstance(getResources().getString(R.string.slow_time_perk), R.drawable.slow_time_perk, GameInformation.SLOW_TIME_PERK));
-        fragmentList.add(ViewPagerForClass.newInstance(getResources().getString(R.string.more_damage_park), R.drawable.more_power, GameInformation.MORE_DAMAGE_PERK));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_ammo_perk), R.drawable.ammo_perk, GameInformation.MORE_AMMO_PERK));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_time_perk), R.drawable.clock_perk, GameInformation.MORE_TIME_PERK));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.slow_time_perk), R.drawable.slow_time_perk, GameInformation.SLOW_TIME_PERK));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_damage_park), R.drawable.more_power, GameInformation.MORE_DAMAGE_PERK));
 
         ViewPager viewPager = findViewById(R.id.mainActivity_viewPager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), fragmentList));
