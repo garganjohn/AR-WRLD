@@ -6,19 +6,17 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.jakewharton.rxbinding.view.RxView;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
-import org.pursuit.ar_wrld.viewPager.ClassPickForUser;
+import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
 
@@ -76,7 +74,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
 
         pickAPerkButton.setOnClickListener(v -> {
-            Intent perkIntent = new Intent(UserHomeScreenActivity.this, ClassPickForUser.class);
+            Intent perkIntent = new Intent(UserHomeScreenActivity.this, PerkPickForUser.class);
             startActivity(perkIntent);
             finish();
         });

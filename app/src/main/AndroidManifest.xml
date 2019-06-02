@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".viewPager.ClassPickForUser"></activity>
+        <activity android:name=".perks.PerkPickForUser"></activity>
         <activity android:name=".login.ResetPasswordActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>

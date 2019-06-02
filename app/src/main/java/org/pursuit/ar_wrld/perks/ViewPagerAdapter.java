@@ -1,11 +1,8 @@
-package org.pursuit.ar_wrld.viewPager;
+package org.pursuit.ar_wrld.perks;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 
 import java.util.List;
 
