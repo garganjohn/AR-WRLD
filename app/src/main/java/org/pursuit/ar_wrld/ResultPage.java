@@ -24,6 +24,7 @@ public class ResultPage extends AppCompatActivity {
 
     private TextView nameTextView;
     private TextView scoreTextView;
+    private TextView titleForScore;
     private Button playAgainButton;
     FirebaseAuth firebaseAuth;
     FirebaseAuth.AuthStateListener authStateListener;
@@ -36,16 +37,12 @@ public class ResultPage extends AppCompatActivity {
         setContentView(R.layout.activity_resultpage);
 
         nameTextView = findViewById(R.id.player_name);
+        titleForScore = findViewById(R.id.title_for_player_score);
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
-//        retrieveUsername();
         retrieveUserScore();
 
-//        playAgainButton.setOnClickListener(v -> {
-//            startActivity(new Intent(ResultPage.this, MainActivity.class));
-//            finish();
-//        });
 
     }
 
@@ -58,15 +55,10 @@ public class ResultPage extends AppCompatActivity {
 
     public void retrieveUserScore() {
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-//        Log.e("SharedPrefKey: ", GameInformation.SHARED_PREF_KEY);
-        int userScore = sharedPreferences.getInt("test", -1);
+        int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+        scoreTextView.setText(String.valueOf(userScore));
         Log.d("retrieveUserScore: ", userScore +"");
 
-//        if (sharedPreferences.contains("test")) {
-//            scoreTextView.setText(sharedPreferences.getInt("test", 0));
-//            Log.d("retrieveUserScore: ", userScore +"");
-//
-//        }
     }
 
 }
