@@ -11,7 +11,10 @@
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/aansa"
         android:background="#fff"
+        android:textColor="#000"
+        android:textSize="24sp"
         android:text="These are just a few words to test out if this is working" />
 
 </LinearLayout>
