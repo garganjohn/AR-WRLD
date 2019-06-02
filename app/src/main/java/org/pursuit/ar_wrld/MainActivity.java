@@ -693,6 +693,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onTimerFinish() {
+                        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).commit();
                         goToResultPage();
 
                     }

@@ -63,6 +63,11 @@ public class ResultPage extends AppCompatActivity {
         scoreTextView.setText(String.valueOf(userScore));
         Log.d("retrieveUserScore: ", userScore +"");
 
+        /**
+         * if points are zero, update sharedPref with points.
+         *
+         */
+
     }
 
 }
