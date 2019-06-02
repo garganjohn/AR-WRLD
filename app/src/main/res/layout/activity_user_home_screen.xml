@@ -12,6 +12,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         >
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -68,7 +69,8 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#6320b5">
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,8 +80,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="italic"
+        android:textSize="30sp"
         android:textAlignment="center"
         android:text="@string/choose_a_level"
+        android:textColor="#6320b5"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@id/level_spinner"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -103,6 +107,9 @@
         android:id="@+id/practice_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#6320b5"
+        android:textSize="25sp"
+        android:textColor="#E1E2E7"
         android:text="@string/practice"
         app:layout_constraintBottom_toTopOf="@id/play_button"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -114,6 +121,9 @@
         android:id="@+id/play_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#6320b5"
+        android:textColor="#E1E2E7"
+        android:textSize="25sp"
         android:text="@string/play"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@id/logout_button"
@@ -125,6 +135,9 @@
         android:id="@+id/logout_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#6320b5"
+        android:textColor="#E1E2E7"
+        android:textSize="25sp"
         android:text="@string/logout"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
