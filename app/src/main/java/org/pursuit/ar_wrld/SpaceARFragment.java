@@ -751,7 +751,6 @@ public class SpaceARFragment extends Fragment {
     }
 
     public void gameOver(String gameOverMessage) {
-        arFragment.onDestroy();
 
         sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
 
@@ -762,8 +761,8 @@ public class SpaceARFragment extends Fragment {
 
         GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
         //TODO ensure this transaction happens
-        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).add(R.id.result_container, gameOverFragment).commit();
-        new CountDownTimer(5000, 1000) {
+        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).add(R.id.background_for_ar_view, gameOverFragment).commit();
+        new CountDownTimer(1500, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
