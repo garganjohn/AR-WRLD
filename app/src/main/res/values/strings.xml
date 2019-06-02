@@ -50,5 +50,8 @@
     <string name="your_score_is">Your score is</string>
     <string name="pick_a_perk">Pick a perk</string>
 
+    <string name="game_over_if_models_exceed_amount">Oh no! Seems like the models have overtaken you, going to the results page now…</string>
+    <string name="game_over_if_timer_runs_out">You protected the Earth… for now. Keep on playing to collect more weapons</string>
+
 
 </resources>
