@@ -13,6 +13,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
 import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
@@ -34,9 +35,8 @@ public class DatabaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 //        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, MODE_PRIVATE);
-//        sharedPreferences = getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         savePlayerInfo();
         displayScore();
