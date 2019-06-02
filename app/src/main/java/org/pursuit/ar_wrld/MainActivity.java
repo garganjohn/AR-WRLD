@@ -3,6 +3,7 @@ package org.pursuit.ar_wrld;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,11 +16,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSpaceFragment() {
-        SpaceARFragment spaceARFragment = SpaceARFragment.getInstance(getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY));
+    SpaceARFragment spaceARFragment = SpaceARFragment.getInstance(getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY));
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_activity_container, spaceARFragment)
-                .addToBackStack("main")
+//                .addToBackStack("main")
                 .commit();
     }
 
@@ -27,4 +28,5 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
     }
+
 }

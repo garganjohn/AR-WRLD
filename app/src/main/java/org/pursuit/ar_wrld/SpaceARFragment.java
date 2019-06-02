@@ -773,6 +773,10 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
+        audioLoader = null;
+        instance.onDestroy();
+        instance.onDetach();
+        instance = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
@@ -815,4 +819,5 @@ public class SpaceARFragment extends Fragment {
     public void stopAudio() {
         audioLoader.stopAudio();
     }
+
 }
