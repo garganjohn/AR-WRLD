@@ -41,11 +41,11 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.gameEndsFragments.GameOverFragment;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.movement.MovementNode;
-import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -73,13 +73,16 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 60000;
+    private long timeLeftInMilliseconds = 10000;
     int numOfModels = 0;
     private int scoreNumber;
     private int scoreTillClockModel = 2000;
     private String scoreString;
     private String aliensLeftString;
     private String medAmmoCounter;
+    private String medDamageCounter;
+    private String medDamageString;
+    private String medAmmoString;
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
@@ -112,6 +115,10 @@ public class SpaceARFragment extends Fragment {
     // Index of the current animation playing.
     private MovementNode anchorNode;
     private int nextAnimation;
+    private int firstPointThreshold;
+    private int startingMedAmmo = 25;
+    private int increaseScoreTillClockModelEasy = 5000;
+    private int increaseScoreTillClockModelMed = 15000;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -141,7 +148,7 @@ public class SpaceARFragment extends Fragment {
         modelCoordinates = new ModelCoordinates();
 
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-        sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
+        //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         vector = new Vector3();
 
@@ -178,7 +185,7 @@ public class SpaceARFragment extends Fragment {
             gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
-
+        applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
     }
 
     private void setUpAR() {
@@ -191,6 +198,32 @@ public class SpaceARFragment extends Fragment {
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);
 
+    }
+
+    private void applyPerkToUser(String whichPerk) {
+        if (whichPerk == null) {
+            return;
+        }
+        switch (whichPerk) {
+            case GameInformation.MORE_AMMO_PERK:
+                weaponSelection.setMedWeaponAmmo(startingMedAmmo + (startingMedAmmo / 2));
+                setMedAmmoTv();
+                break;
+            case GameInformation.MORE_DAMAGE_PERK:
+                weaponSelection.setMedWeaponDamage(4);
+                setMedAmmoTv();
+                break;
+            case GameInformation.MORE_TIME_PERK:
+                startGame.pauseTimer();
+                startGame = null;
+                timeLeftInMilliseconds += 20000;
+                startGameTimer();
+                break;
+            case GameInformation.SLOW_TIME_PERK:
+                increaseScoreTillClockModelEasy = 2500;
+                increaseScoreTillClockModelMed = 7500;
+                break;
+        }
     }
 
     private void setupGameInfo() {
@@ -310,7 +343,10 @@ public class SpaceARFragment extends Fragment {
         });
     }
 
+    @SuppressLint("StringFormatMatches")
     private void setMedAmmoTv() {
+        medDamageString = Integer.toString(weaponSelection.getMedWeaponDamage());
+        medAmmoString = Integer.toString(weaponSelection.getMedWeaponAmmo());
         medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
         medWeaponAmmoTv.setText(medAmmoCounter);
     }
@@ -326,7 +362,7 @@ public class SpaceARFragment extends Fragment {
     private void weaponSetup() {
         medWeapon.setAlpha(0.125f);
         setWeaponListener();
-        weaponSelection = new WeaponsAvailable(25);
+        weaponSelection = new WeaponsAvailable(startingMedAmmo);
         weaponDamage = weaponSelection.getWeakWeaponDamage();
     }
 
@@ -361,6 +397,7 @@ public class SpaceARFragment extends Fragment {
         });
     }
 
+
     private void findViews(View v) {
         msgForUser = v.findViewById(R.id.msg_for_user);
         countDownText = v.findViewById(R.id.timer_textview);
@@ -390,7 +427,7 @@ public class SpaceARFragment extends Fragment {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
-            easyAlienSpawn = new Hourglass(2000, 1000) {
+            easyAlienSpawn = new Hourglass(4000, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -410,7 +447,7 @@ public class SpaceARFragment extends Fragment {
                 }
             };
 
-            medAlienSpawn = new Hourglass(3000, 1000) {
+            medAlienSpawn = new Hourglass(5000, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -428,7 +465,7 @@ public class SpaceARFragment extends Fragment {
                 }
             };
 
-            hardAlienSpawn = new Hourglass(6000, 1000) {
+            hardAlienSpawn = new Hourglass(8000, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -459,7 +496,7 @@ public class SpaceARFragment extends Fragment {
     }
 
 
-    @SuppressLint("StringFormatInvalid")
+    @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
@@ -498,10 +535,25 @@ public class SpaceARFragment extends Fragment {
 
     public void addNodeToScene(ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
+
+        switch (difficulty) {
+            case UserHomeScreenActivity.EASY_STRING:
+                if (numOfModels > 9) {
+                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
+                }
+            case UserHomeScreenActivity.MEDIUM_STRING:
+                if (numOfModels > 6) {
+                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
+                }
+            case UserHomeScreenActivity.HARD_STRING:
+                Log.d(TAG, "setNodeListener: " + numOfModels);
+                if (numOfModels > 4) {
+                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
+                }
+        }
+
         anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-        node.getScaleController().setMinScale(0.25f);
-        node.getScaleController().setMaxScale(1.0f);
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
@@ -516,7 +568,6 @@ public class SpaceARFragment extends Fragment {
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
         mli.indicate(vector);
-        //TODO put location logic here
 
         ModelLives modelLives = new ModelLives();
         boolean isTimerModel = false;
@@ -544,28 +595,16 @@ public class SpaceARFragment extends Fragment {
         arFragment.getArSceneView().getScene().addChild(anchorNode);
         //Rotates the model every frame
         //Second parameter in Quaternion.axisAngle() measures speed of rotation
-        arFragment.getArSceneView().getScene().addOnUpdateListener(new Scene.OnUpdateListener() {
-            @Override
-            public void onUpdate(FrameTime frameTime) {
-                Quaternion startQ = node.getLocalRotation();
-                Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
-                node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
-            }
+        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
+            Quaternion startQ = node.getLocalRotation();
+            Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
+            node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
         });
 
         setNodeListener(node, anchorNode, modelLives, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
 
-
-    public void onException(Throwable throwable) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(throwable.getMessage())
-                .setTitle("Codelab error!");
-        AlertDialog dialog = builder.create();
-        dialog.show();
-        return;
-    }
 
     private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLives modelLives, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
@@ -607,7 +646,7 @@ public class SpaceARFragment extends Fragment {
 
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
-                    timeLeftInMilliseconds += 5000;
+                    timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
                     startGame.pauseTimer();
                     startGame = null;
@@ -621,6 +660,16 @@ public class SpaceARFragment extends Fragment {
                         scoreTillClockModel += 5000;
                     } else {
                         scoreTillClockModel += 10000;
+                    }
+                    loadModel(Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
+                }
+
+                if (scoreNumber >= scoreTillClockModel) {
+                    firstPointThreshold = 20000;
+                    if (scoreTillClockModel <= firstPointThreshold) {
+                        scoreTillClockModel += increaseScoreTillClockModelEasy;
+                    } else {
+                        scoreTillClockModel += increaseScoreTillClockModelMed;
                     }
                     loadModel(Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }
@@ -667,7 +716,6 @@ public class SpaceARFragment extends Fragment {
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
                 stopAudio();
-                showDialog();
                 new Hourglass(3000, 1000) {
                     @Override
                     public void onTimerTick(long timeRemaining) {
@@ -676,7 +724,8 @@ public class SpaceARFragment extends Fragment {
 
                     @Override
                     public void onTimerFinish() {
-                        goToResultPage();
+                        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                        gameOver(getString(R.string.game_over_if_timer_runs_out));
 
                     }
                 }.startTimer();
@@ -701,11 +750,37 @@ public class SpaceARFragment extends Fragment {
         countDownText.setText(timeLeftText);
     }
 
-    public void showDialog() {
-        AlertDialog.Builder aBuilder = new AlertDialog.Builder(getContext());
-        aBuilder.setMessage("Press Continue to see your results");
-        aBuilder.setPositiveButton("Continue", (dialog, which) -> Toast.makeText(getContext(), "Button has been clicked", Toast.LENGTH_SHORT).show());
-        aBuilder.show();
+    public void gameOver(String gameOverMessage) {
+        arFragment.onDestroy();
+
+        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+
+        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
+        if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
+
+        GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
+        //TODO ensure this transaction happens
+        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).add(R.id.result_container, gameOverFragment).commit();
+        new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                //TODO ensure intent moves to next activity from fragment
+                Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
+                startActivity(goToResultPageIntent);
+                try {
+                    arFragment.onDestroy();
+                } catch (Exception e) {
+                    Log.d(TAG, "onFinish: " + e.toString());
+                }
+            }
+        }.start();
     }
 
     public void goToResultPage() {

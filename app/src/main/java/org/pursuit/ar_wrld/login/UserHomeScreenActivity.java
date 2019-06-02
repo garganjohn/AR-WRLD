@@ -65,28 +65,29 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
 
         retrieveUsername();
-      
+
         RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
-        pickAPerkButton.setOnClickListener(v -> {
-            Intent perkIntent = new Intent(UserHomeScreenActivity.this, ClassPickForUser.class);
-            startActivity(perkIntent);
-            finish();
-
-        });
-
-        playButton.setOnClickListener(v -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
             Intent playIntent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
             playIntent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
             startActivity(playIntent);
             finish();
+
         });
-          
+
+        pickAPerkButton.setOnClickListener(v -> {
+            Intent perkIntent = new Intent(UserHomeScreenActivity.this, ClassPickForUser.class);
+            startActivity(perkIntent);
+            finish();
+        });
+
         RxView.clicks(logoutButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
             finish();
         });
+
+
     }
 
     private void retrieveUsername() {
