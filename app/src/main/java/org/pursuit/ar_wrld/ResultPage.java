@@ -44,7 +44,7 @@ public class ResultPage extends AppCompatActivity {
         retrieveUserScore();
 
         playAgainButton.setOnClickListener(v -> {
-            startActivity(new Intent(ResultPage.this, MainActivity.class));
+            startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
             finish();
         });
 
@@ -61,12 +61,6 @@ public class ResultPage extends AppCompatActivity {
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
         scoreTextView.setText(String.valueOf(userScore));
-        Log.d("retrieveUserScore: ", userScore +"");
-
-        /**
-         * if points are zero, update sharedPref with points.
-         *
-         */
 
     }
 
