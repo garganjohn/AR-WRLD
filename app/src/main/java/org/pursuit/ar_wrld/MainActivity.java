@@ -38,6 +38,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.gameEndsFragments.GameOverFragment;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -496,6 +497,23 @@ public class MainActivity extends AppCompatActivity {
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
         // AnchorNode anchorNode = new AnchorNode();
+
+        switch (difficulty){
+            case UserHomeScreenActivity.EASY_STRING:
+                if (numOfModels > 9){
+                    goToResultPage();
+                }
+            case UserHomeScreenActivity.MEDIUM_STRING:
+                if (numOfModels > 6){
+                    goToResultPage();
+                }
+            case UserHomeScreenActivity.HARD_STRING:
+                Log.d(TAG, "setNodeListener: "+numOfModels);
+                if (numOfModels > 4){
+                    goToResultPage();
+                }
+        }
+
         anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
@@ -627,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
                 numOfModels--;
                 shootSound();
                 getStringRes();
-                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).commit();
+                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 scorekeepingTv.setText(scoreString);
@@ -709,6 +727,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToResultPage() {
+        Log.d(TAG, "goToResultPage: ");
+        arFragment.onDestroy();
+
+        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
+        if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
+
+            GameOverFragment gameOverFragment = GameOverFragment.newInstance("apple", "banana");
+            getSupportFragmentManager().beginTransaction().add(R.id.result_container, gameOverFragment).commit();
+
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
@@ -737,7 +766,8 @@ public class MainActivity extends AppCompatActivity {
 //            return minFloat + random.nextFloat() * (maxFloat - minFloat);
 //        }
         //Location infront of user
-        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+//        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+        return -.7f;
     }
 
     @Override
@@ -781,5 +811,10 @@ public class MainActivity extends AppCompatActivity {
     private void showActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
