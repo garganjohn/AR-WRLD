@@ -683,7 +683,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
                 stopAudio();
-                showDialog();
                 new Hourglass(3000, 1000) {
                     @Override
                     public void onTimerTick(long timeRemaining) {
@@ -718,16 +717,7 @@ public class MainActivity extends AppCompatActivity {
         countDownText.setText(timeLeftText);
     }
 
-    public void showDialog() {
-
-        AlertDialog.Builder aBuilder = new AlertDialog.Builder(this);
-        aBuilder.setMessage("Press Continue to see your results");
-        aBuilder.setPositiveButton("Continue", (dialog, which) -> Toast.makeText(MainActivity.this, "Button has been clicked", Toast.LENGTH_SHORT).show());
-        aBuilder.show();
-    }
-
     public void gameOver(String gameOverMessage) {
-        Log.d(TAG, "gameOver: ");
         arFragment.onDestroy();
 
         sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
@@ -738,7 +728,7 @@ public class MainActivity extends AppCompatActivity {
         if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
 
             GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
-            getSupportFragmentManager().beginTransaction().add(R.id.result_container, gameOverFragment).commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).add(R.id.result_container, gameOverFragment).commit();
 
         new CountDownTimer(5000, 1000) {
             @Override
