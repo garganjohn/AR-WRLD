@@ -501,16 +501,16 @@ public class MainActivity extends AppCompatActivity {
         switch (difficulty){
             case UserHomeScreenActivity.EASY_STRING:
                 if (numOfModels > 9){
-                    goToResultPage();
+                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
                 }
             case UserHomeScreenActivity.MEDIUM_STRING:
                 if (numOfModels > 6){
-                    goToResultPage();
+                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
                 }
             case UserHomeScreenActivity.HARD_STRING:
                 Log.d(TAG, "setNodeListener: "+numOfModels);
                 if (numOfModels > 4){
-                    goToResultPage();
+                    gameOver(getString(R.string.game_over_if_models_exceed_amount));
                 }
         }
 
@@ -645,7 +645,6 @@ public class MainActivity extends AppCompatActivity {
                 numOfModels--;
                 shootSound();
                 getStringRes();
-                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 scorekeepingTv.setText(scoreString);
@@ -693,7 +692,8 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onTimerFinish() {
-                        goToResultPage();
+                        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                        gameOver(getString(R.string.game_over_if_timer_runs_out));
 
                     }
                 }.startTimer();
@@ -726,20 +726,32 @@ public class MainActivity extends AppCompatActivity {
         aBuilder.show();
     }
 
-    public void goToResultPage() {
-        Log.d(TAG, "goToResultPage: ");
+    public void gameOver(String gameOverMessage) {
+        Log.d(TAG, "gameOver: ");
         arFragment.onDestroy();
+
+        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
 
         if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
         if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
         if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
         if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
 
-            GameOverFragment gameOverFragment = GameOverFragment.newInstance("apple", "banana");
+            GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
             getSupportFragmentManager().beginTransaction().add(R.id.result_container, gameOverFragment).commit();
 
-        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
-        startActivity(goToResultPageIntent);
+        new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+                startActivity(goToResultPageIntent);
+            }
+        }.start();
     }
 
     //Random X coordinates will be between -.2 to .4f
