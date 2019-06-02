@@ -88,4 +88,8 @@ public class AudioLoader {
     public void stopAudio(){
         mediaPlayer.release();
     }
+
+    public void nullMediaPlayer(){
+        mediaPlayer = null;
+    }
 }

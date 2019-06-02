@@ -14,7 +14,7 @@
     <string name="log_in">Log In</string>
     <string name="create_a_new_account">Create A New Account</string>
     <string name="failed">Attempt Unsuccessful!</string>
-    <string name="med_weapon_info">Damage: %1$s \n Ammo: %2$s</string>
+    <string name="med_weapon_info">Damage: %1$s \n Ammo: </string>
     <string name="damage_weak_weapon">Damage: 1 \n Ammo: ∞</string>
     <string name="practice">Practice</string>
     <string name="play">Play</string>
