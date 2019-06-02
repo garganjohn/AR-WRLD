@@ -11,6 +11,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -57,7 +58,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SpaceARFragment extends ArFragment {
+public class SpaceARFragment extends Fragment {
     private static SpaceARFragment instance;
     private String difficulty;
     public static final String DIFFCIULTY_KEY = "DIFFICULTY";
@@ -129,7 +130,6 @@ public class SpaceARFragment extends ArFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
@@ -139,7 +139,6 @@ public class SpaceARFragment extends ArFragment {
             difficulty = getArguments().getString(DIFFCIULTY_KEY);
         }
         modelCoordinates = new ModelCoordinates();
-        setUpAR();
 
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
@@ -147,6 +146,30 @@ public class SpaceARFragment extends ArFragment {
         vector = new Vector3();
 
         // If user misses their shot account here
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
+        setUpAR();
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mainActBG = view.findViewById(R.id.background_for_ar_view);
+        findViews(view);
+        audioSetup();
+        weaponSetup();
+        getStringRes();
+        setupGameInfo();
+        scorekeepingTv.setText(scoreString);
+        numOfAliensTv.setText(aliensLeftString);
+        medWeaponAmmoTv.setText(medAmmoCounter);
         onTapForMissInteraction();
         if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
             gameInfoPopup(R.string.boss_level, false);
@@ -155,32 +178,15 @@ public class SpaceARFragment extends ArFragment {
             gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        getStringRes();
-        audioSetup();
-        weaponSetup();
-        setupGameInfo();
-        return inflater.inflate(R.layout.fragment_space_ar, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mainActBG = view.findViewById(R.id.background_for_ar_view);
-        findViews(view);
-        scorekeepingTv.setText(scoreString);
-        numOfAliensTv.setText(aliensLeftString);
-        medWeaponAmmoTv.setText(medAmmoCounter);
 
     }
 
     private void setUpAR() {
-        arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.sceneform_fragment);
+        try {
+            arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.sceneform_fragment);
+        } catch (NullPointerException n) {
+            Log.d(TAG, "setUpAR: " + n.toString());
+        }
         arFragment.getPlaneDiscoveryController().hide();
         arFragment.getPlaneDiscoveryController().setInstructionView(null);
         arFragment.getArSceneView().getScene().addOnUpdateListener(this::onUpdate);

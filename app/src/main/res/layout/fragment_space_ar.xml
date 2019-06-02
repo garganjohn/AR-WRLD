@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/space_fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".SpaceARFragment"
-    android:id="@+id/space_fragment_container">
+    tools:context=".SpaceARFragment">
 
-    <fragment
-        android:id="@+id/sceneform_fragment"
-        android:name="com.google.ar.sceneform.ux.ArFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <fragment
+            android:id="@+id/sceneform_fragment"
+            android:name="com.google.ar.sceneform.ux.ArFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/damage_for_med_weapon"
@@ -61,9 +61,9 @@
         android:layout_marginTop="8dp"
         android:background="#70000000"
         android:src="@drawable/saucer_icon"
+        app:layout_constraintBottom_toBottomOf="@id/number_of_aliens_textview"
         app:layout_constraintEnd_toStartOf="@id/number_of_aliens_textview"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/number_of_aliens_textview"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/number_of_aliens_textview"
@@ -71,8 +71,8 @@
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:background="#70000000"
-        android:padding="8dp"
         android:fontFamily="@font/aansa"
+        android:padding="8dp"
         android:text="@string/aliens_remaining_string"
         android:textColor="#fff"
         android:textSize="16sp"
@@ -98,12 +98,12 @@
         android:id="@+id/timer_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="#70000000"
         android:layout_marginTop="8dp"
+        android:background="#70000000"
         android:src="@drawable/timer_black_white"
+        app:layout_constraintBottom_toBottomOf="@id/timer_textview"
         app:layout_constraintEnd_toStartOf="@id/timer_textview"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/timer_textview"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/timer_textview"
@@ -123,8 +123,8 @@
         android:id="@+id/msg_for_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/aansa"
         android:background="#F51720"
+        android:fontFamily="@font/aansa"
         android:text=""
         android:textAlignment="center"
         android:textColor="#000000"
