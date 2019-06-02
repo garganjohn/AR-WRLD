@@ -645,7 +645,7 @@ public class MainActivity extends AppCompatActivity {
                 numOfModels--;
                 shootSound();
                 getStringRes();
-                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).commit();
+                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 scorekeepingTv.setText(scoreString);
@@ -728,12 +728,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToResultPage() {
         Log.d(TAG, "goToResultPage: ");
-        GameOverFragment gameOverFragment = GameOverFragment.newInstance("apple","banana");
-        getSupportFragmentManager().beginTransaction().add(R.id.result_container, gameOverFragment).commit();
+        arFragment.onDestroy();
 
-        
-//        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
-//        startActivity(goToResultPageIntent);
+        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
+        if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
+
+            GameOverFragment gameOverFragment = GameOverFragment.newInstance("apple", "banana");
+            getSupportFragmentManager().beginTransaction().add(R.id.result_container, gameOverFragment).commit();
+
+        Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
+        startActivity(goToResultPageIntent);
     }
 
     //Random X coordinates will be between -.2 to .4f
@@ -760,7 +766,8 @@ public class MainActivity extends AppCompatActivity {
 //            return minFloat + random.nextFloat() * (maxFloat - minFloat);
 //        }
         //Location infront of user
-        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+//        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+        return -.7f;
     }
 
     @Override
