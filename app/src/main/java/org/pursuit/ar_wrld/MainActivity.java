@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
         showActionBar();
         initSpaceFragment();
     }
-  
+
     private void initSpaceFragment() {
         SpaceARFragment spaceARFragment = SpaceARFragment.getInstance(getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY));
         getSupportFragmentManager()

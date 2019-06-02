@@ -716,19 +716,8 @@ public class SpaceARFragment extends Fragment {
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
                 stopAudio();
-                new Hourglass(3000, 1000) {
-                    @Override
-                    public void onTimerTick(long timeRemaining) {
-
-                    }
-
-                    @Override
-                    public void onTimerFinish() {
-                        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                        gameOver(getString(R.string.game_over_if_timer_runs_out));
-
-                    }
-                }.startTimer();
+                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                gameOver(getString(R.string.game_over_if_timer_runs_out));
             }
         };
         startGame.startTimer();
@@ -762,7 +751,7 @@ public class SpaceARFragment extends Fragment {
         GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
         //TODO ensure this transaction happens
         getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).add(R.id.background_for_ar_view, gameOverFragment).commit();
-        new CountDownTimer(1500, 1000) {
+        new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -771,13 +760,12 @@ public class SpaceARFragment extends Fragment {
             @Override
             public void onFinish() {
                 //TODO ensure intent moves to next activity from fragment
-                Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
-                startActivity(goToResultPageIntent);
                 try {
                     arFragment.onDestroy();
                 } catch (Exception e) {
                     Log.d(TAG, "onFinish: " + e.toString());
                 }
+                goToResultPage();
             }
         }.start();
     }
