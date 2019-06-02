@@ -2,16 +2,18 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/space_fragment_container"
+    android:id="@+id/background_for_ar_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000"
+    android:padding="2dp"
     tools:context=".SpaceARFragment">
 
-        <fragment
-            android:id="@+id/sceneform_fragment"
-            android:name="com.google.ar.sceneform.ux.ArFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <fragment
+        android:id="@+id/sceneform_fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/damage_for_med_weapon"
