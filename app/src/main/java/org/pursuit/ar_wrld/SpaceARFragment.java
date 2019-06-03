@@ -119,6 +119,8 @@ public class SpaceARFragment extends Fragment {
     private int startingMedAmmo = 25;
     private int increaseScoreTillClockModelEasy = 5000;
     private int increaseScoreTillClockModelMed = 15000;
+    private ArrayList<ModelRenderable> modelRenderablesList;
+    private ArrayList<TransformableNode> transformableNodesList;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -142,6 +144,8 @@ public class SpaceARFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        modelRenderablesList = new ArrayList<>();
+        transformableNodesList = new ArrayList<>();
         if (getArguments() != null) {
             difficulty = getArguments().getString(DIFFCIULTY_KEY);
         }
@@ -536,6 +540,8 @@ public class SpaceARFragment extends Fragment {
     public void addNodeToScene(ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
 
+        modelRenderablesList.add(renderable);
+
         switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
                 if (numOfModels > 9) {
@@ -554,6 +560,9 @@ public class SpaceARFragment extends Fragment {
 
         anchorNode = new MovementNode();
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+
+        transformableNodesList.add(node);
+
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
@@ -773,7 +782,10 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
-        audioLoader = null;
+        transformableNodesList.clear();
+        transformableNodesList = null;
+        modelRenderablesList.clear();
+        modelRenderablesList = null;
         instance.onDestroy();
         instance.onDetach();
         instance = null;
