@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -25,7 +27,7 @@ public class DatabaseActivity extends AppCompatActivity {
 
     private static final String TAG = "DB";
     private SharedPreferences sharedPreferences;
-    private String playerName;
+    private String name;
     private int playerScore;
     private String playerTitle;
     private RecyclerView recyclerView;
@@ -44,10 +46,8 @@ public class DatabaseActivity extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
 
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-        playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
-        playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
 
-        Log.e("Checking if name and score are here", "khaing" + playerName + playerScore);
+        Log.e("Checking if name and score are here", "khaing" + name + playerScore);
 
         savePlayerInfo();
         displayScore();
@@ -57,25 +57,23 @@ public class DatabaseActivity extends AppCompatActivity {
 
     public void savePlayerInfo() {
 
-//        if (sharedPreferences.contains(USERNAME_KEY)) {
-//            playerName = sharedPreferences.getString(USERNAME_KEY, "");
-//        }
-//        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
-//            playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0);
-//        }
-//        if (sharedPreferences.contains(UserTitleInformation.TITLE_SHAREDPREF_KEY)) {
-//            playerTitle = sharedPreferences.getString(UserTitleInformation.DOPE, "");
-//        }
+        name = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
 
-        UserInformation userInformation = new UserInformation(playerName, playerScore, playerTitle);
+        if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(String.valueOf(playerScore))) {
+            String aName = myRef.push().getKey();
 
-        myRef.push()
-                .setValue(userInformation);
+            UserInformation userInformation = new UserInformation(this.name, playerScore, playerTitle);
+
+            myRef.child(aName).setValue(userInformation);
+        }else {
+            Toast.makeText(this, "Please enter a name!", Toast.LENGTH_SHORT).show();
+        }
 
         adapter.notifyDataSetChanged();
 
-
     }
+
 
     public void displayScore() {
         userOptions = new FirebaseRecyclerOptions.Builder<UserInformation>()
