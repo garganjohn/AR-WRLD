@@ -50,7 +50,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_screen);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
@@ -63,6 +63,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
 
         retrieveUsername();
+        retrieveUserScore();
 
         RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
@@ -89,10 +90,14 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private void retrieveUsername() {
-        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            usernameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
-        }
+        String name = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        usernameTextView.setText(name);
+
+    }
+
+    private void retrieveUserScore(){
+        int score = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+        userscoreTextView.setText(String.valueOf(score));
 
     }
 
