@@ -88,6 +88,7 @@ public class SpaceARFragment extends Fragment {
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
     private List<ModelRenderable> renderableList;
+    private List<TransformableNode> nodeList;
     private TextView numOfAliensTv;
     private TextView medWeaponAmmoTv;
     private Hourglass easyAlienSpawn;
@@ -154,6 +155,7 @@ public class SpaceARFragment extends Fragment {
 
         vector = new Vector3();
         renderableList = new ArrayList<>();
+        nodeList = new ArrayList<>();
         // If user misses their shot account here
 
     }
@@ -602,7 +604,7 @@ public class SpaceARFragment extends Fragment {
             Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
             node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
         });
-
+        nodeList.add(node);
         setNodeListener(node, anchorNode, modelLives, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
@@ -778,6 +780,7 @@ public class SpaceARFragment extends Fragment {
     public void goToResultPage() {
         audioLoader.stopAudio();
         audioLoader.nullMediaPlayer();
+        nullNodes();
         arFragment.getArSceneView().clearAnimation();
         arFragment.onDestroy();
         instance = null;
@@ -786,9 +789,16 @@ public class SpaceARFragment extends Fragment {
     }
 
     //TODO find a way to null these renderables
-    private void destroyRenderables(){
+    private void destroyRenderables() {
         for (int i = 0; i < renderableList.size(); i++) {
             renderableList.get(i);
+        }
+    }
+
+    private void nullNodes(){
+        for (int i = 0; i < nodeList.size(); i++) {
+            nodeList.get(i).setParent(null);
+            nodeList.get(i).setRenderable(null);
         }
     }
 
