@@ -35,12 +35,14 @@ public class ResultPage extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultpage);
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
         nameTextView = findViewById(R.id.player_name);
         titleForScore = findViewById(R.id.title_for_player_score);
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
+        retrieveUsername();
         retrieveUserScore();
 
         playAgainButton.setOnClickListener(v -> {
@@ -51,17 +53,13 @@ public class ResultPage extends AppCompatActivity {
     }
 
     private void retrieveUsername() {
-        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            nameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
-        }
+        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        nameTextView.setText(playerName);
     }
 
     public void retrieveUserScore() {
-        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
         scoreTextView.setText(String.valueOf(userScore));
-
     }
 
 }
