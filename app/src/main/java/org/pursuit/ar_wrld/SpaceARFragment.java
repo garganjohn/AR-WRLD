@@ -11,9 +11,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +29,6 @@ import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
@@ -41,7 +38,6 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
-import org.pursuit.ar_wrld.gameEndsFragments.GameOverFragment;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
@@ -87,7 +83,7 @@ public class SpaceARFragment extends Fragment {
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
     private TextView numOfAliensTv;
-    private TextView medWeaponAmmoTv;
+    private TextView medWeaponInfo;
     private Hourglass easyAlienSpawn;
     private Hourglass medAlienSpawn;
     private Hourglass hardAlienSpawn;
@@ -180,7 +176,7 @@ public class SpaceARFragment extends Fragment {
         setupGameInfo();
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
-        medWeaponAmmoTv.setText(medAmmoCounter);
+        medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
         onTapForMissInteraction();
         if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
             gameInfoPopup(R.string.boss_level, false);
@@ -351,8 +347,8 @@ public class SpaceARFragment extends Fragment {
     private void setMedAmmoTv() {
         medDamageString = Integer.toString(weaponSelection.getMedWeaponDamage());
         medAmmoString = Integer.toString(weaponSelection.getMedWeaponAmmo());
-        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
-        medWeaponAmmoTv.setText(medAmmoCounter);
+//        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
+        medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
     }
 
     private boolean isOutOfAmmo() {
@@ -407,7 +403,7 @@ public class SpaceARFragment extends Fragment {
         countDownText = v.findViewById(R.id.timer_textview);
         scorekeepingTv = v.findViewById(R.id.scorekeeping_textview);
         numOfAliensTv = v.findViewById(R.id.number_of_aliens_textview);
-        medWeaponAmmoTv = v.findViewById(R.id.damage_for_med_weapon);
+        medWeaponInfo = v.findViewById(R.id.damage_for_med_weapon);
         weakWeapon = v.findViewById(R.id.weak_weapon);
         medWeapon = v.findViewById(R.id.med_weapon);
 
@@ -504,7 +500,7 @@ public class SpaceARFragment extends Fragment {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
+//        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -783,7 +779,6 @@ public class SpaceARFragment extends Fragment {
 
     public void goToResultPage() {
         transformableNodesList.clear();
-        transformableNodesList = null;
         modelRenderablesList.clear();
         modelRenderablesList = null;
         instance.onDestroy();
@@ -809,7 +804,6 @@ public class SpaceARFragment extends Fragment {
         if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
         if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
         if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-
     }
 
 
