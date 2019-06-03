@@ -50,6 +50,30 @@
     <string name="your_score_is">Your score is</string>
     <string name="pick_a_perk">Pick a perk</string>
 
+    <string name="more_ammo_level_1">+10% damage to enemies</string>
+    <string name="more_ammo_level_2">+15% damage to enemies</string>
+    <string name="more_ammo_level_3">+25% damage to enemies</string>
+    <string name="more_ammo_level_4">+50% damage to enemies</string>
+
+    <string name="more_time_level_1">+2 seconds to timer</string>
+    <string name="more_time_level_2">+4 seconds to timer</string>
+    <string name="more_time_level_3">+6 seconds to timer</string>
+    <string name="more_time_level_4">+10 seconds to timer</string>
+
+    <string name="slow_time_level_1">Points required for clock to appear is reduced</string>
+    <string name="slow_time_level_2">Points required for clock to appear is greatly reduced</string>
+    <string name="slow_time_level_3">Points required for clock to appear is dramatically reduced</string>
+    <string name="slow_time_level_4">Destroying martians increase your score by an additional 1000 points</string>
+
+    <string name="more_damage_level_1">Special weapons do +1 damage</string>
+    <string name="more_damage_level_2">Special weapons do +2 damage</string>
+    <string name="more_damage_level_3">Special weapons do +3 damage</string>
+    <string name="more_damage_level_4">Starting weapon does +1 damage</string>
+
+
+
+
+
     <string name="game_over_if_models_exceed_amount">Oh no! Seems like the models have overtaken you, going to the results page now…</string>
     <string name="game_over_if_timer_runs_out">You protected the Earth… for now. Keep on playing to collect more weapons</string>
 
