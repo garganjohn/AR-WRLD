@@ -37,6 +37,7 @@ public class ResultPage extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultpage);
+        System.gc();
 
         nameTextView = findViewById(R.id.player_name);
         titleForScore = findViewById(R.id.title_for_player_score);

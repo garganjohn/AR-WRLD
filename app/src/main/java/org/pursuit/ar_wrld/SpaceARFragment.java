@@ -629,7 +629,6 @@ public class SpaceARFragment extends Fragment {
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
-
                 switch (whichEnemy) {
                     case GameInformation.EASY_ENEMY:
                         scoreNumber += 1000;
@@ -774,13 +773,13 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
-        audioLoader = null;
-        instance.onDestroy();
-        instance.onDetach();
+        audioLoader.stopAudio();
+        audioLoader.nullMediaPlayer();
+        arFragment.getArSceneView().clearAnimation();
+        arFragment.onDestroy();
         instance = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
-        arFragment.onDestroy();
     }
 
 
