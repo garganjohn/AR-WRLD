@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_activity_container, spaceARFragment)
-//                .addToBackStack("main")
+                .disallowAddToBackStack()
                 .commit();
     }
 

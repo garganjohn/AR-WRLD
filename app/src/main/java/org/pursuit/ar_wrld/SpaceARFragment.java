@@ -51,6 +51,7 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -59,7 +60,6 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class SpaceARFragment extends Fragment {
-    private static SpaceARFragment instance;
     private String difficulty;
     public static final String DIFFCIULTY_KEY = "DIFFICULTY";
     private ArFragment arFragment;
@@ -86,6 +86,8 @@ public class SpaceARFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
+    private List<ModelRenderable> renderableList;
+    private List<TransformableNode> nodeList;
     private TextView numOfAliensTv;
     private TextView medWeaponAmmoTv;
     private Hourglass easyAlienSpawn;
@@ -127,13 +129,13 @@ public class SpaceARFragment extends Fragment {
     }
 
     public static SpaceARFragment getInstance(String diff) {
-        if (instance == null) {
-            Bundle b = new Bundle();
-            b.putString(DIFFCIULTY_KEY, diff);
-            instance = new SpaceARFragment();
-            instance.setArguments(b);
-        }
-        return instance;
+        SpaceARFragment spaceARFragment = new SpaceARFragment();
+        Bundle b = new Bundle();
+        b.putString(DIFFCIULTY_KEY, diff);
+        spaceARFragment = new SpaceARFragment();
+        spaceARFragment.setArguments(b);
+
+        return spaceARFragment;
     }
 
     @Override
@@ -155,7 +157,8 @@ public class SpaceARFragment extends Fragment {
         //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         vector = new Vector3();
-
+        renderableList = new ArrayList<>();
+        nodeList = new ArrayList<>();
         // If user misses their shot account here
 
     }
@@ -609,7 +612,7 @@ public class SpaceARFragment extends Fragment {
             Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
             node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
         });
-
+        nodeList.add(node);
         setNodeListener(node, anchorNode, modelLives, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
@@ -634,9 +637,9 @@ public class SpaceARFragment extends Fragment {
                 laserSound();
                 Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
+                node.setRenderable(null);
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
-
 
                 switch (whichEnemy) {
                     case GameInformation.EASY_ENEMY:
@@ -702,6 +705,7 @@ public class SpaceARFragment extends Fragment {
                 .setSource(getContext(), uri)
                 .build()
                 .thenAccept(modelRenderable -> {
+                    renderableList.add(modelRenderable);
                     addNodeToScene(modelRenderable, whichEnemy);
                 });
         return;
@@ -782,17 +786,32 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
+        audioLoader.stopAudio();
+        audioLoader.nullMediaPlayer();
+        nullNodes();
+        arFragment.getArSceneView().clearAnimation();
+        arFragment.onDestroy();
         transformableNodesList.clear();
         transformableNodesList = null;
         modelRenderablesList.clear();
         modelRenderablesList = null;
-        instance.onDestroy();
-        instance.onDetach();
-        instance = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
 
+    //TODO find a way to null these renderables
+    private void destroyRenderables() {
+        for (int i = 0; i < renderableList.size(); i++) {
+            renderableList.get(i);
+        }
+    }
+
+    private void nullNodes() {
+        for (int i = 0; i < nodeList.size(); i++) {
+            nodeList.get(i).setParent(null);
+            nodeList.get(i).setRenderable(null);
+        }
+    }
 
     @Override
     public void onPause() {
