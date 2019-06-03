@@ -39,6 +39,7 @@ public class ViewPagerForPerk extends Fragment {
     private int level2xpMax = 25000;
     private int level3xpMax = 50000;
     private int level4xpMax = 100000;
+    private float lockedPerk = 0.350f;
 
 
     public ViewPagerForPerk() {
@@ -145,6 +146,19 @@ public class ViewPagerForPerk extends Fragment {
         levelThreeExpTv.setText(getString(R.string.level_exp,level3CurrentExp, level3xpMax));
         levelFourTv.setText(level4);
         levelFourExpTv.setText(getString(R.string.level_exp,level4CurrentExp, level4xpMax));
+
+        if (level1CurrentExp < level1xpMax){
+            levelOneTv.setAlpha(lockedPerk);
+        }
+        if (level2CurrentExp < level3xpMax){
+            levelTwoTv.setAlpha(lockedPerk);
+        }
+        if (level3CurrentExp < level3xpMax){
+            levelThreeTv.setAlpha(lockedPerk);
+        }
+        if (level4CurrentExp < level4xpMax){
+            levelFourTv.setAlpha(lockedPerk);
+        }
     }
 
 
