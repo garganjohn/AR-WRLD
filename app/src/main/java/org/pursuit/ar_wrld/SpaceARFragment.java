@@ -51,6 +51,7 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -86,6 +87,7 @@ public class SpaceARFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
+    private List<ModelRenderable> renderableList;
     private TextView numOfAliensTv;
     private TextView medWeaponAmmoTv;
     private Hourglass easyAlienSpawn;
@@ -151,7 +153,7 @@ public class SpaceARFragment extends Fragment {
         //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         vector = new Vector3();
-
+        renderableList = new ArrayList<>();
         // If user misses their shot account here
 
     }
@@ -693,6 +695,7 @@ public class SpaceARFragment extends Fragment {
                 .setSource(getContext(), uri)
                 .build()
                 .thenAccept(modelRenderable -> {
+                    renderableList.add(modelRenderable);
                     addNodeToScene(modelRenderable, whichEnemy);
                 });
         return;
@@ -782,6 +785,12 @@ public class SpaceARFragment extends Fragment {
         startActivity(goToResultPageIntent);
     }
 
+    //TODO find a way to null these renderables
+    private void destroyRenderables(){
+        for (int i = 0; i < renderableList.size(); i++) {
+            renderableList.get(i);
+        }
+    }
 
     @Override
     public void onPause() {
