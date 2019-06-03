@@ -27,9 +27,10 @@ public class ViewPagerForPerk extends Fragment {
     private String perkInfo;
     private String whichGamePerk;
     private int perkImageRes;
-    private TextView textView;
+    private TextView classDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv;
     private ImageView imageView;
     private ViewPagerListener vpl;
+    private View rootView;
 
     public ViewPagerForPerk() {
         // Required empty public constructor
@@ -68,7 +69,12 @@ public class ViewPagerForPerk extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_pager_for_class, container, false);
+        rootView = inflater.inflate(R.layout.fragment_view_pager_for_class, container, false);
+        levelOneTv = rootView.findViewById(R.id.perk_level_1);
+        levelTwoTv = rootView.findViewById(R.id.perk_level_2);
+        levelThreeTv = rootView.findViewById(R.id.perk_level_3);
+        levelFourTv = rootView.findViewById(R.id.perk_level_4);
+        return rootView;
     }
 
     @Override
@@ -77,10 +83,11 @@ public class ViewPagerForPerk extends Fragment {
 
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
 
-        textView = view.findViewById(R.id.class_description);
+        classDescriptionTv = view.findViewById(R.id.class_description);
         imageView = view.findViewById(R.id.class_image);
-        textView.setText(perkInfo);
+        classDescriptionTv.setText(perkInfo);
         imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), perkImageRes));
+        setLevelDescriptionBasedOnPerk();
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,5 +97,31 @@ public class ViewPagerForPerk extends Fragment {
             }
         });
     }
+
+    public void setLevelDescriptionBasedOnPerk(){
+        switch (whichGamePerk){
+            case GameInformation.MORE_TIME_PERK:
+                setLevelDescription(getString(R.string.more_time_level_1), getString(R.string.more_time_level_2), getString(R.string.more_time_level_3), getString(R.string.more_time_level_4));
+                break;
+            case GameInformation.MORE_DAMAGE_PERK:
+                setLevelDescription(getString(R.string.more_damage_level_1), getString(R.string.more_damage_level_2), getString(R.string.more_damage_level_3), getString(R.string.more_damage_level_4));
+                break;
+            case GameInformation.MORE_AMMO_PERK:
+                setLevelDescription(getString(R.string.more_ammo_level_1), getString(R.string.more_ammo_level_2), getString(R.string.more_ammo_level_3), getString(R.string.more_ammo_level_4));
+                break;
+            case GameInformation.SLOW_TIME_PERK:
+                setLevelDescription(getString(R.string.slow_time_level_1), getString(R.string.slow_time_level_2), getString(R.string.slow_time_level_3), getString(R.string.slow_time_level_4));
+                break;
+
+        }
+    }
+
+    private void setLevelDescription(String level1, String level2, String level3, String level4){
+        levelOneTv.setText(level1);
+        levelTwoTv.setText(level2);
+        levelThreeTv.setText(level3);
+        levelFourTv.setText(level4);
+    }
+
 
 }
