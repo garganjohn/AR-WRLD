@@ -27,10 +27,19 @@ public class ViewPagerForPerk extends Fragment {
     private String perkInfo;
     private String whichGamePerk;
     private int perkImageRes;
-    private TextView classDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv;
+    private TextView classDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv,levelOneExpTv,levelTwoExpTv,levelThreeExpTv,levelFourExpTv;
     private ImageView imageView;
     private ViewPagerListener vpl;
     private View rootView;
+    private int level1CurrentExp;
+    private int level2CurrentExp;
+    private int level3CurrentExp;
+    private int level4CurrentExp;
+    private int level1xpMax = 10000;
+    private int level2xpMax = 25000;
+    private int level3xpMax = 50000;
+    private int level4xpMax = 100000;
+
 
     public ViewPagerForPerk() {
         // Required empty public constructor
@@ -74,6 +83,17 @@ public class ViewPagerForPerk extends Fragment {
         levelTwoTv = rootView.findViewById(R.id.perk_level_2);
         levelThreeTv = rootView.findViewById(R.id.perk_level_3);
         levelFourTv = rootView.findViewById(R.id.perk_level_4);
+
+        levelOneExpTv = rootView.findViewById(R.id.perk_level_1_exp);
+        levelTwoExpTv = rootView.findViewById(R.id.perk_level_2_exp);
+        levelThreeExpTv = rootView.findViewById(R.id.perk_level_3_exp);
+        levelFourExpTv = rootView.findViewById(R.id.perk_level_4_exp);
+
+        level1CurrentExp = 500;
+        level2CurrentExp = 853;
+        level3CurrentExp = 2394;
+        level4CurrentExp = 27392;
+
         return rootView;
     }
 
@@ -118,9 +138,13 @@ public class ViewPagerForPerk extends Fragment {
 
     private void setLevelDescription(String level1, String level2, String level3, String level4){
         levelOneTv.setText(level1);
+        levelOneExpTv.setText(getString(R.string.level_exp, level1CurrentExp, level1xpMax));
         levelTwoTv.setText(level2);
+        levelTwoExpTv.setText(getString(R.string.level_exp,level2CurrentExp, level2xpMax));
         levelThreeTv.setText(level3);
+        levelThreeExpTv.setText(getString(R.string.level_exp,level3CurrentExp, level3xpMax));
         levelFourTv.setText(level4);
+        levelFourExpTv.setText(getString(R.string.level_exp,level4CurrentExp, level4xpMax));
     }
 
 
