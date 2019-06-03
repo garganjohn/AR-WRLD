@@ -60,7 +60,6 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class SpaceARFragment extends Fragment {
-    private static SpaceARFragment instance;
     private String difficulty;
     public static final String DIFFCIULTY_KEY = "DIFFICULTY";
     private ArFragment arFragment;
@@ -128,13 +127,13 @@ public class SpaceARFragment extends Fragment {
     }
 
     public static SpaceARFragment getInstance(String diff) {
-        if (instance == null) {
-            Bundle b = new Bundle();
-            b.putString(DIFFCIULTY_KEY, diff);
-            instance = new SpaceARFragment();
-            instance.setArguments(b);
-        }
-        return instance;
+        SpaceARFragment spaceARFragment = new SpaceARFragment();
+        Bundle b = new Bundle();
+        b.putString(DIFFCIULTY_KEY, diff);
+        spaceARFragment = new SpaceARFragment();
+        spaceARFragment.setArguments(b);
+
+        return spaceARFragment;
     }
 
     @Override
@@ -783,7 +782,6 @@ public class SpaceARFragment extends Fragment {
         nullNodes();
         arFragment.getArSceneView().clearAnimation();
         arFragment.onDestroy();
-        instance = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
@@ -795,7 +793,7 @@ public class SpaceARFragment extends Fragment {
         }
     }
 
-    private void nullNodes(){
+    private void nullNodes() {
         for (int i = 0; i < nodeList.size(); i++) {
             nodeList.get(i).setParent(null);
             nodeList.get(i).setRenderable(null);
