@@ -17,6 +17,16 @@ public class AudioLoader {
     private Context context;
     private MediaPlayer shootingSound;
     private MediaPlayer pointUp;
+    private MediaPlayer explosionSound;
+
+    public MediaPlayer getExplosionSound() {
+        return explosionSound;
+    }
+
+    public void setExplosionSound(int rawNameSound) {
+        explosionSound = MediaPlayer.create(context, rawNameSound);
+    }
+
     private MediaPlayer miss;
 
     public MediaPlayer getMediaPlayer() {
@@ -37,11 +47,11 @@ public class AudioLoader {
         shootingSound = MediaPlayer.create(context, rawNameSound);
     }
 
-    public void setPointUp(int rawNameSound){
+    public void setPointUp(int rawNameSound) {
         pointUp = MediaPlayer.create(context, rawNameSound);
     }
 
-    public void setMiss(int rawNameSound){
+    public void setMiss(int rawNameSound) {
         miss = MediaPlayer.create(context, rawNameSound);
     }
 
@@ -57,35 +67,27 @@ public class AudioLoader {
         return miss;
     }
 
-
-    public void explodeSound(){
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer = MediaPlayer.create(context, R.raw.explosion8bit);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.setVolume(20f,20f);
-        mediaPlayer.start();
-
-
-    }
-    public void laserSound(){
+    public void laserSound() {
         mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(context, R.raw.laserbeam);
         mediaPlayer.seekTo(0);
-        mediaPlayer.setVolume(20f,20f);
+        mediaPlayer.setVolume(20f, 20f);
         mediaPlayer.start();
 
 
     }
-    public void backGroundMusic(){
+
+    public void backGroundMusic() {
         mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(context, R.raw.backgroundmusic);
-        mediaPlayer.setVolume(20f,20f);
-        mediaPlayer.start();
         mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(20f, 20f);
+        mediaPlayer.start();
+
 
     }
 
-    public void stopAudio(){
+    public void stopAudio() {
         mediaPlayer.release();
     }
 }

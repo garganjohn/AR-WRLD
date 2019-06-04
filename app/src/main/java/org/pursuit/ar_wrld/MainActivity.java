@@ -2,26 +2,18 @@ package org.pursuit.ar_wrld;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Path;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,12 +28,10 @@ import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.Light;
@@ -52,7 +42,6 @@ import com.google.ar.sceneform.ux.TransformableNode;
 import org.pursuit.ar_wrld.Effects.AudioLoader;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLoader;
-import org.pursuit.ar_wrld.movement.ModelSpeed;
 import org.pursuit.ar_wrld.usermodel.UserTitleInformation;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.movement.MovementNode;
@@ -108,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
     private AudioLoader audioLoader;
     private ObjectAnimator objectAnimation;
     private ArrayList<Vector3> vector3List;
-    private Light modelLight;
+    private Light modelLight = null;
     View view;
-
+    private AnchorNode lightAnchor;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -156,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupGameInfo() {
+        backgroundMusic();
         startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
         startFromBottom.setDuration(1000);
 
@@ -475,8 +465,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void addNodeToScene(Anchor anchor, ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
-        // AnchorNode anchorNode = new AnchorNode();
-        anchorNode = new MovementNode();
+
+        anchorNode = new MovementNode(anchor);
+        lightAnchor = new AnchorNode();
+        lightAnchor.setParent(anchorNode);
         node = new TransformableNode(arFragment.getTransformationSystem());
         node.getScaleController().setMinScale(0.25f);
         node.getScaleController().setMaxScale(1.0f);
@@ -484,10 +476,12 @@ public class MainActivity extends AppCompatActivity {
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
 
+//        setUpLightsRed(anchorNode);
+
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         node.setParent(anchorNode);
         vector.set(randomCoordinates(true), randomCoordinates(false), randomZCoordinates());
-        //setUpLights();
+        //setUpLightsRed();
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
         anchorNode.randomMovement();
         node.setWorldRotation(rotate);
@@ -530,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setNodeListener(node, anchorNode, modelLoader, isTimerModel, whichEnemy);
+        setNodeListener(node,anchorNode, modelLoader, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
 
@@ -544,11 +538,11 @@ public class MainActivity extends AppCompatActivity {
         return;
     }
 
-    private void setNodeListener(TransformableNode node, AnchorNode anchorNode, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
+    private void setNodeListener(TransformableNode node, AnchorNode node1, ModelLoader modelLoader, boolean isTimerModel, String whichEnemy) {
         node.setOnTapListener(((hitTestResult, motionEvent) -> {
-
             if (!isOutOfAmmo() && isMedWeaponChosen) {
                 shootMedWeapon();
+
                 setMedAmmoTv();
             }
 
@@ -559,13 +553,20 @@ public class MainActivity extends AppCompatActivity {
             }
 
             modelLoader.setNumofLivesModel0(modelLoader.getNumofLivesModel0() - weaponDamage);
+
             if (0 < modelLoader.getNumofLivesModel0()) {
                 laserSound();
-//                anchorNode.modelBlink(3, 0f, 100000f, 100);
+
+                if (modelLoader.getNumofLivesModel0() == 2 ){
+                    setUpLightsYellow();
+                }else {setUpLightsRed();}
+
+//                modelBlink(modelLight, 3, 0f, 100000f, 100);
+//                node1.modelBlink(3, 0f, 100000f, 100);
                 //modelBlink(modelLight, 3, 0f, 100000f, 100);
                 Toast.makeText(this, "Lives left: " + modelLoader.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
-                anchorNode.removeChild(node);
+                node1.removeChild(node);
                 mli.cancelAnimator();
 
 
@@ -601,11 +602,11 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         scoreTillClockModel += 10000;
                     }
-                    loadModel(anchorNode.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
+                    loadModel(node1.getAnchor(), Uri.parse(GameInformation.TIME_INCREASE_MODEL), GameInformation.TIME_INCREASE_MODEL);
                 }
 
                 numOfModels--;
-                shootSound();
+                explosionSound();
                 getStringRes();
                 sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -630,7 +631,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startGameTimer() {
-        backgroundMusic();
+
 
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
@@ -690,6 +691,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToResultPage() {
+        stopAudio();
         Intent goToResultPageIntent = new Intent(MainActivity.this, ResultPage.class);
         startActivity(goToResultPageIntent);
     }
@@ -739,9 +741,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void shootSound() {
+    public void explosionSound() {
         audioSetup();
-        audioLoader.explodeSound();
+        audioLoader.setExplosionSound(R.raw.explosion8bit);
+        audioLoader.getExplosionSound().start();
     }
 
     public void laserSound() {
@@ -765,36 +768,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setUpLights() {
+    private void setUpLightsRed() {
         modelLight =
                 Light.builder(Light.Type.POINT)
-                        .setFalloffRadius(20f)
-                        .setColor(new Color(178, 34, 34))
+                        .setColor(new Color(android.graphics.Color.RED))
+                       // .setFalloffRadius(node.getScaleController().getMinScale())
+                        .setFalloffRadius(0.700f)
                         .setShadowCastingEnabled(false)
-                        .setIntensity(3f)
+                        .setIntensity(0)
                         .build();
 
-        // for (int i = 0; i < 4; i++) {
-        // Sets the color of and creates the light.
-
-
-        // Create node and set its light.
-
-
-//            RotatingNode orbit = new RotatingNode();
-//            orbit.setParent(anchorNode);
-
         Node lightNode = new Node();
-        lightNode.setParent(this.node);
-        lightNode.setLocalPosition(node.getLocalPosition());
+        lightNode.setParent(node);
+       // lightNode.setLocalPosition(node.getLocalScale());
+        lightNode.setLocalPosition(anchorNode.getWorldPosition());
         lightNode.setLight(modelLight);
-        //  Check if lights are currently switched on or off, and update accordingly.
-        //lightNode.setEnabled(toggleLights.isChecked());
 
-        // pointlightNodes.add(lightNode);
-        //}
 
-        //isLightingInitialized = true;
+        modelBlink(modelLight, 3, 0f, 100000f, 100);
     }
 
     public void modelBlink(Light receiver, int times, float from, float to, long inMs) {
@@ -803,6 +794,22 @@ public class MainActivity extends AppCompatActivity {
         intensityAnimator.setRepeatCount(times * 2 - 1);
         intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
         intensityAnimator.start();
+    }
+    private void setUpLightsYellow() {
+        modelLight =
+                Light.builder(Light.Type.POINT)
+                        .setColor(new Color(android.graphics.Color.YELLOW))
+                        .setFalloffRadius(node.getScaleController().getMinScale())
+                        .setShadowCastingEnabled(false)
+                        .setIntensity(0)
+                        .build();
+
+          Node lightNode = new Node();
+        lightNode.setParent(node);
+        lightNode.setLocalPosition(anchorNode.getWorldPosition());
+        lightNode.setLight(modelLight);
+
+        modelBlink(modelLight, 3, 0f, 100000f, 100);
     }
 
 }
