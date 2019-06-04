@@ -47,7 +47,10 @@ public class FirebaseDatabaseHelper {
     FirebaseRecyclerAdapter<UserInformation, TopScoreViewHolder> adapter;
 
     public interface DataStatus{
-        void dataIsLoaded(List<UserInformation> userInformations);
+        void dataIsLoaded(List<UserInformation> userInformations, List<String> keys);
+        void dataIsInserted();
+        void dataIsUpdated();
+        void dataIsDeleted();
     }
 
     public FirebaseDatabaseHelper(){
@@ -75,7 +78,7 @@ public class FirebaseDatabaseHelper {
 //
 //    }
 
-    public void savePlayerInfo() {
+    public void savePlayerInfo(final DataStatus dataStatus) {
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,6 +90,7 @@ public class FirebaseDatabaseHelper {
                     UserInformation userInformation = keyNode.getValue(UserInformation.class);
                     userInformationList.add(userInformation);
                 }
+                dataStatus.dataIsLoaded(userInformationList, keys);
 
             }
 
