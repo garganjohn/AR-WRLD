@@ -60,10 +60,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         findViews();
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-      
+
         retrieveUsername();
         retrieveUserScore();
-      
+
         userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
         userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
         setPerkInfo();

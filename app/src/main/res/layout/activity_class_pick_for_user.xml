@@ -8,14 +8,15 @@
 
     <TextView
         android:id="@+id/intro_for_choosing_class_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:text="@string/choose_hero_text"
         android:fontFamily="@font/pixel_operator"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:text="@string/choose_hero_text"
+        android:textSize="16sp"
+        android:layout_margin="8dp"
+        app:layout_constraintEnd_toEndOf="@id/mainActivity_viewPager"
+        app:layout_constraintStart_toStartOf="@id/mainActivity_viewPager"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mainActivity_viewPager"
