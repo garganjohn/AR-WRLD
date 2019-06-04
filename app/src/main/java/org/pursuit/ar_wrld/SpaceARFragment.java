@@ -191,6 +191,18 @@ public class SpaceARFragment extends Fragment {
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        audioLoader.stopAudio();
+        audioLoader.nullMediaPlayer();
+        arFragment.getArSceneView().clearAnimation();
+        arFragment.onDestroy();
+        transformableNodesList.clear();
+        modelRenderablesList.clear();
+        modelRenderablesList = null;
+    }
+
     private void setUpAR() {
         try {
             arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.sceneform_fragment);
@@ -782,14 +794,6 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
-        audioLoader.stopAudio();
-        audioLoader.nullMediaPlayer();
-        nullNodes();
-        arFragment.getArSceneView().clearAnimation();
-        arFragment.onDestroy();
-        transformableNodesList.clear();
-        modelRenderablesList.clear();
-        modelRenderablesList = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
