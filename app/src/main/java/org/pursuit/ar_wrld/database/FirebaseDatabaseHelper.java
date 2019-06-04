@@ -48,18 +48,18 @@ public class FirebaseDatabaseHelper {
     FirebaseRecyclerOptions<UserInformation> userOptions;
     FirebaseRecyclerAdapter<UserInformation, TopScoreViewHolder> adapter;
 
-    public interface DataStatus{
+    public interface DataStatus {
         void dataIsLoaded(List<UserInformation> userInformations, List<String> keys);
+
         void dataIsInserted();
+
         void dataIsUpdated();
-        void dataIsDeleted();
     }
 
-    public FirebaseDatabaseHelper(){
+    public FirebaseDatabaseHelper() {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("mARtians");
     }
-
 
 
 //    @Override
@@ -87,7 +87,7 @@ public class FirebaseDatabaseHelper {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userInformationList.clear();
                 List<String> keys = new ArrayList<>();
-                for(DataSnapshot keyNode : dataSnapshot.getChildren()){
+                for (DataSnapshot keyNode : dataSnapshot.getChildren()) {
                     keys.add(keyNode.getKey());
                     UserInformation userInformation = keyNode.getValue(UserInformation.class);
                     userInformationList.add(userInformation);
@@ -120,9 +120,9 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void addUser(UserInformation userInformation, final DataStatus dataStatus){
-        String keyForDB = myRef.push().getKey();
-        myRef.child(keyForDB).setValue(userInformation)
+    public void addUser(UserInformation userInformation, final DataStatus dataStatus) {
+        String key = myRef.push().getKey();
+        myRef.child(key).setValue(userInformation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -131,6 +131,18 @@ public class FirebaseDatabaseHelper {
                 });
 
     }
+
+    public void updateScore(String key, UserInformation userInformation, final DataStatus dataStatus) {
+        myRef.child(key).setValue(userInformation)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        dataStatus.dataIsUpdated();
+                    }
+                });
+
+    }
+
 
     public void displayScore() {
 //        userOptions = new FirebaseRecyclerOptions.Builder<UserInformation>()

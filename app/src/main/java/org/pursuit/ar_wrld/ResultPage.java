@@ -70,11 +70,6 @@ public class ResultPage extends AppCompatActivity {
                 public void dataIsUpdated() {
 
                 }
-
-                @Override
-                public void dataIsDeleted() {
-
-                }
             });
 
         });
