@@ -10,6 +10,7 @@
         android:id="@+id/intro_for_choosing_class_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="24sp"
         android:text="@string/choose_hero_text"
         android:fontFamily="@font/pixel_operator"
         app:layout_constraintTop_toTopOf="parent"
