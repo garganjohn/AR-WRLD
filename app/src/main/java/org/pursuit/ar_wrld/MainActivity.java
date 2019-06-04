@@ -19,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
     SpaceARFragment spaceARFragment = SpaceARFragment.getInstance(getIntent().getStringExtra(GameInformation.GAME_DIFFICULTY));
         getSupportFragmentManager()
                 .beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.main_activity_container, spaceARFragment)
-//                .addToBackStack("main")
+                .disallowAddToBackStack()
                 .commit();
     }
 

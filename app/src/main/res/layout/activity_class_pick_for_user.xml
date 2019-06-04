@@ -10,6 +10,7 @@
         android:id="@+id/intro_for_choosing_class_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="24sp"
         android:text="@string/choose_hero_text"
         android:fontFamily="@font/pixel_operator"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,8 +19,9 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/mainActivity_viewPager"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="8dp"
         app:layout_constraintTop_toBottomOf="@id/intro_for_choosing_class_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -11,9 +11,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +29,6 @@ import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
@@ -41,7 +38,6 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
-import org.pursuit.ar_wrld.gameEndsFragments.GameOverFragment;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
@@ -51,6 +47,7 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -59,7 +56,6 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class SpaceARFragment extends Fragment {
-    private static SpaceARFragment instance;
     private String difficulty;
     public static final String DIFFCIULTY_KEY = "DIFFICULTY";
     private ArFragment arFragment;
@@ -86,8 +82,10 @@ public class SpaceARFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private CountDownTimer alienAppearanceRate;
     private Vector3 vector;
+    private List<ModelRenderable> renderableList;
+    private List<TransformableNode> nodeList;
     private TextView numOfAliensTv;
-    private TextView medWeaponAmmoTv;
+    private TextView medWeaponInfo;
     private Hourglass easyAlienSpawn;
     private Hourglass medAlienSpawn;
     private Hourglass hardAlienSpawn;
@@ -127,13 +125,13 @@ public class SpaceARFragment extends Fragment {
     }
 
     public static SpaceARFragment getInstance(String diff) {
-        if (instance == null) {
-            Bundle b = new Bundle();
-            b.putString(DIFFCIULTY_KEY, diff);
-            instance = new SpaceARFragment();
-            instance.setArguments(b);
-        }
-        return instance;
+        SpaceARFragment spaceARFragment = new SpaceARFragment();
+        Bundle b = new Bundle();
+        b.putString(DIFFCIULTY_KEY, diff);
+        spaceARFragment = new SpaceARFragment();
+        spaceARFragment.setArguments(b);
+
+        return spaceARFragment;
     }
 
     @Override
@@ -155,7 +153,8 @@ public class SpaceARFragment extends Fragment {
         //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         vector = new Vector3();
-
+        renderableList = new ArrayList<>();
+        nodeList = new ArrayList<>();
         // If user misses their shot account here
 
     }
@@ -180,7 +179,7 @@ public class SpaceARFragment extends Fragment {
         setupGameInfo();
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
-        medWeaponAmmoTv.setText(medAmmoCounter);
+        medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
         onTapForMissInteraction();
         if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
             gameInfoPopup(R.string.boss_level, false);
@@ -190,6 +189,18 @@ public class SpaceARFragment extends Fragment {
             spawningAliens(false);
         }
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        audioLoader.stopAudio();
+        audioLoader.nullMediaPlayer();
+        arFragment.getArSceneView().clearAnimation();
+        arFragment.onDestroy();
+        transformableNodesList.clear();
+        modelRenderablesList.clear();
+        modelRenderablesList = null;
     }
 
     private void setUpAR() {
@@ -351,8 +362,8 @@ public class SpaceARFragment extends Fragment {
     private void setMedAmmoTv() {
         medDamageString = Integer.toString(weaponSelection.getMedWeaponDamage());
         medAmmoString = Integer.toString(weaponSelection.getMedWeaponAmmo());
-        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
-        medWeaponAmmoTv.setText(medAmmoCounter);
+//        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
+        medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
     }
 
     private boolean isOutOfAmmo() {
@@ -407,7 +418,7 @@ public class SpaceARFragment extends Fragment {
         countDownText = v.findViewById(R.id.timer_textview);
         scorekeepingTv = v.findViewById(R.id.scorekeeping_textview);
         numOfAliensTv = v.findViewById(R.id.number_of_aliens_textview);
-        medWeaponAmmoTv = v.findViewById(R.id.damage_for_med_weapon);
+        medWeaponInfo = v.findViewById(R.id.damage_for_med_weapon);
         weakWeapon = v.findViewById(R.id.weak_weapon);
         medWeapon = v.findViewById(R.id.med_weapon);
 
@@ -504,7 +515,7 @@ public class SpaceARFragment extends Fragment {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
-        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
+//        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -609,7 +620,7 @@ public class SpaceARFragment extends Fragment {
             Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
             node.setLocalRotation(Quaternion.multiply(startQ, rotateQ));
         });
-
+        nodeList.add(node);
         setNodeListener(node, anchorNode, modelLives, isTimerModel, whichEnemy);
         playAnimation(renderable);
     }
@@ -634,9 +645,9 @@ public class SpaceARFragment extends Fragment {
                 laserSound();
                 Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
+                node.setRenderable(null);
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
-
 
                 switch (whichEnemy) {
                     case GameInformation.EASY_ENEMY:
@@ -702,6 +713,7 @@ public class SpaceARFragment extends Fragment {
                 .setSource(getContext(), uri)
                 .build()
                 .thenAccept(modelRenderable -> {
+                    renderableList.add(modelRenderable);
                     addNodeToScene(modelRenderable, whichEnemy);
                 });
         return;
@@ -782,17 +794,23 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
-        transformableNodesList.clear();
-        transformableNodesList = null;
-        modelRenderablesList.clear();
-        modelRenderablesList = null;
-        instance.onDestroy();
-        instance.onDetach();
-        instance = null;
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
 
+    //TODO find a way to null these renderables
+    private void destroyRenderables() {
+        for (int i = 0; i < renderableList.size(); i++) {
+            renderableList.get(i);
+        }
+    }
+
+    private void nullNodes() {
+        for (int i = 0; i < nodeList.size(); i++) {
+            nodeList.get(i).setParent(null);
+            nodeList.get(i).setRenderable(null);
+        }
+    }
 
     @Override
     public void onPause() {
@@ -809,7 +827,6 @@ public class SpaceARFragment extends Fragment {
         if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
         if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
         if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-
     }
 
 

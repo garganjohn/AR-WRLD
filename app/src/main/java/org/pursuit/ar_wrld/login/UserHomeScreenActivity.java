@@ -3,10 +3,12 @@ package org.pursuit.ar_wrld.login;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.SplashActivity;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
@@ -32,8 +35,13 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private TextView usernameTextView;
     private TextView userscoreTextView;
     private TextView userTitleTextView;
+    private String userPerkChosen;
+    private TextView perkChosen;
+    private ImageView perkImage;
     private SharedPreferences sharedPreferences;
+    private String userPerkFromSharedPref;
     private RecyclerView recyclerView;
+    private String perkChosenSharedPref;
 
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
@@ -50,20 +58,15 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_screen);
         firebaseAuth = FirebaseAuth.getInstance();
+        findViews();
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-
-        usernameTextView = findViewById(R.id.user_name);
-        userscoreTextView = findViewById(R.id.user_score);
-        userTitleTextView = findViewById(R.id.user_title);
-        recyclerView = findViewById(R.id.top_play_recyclerview);
-        levelSpinner = findViewById(R.id.level_spinner);
-        pickAPerkButton = findViewById(R.id.pick_a_perk);
-        practiceButton = findViewById(R.id.practice_button);
-        playButton = findViewById(R.id.play_button);
-        logoutButton = findViewById(R.id.logout_button);
-
+      
         retrieveUsername();
         retrieveUserScore();
+      
+        userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
+        userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
+        setPerkInfo();
 
         RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
@@ -85,20 +88,50 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
             finish();
         });
+    }
 
-
+    private void findViews() {
+        usernameTextView = findViewById(R.id.user_name);
+        userscoreTextView = findViewById(R.id.user_score);
+        userTitleTextView = findViewById(R.id.user_title);
+        recyclerView = findViewById(R.id.top_play_recyclerview);
+        levelSpinner = findViewById(R.id.level_spinner);
+        pickAPerkButton = findViewById(R.id.pick_a_perk);
+        practiceButton = findViewById(R.id.practice_button);
+        playButton = findViewById(R.id.play_button);
+        logoutButton = findViewById(R.id.logout_button);
+        perkChosen = findViewById(R.id.perk_selected);
+        perkImage = findViewById(R.id.perk_selected_image);
     }
 
     private void retrieveUsername() {
         String name = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
         usernameTextView.setText(name);
-
     }
 
     private void retrieveUserScore(){
         int score = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
         userscoreTextView.setText(String.valueOf(score));
+    }
 
+    private void setPerkInfo(){
+        perkChosen.setText(userPerkChosen);
+        perkImage.setImageDrawable(setUserPerk());
+    }
+
+    private Drawable setUserPerk(){
+        switch (userPerkFromSharedPref) {
+            case GameInformation.MORE_AMMO_PERK:
+                return getDrawable(R.drawable.ammo_perk);
+            case GameInformation.MORE_DAMAGE_PERK:
+                return getDrawable(R.drawable.more_damage_perk_image);
+            case GameInformation.MORE_TIME_PERK:
+                return getDrawable(R.drawable.more_time_perk_image);
+            case GameInformation.SLOW_TIME_PERK:
+                return getDrawable(R.drawable.slow_time_perk);
+                default:
+                    return getDrawable(R.drawable.noperk_chosen_image);
+        }
     }
 
 //    public  void updateUI (FirebaseUser user){
