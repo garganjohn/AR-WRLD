@@ -28,9 +28,6 @@ public class ResultPage extends AppCompatActivity {
     private TextView scoreTextView;
     private TextView titleForScore;
     private Button playAgainButton;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener authStateListener;
-    FirebaseUser user;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -50,18 +47,6 @@ public class ResultPage extends AppCompatActivity {
             finish();
         });
 
-    }
-
-    private void destroyArFragment() {
-        getFragmentManager().popBackStack();
-
-    }
-
-    private void retrieveUsername() {
-        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            nameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
-        }
     }
 
     public void retrieveUserScore() {

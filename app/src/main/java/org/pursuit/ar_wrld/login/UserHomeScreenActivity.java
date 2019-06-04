@@ -39,6 +39,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private TextView perkChosen;
     private ImageView perkImage;
     private SharedPreferences sharedPreferences;
+    private String userPerkFromSharedPref;
     private RecyclerView recyclerView;
     private String perkChosenSharedPref;
 
@@ -58,20 +59,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_home_screen);
         firebaseAuth = FirebaseAuth.getInstance();
 
+        findViews();
         retrieveUsername();
-        usernameTextView = findViewById(R.id.user_name);
-        userscoreTextView = findViewById(R.id.user_score);
-        userTitleTextView = findViewById(R.id.user_title);
-        recyclerView = findViewById(R.id.top_play_recyclerview);
-        levelSpinner = findViewById(R.id.level_spinner);
-        pickAPerkButton = findViewById(R.id.pick_a_perk);
-        practiceButton = findViewById(R.id.practice_button);
-        playButton = findViewById(R.id.play_button);
-        logoutButton = findViewById(R.id.logout_button);
-        perkChosen = findViewById(R.id.perk_selected);
-        perkImage = findViewById(R.id.perk_selected_image);
-
-        userPerkChosen = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
+        
+        userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
+        userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
         setPerkInfo();
 
         RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
@@ -96,6 +88,20 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
     }
 
+    private void findViews() {
+        usernameTextView = findViewById(R.id.user_name);
+        userscoreTextView = findViewById(R.id.user_score);
+        userTitleTextView = findViewById(R.id.user_title);
+        recyclerView = findViewById(R.id.top_play_recyclerview);
+        levelSpinner = findViewById(R.id.level_spinner);
+        pickAPerkButton = findViewById(R.id.pick_a_perk);
+        practiceButton = findViewById(R.id.practice_button);
+        playButton = findViewById(R.id.play_button);
+        logoutButton = findViewById(R.id.logout_button);
+        perkChosen = findViewById(R.id.perk_selected);
+        perkImage = findViewById(R.id.perk_selected_image);
+    }
+
     private void retrieveUsername() {
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
         if (sharedPreferences.contains(USERNAME_KEY)) {
@@ -110,9 +116,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private Drawable setUserPerk(){
-        switch (userPerkChosen){
-           case GameInformation.MORE_AMMO_PERK:
-               return getDrawable(R.drawable.ammo_perk);
+        switch (userPerkFromSharedPref) {
+            case GameInformation.MORE_AMMO_PERK:
+                return getDrawable(R.drawable.ammo_perk);
             case GameInformation.MORE_DAMAGE_PERK:
                 return getDrawable(R.drawable.more_damage_perk_image);
             case GameInformation.MORE_TIME_PERK:
