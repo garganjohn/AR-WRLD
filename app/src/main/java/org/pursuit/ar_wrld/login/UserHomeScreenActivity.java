@@ -58,10 +58,12 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home_screen);
         firebaseAuth = FirebaseAuth.getInstance();
-
         findViews();
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+      
         retrieveUsername();
-        
+        retrieveUserScore();
+      
         userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
         userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
         setPerkInfo();
@@ -103,11 +105,13 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private void retrieveUsername() {
-        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            usernameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
-        }
+        String name = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        usernameTextView.setText(name);
+    }
 
+    private void retrieveUserScore(){
+        int score = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+        userscoreTextView.setText(String.valueOf(score));
     }
 
     private void setPerkInfo(){
