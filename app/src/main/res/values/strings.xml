@@ -70,7 +70,7 @@
     <string name="more_damage_level_3">Special weapons do +3 damage</string>
     <string name="more_damage_level_4">Starting weapon does +1 damage</string>
 
-    <string name="level_1_exp"></string>
+    <string name="level_exp">%1$d xp / %2$d xp to unlock</string>
 
 
 
@@ -78,6 +78,7 @@
 
     <string name="game_over_if_models_exceed_amount">Oh no! Seems like the models have overtaken you, going to the results page now…</string>
     <string name="game_over_if_timer_runs_out">You protected the Earth… for now. Keep on playing to collect more weapons</string>
+    <string name="perk_selected_text">Perk Selected:   %$s</string>
 
 
 </resources>

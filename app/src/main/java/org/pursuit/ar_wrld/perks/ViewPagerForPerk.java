@@ -27,10 +27,17 @@ public class ViewPagerForPerk extends Fragment {
     private String perkInfo;
     private String whichGamePerk;
     private int perkImageRes;
-    private TextView classDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv;
+    private TextView classDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv,levelOneExpTv,levelTwoExpTv,levelThreeExpTv,levelFourExpTv;
     private ImageView imageView;
     private ViewPagerListener vpl;
     private View rootView;
+    private int levelCurrentExp;
+    private int level1xpMax = 10000;
+    private int level2xpMax = 25000;
+    private int level3xpMax = 50000;
+    private int level4xpMax = 100000;
+    private float lockedPerk = 0.350f;
+
 
     public ViewPagerForPerk() {
         // Required empty public constructor
@@ -74,6 +81,13 @@ public class ViewPagerForPerk extends Fragment {
         levelTwoTv = rootView.findViewById(R.id.perk_level_2);
         levelThreeTv = rootView.findViewById(R.id.perk_level_3);
         levelFourTv = rootView.findViewById(R.id.perk_level_4);
+
+        levelOneExpTv = rootView.findViewById(R.id.perk_level_1_exp);
+        levelTwoExpTv = rootView.findViewById(R.id.perk_level_2_exp);
+        levelThreeExpTv = rootView.findViewById(R.id.perk_level_3_exp);
+        levelFourExpTv = rootView.findViewById(R.id.perk_level_4_exp);
+
+
         return rootView;
     }
 
@@ -101,15 +115,19 @@ public class ViewPagerForPerk extends Fragment {
     public void setLevelDescriptionBasedOnPerk(){
         switch (whichGamePerk){
             case GameInformation.MORE_TIME_PERK:
+                levelCurrentExp = 7832;
                 setLevelDescription(getString(R.string.more_time_level_1), getString(R.string.more_time_level_2), getString(R.string.more_time_level_3), getString(R.string.more_time_level_4));
                 break;
             case GameInformation.MORE_DAMAGE_PERK:
+                levelCurrentExp = 6323;
                 setLevelDescription(getString(R.string.more_damage_level_1), getString(R.string.more_damage_level_2), getString(R.string.more_damage_level_3), getString(R.string.more_damage_level_4));
                 break;
             case GameInformation.MORE_AMMO_PERK:
+                levelCurrentExp = 9854;
                 setLevelDescription(getString(R.string.more_ammo_level_1), getString(R.string.more_ammo_level_2), getString(R.string.more_ammo_level_3), getString(R.string.more_ammo_level_4));
                 break;
             case GameInformation.SLOW_TIME_PERK:
+                levelCurrentExp = 232;
                 setLevelDescription(getString(R.string.slow_time_level_1), getString(R.string.slow_time_level_2), getString(R.string.slow_time_level_3), getString(R.string.slow_time_level_4));
                 break;
 
@@ -118,9 +136,26 @@ public class ViewPagerForPerk extends Fragment {
 
     private void setLevelDescription(String level1, String level2, String level3, String level4){
         levelOneTv.setText(level1);
+        levelOneExpTv.setText(getString(R.string.level_exp, levelCurrentExp, level1xpMax));
         levelTwoTv.setText(level2);
+        levelTwoExpTv.setText(getString(R.string.level_exp,levelCurrentExp, level2xpMax));
         levelThreeTv.setText(level3);
+        levelThreeExpTv.setText(getString(R.string.level_exp,levelCurrentExp, level3xpMax));
         levelFourTv.setText(level4);
+        levelFourExpTv.setText(getString(R.string.level_exp,levelCurrentExp, level4xpMax));
+
+        if (levelCurrentExp < level1xpMax){
+            levelOneTv.setAlpha(lockedPerk);
+        }
+        if (levelCurrentExp < level3xpMax){
+            levelTwoTv.setAlpha(lockedPerk);
+        }
+        if (levelCurrentExp < level3xpMax){
+            levelThreeTv.setAlpha(lockedPerk);
+        }
+        if (levelCurrentExp < level4xpMax){
+            levelFourTv.setAlpha(lockedPerk);
+        }
     }
 
 

@@ -146,4 +146,20 @@
         android:layout_marginTop="8dp"
         />
 
+    <TextView
+        android:id="@+id/perk_selected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="24sp"
+        android:text="@string/perk_selected_text"
+        android:textAlignment="center"/>
+
+    <ImageView
+        android:id="@+id/perk_selected_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="center"/>
+
 </LinearLayout>
