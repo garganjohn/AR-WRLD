@@ -117,7 +117,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
     public void goBacktoLogIn(){
-        Intent intent = new Intent(SignUpActivity.this, SignInActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
         startActivity(intent);
         finish();
     }

@@ -110,7 +110,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private void retrieveUserScore(){
-        int score = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+        long score = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, -1);
         userscoreTextView.setText(String.valueOf(score));
     }
 

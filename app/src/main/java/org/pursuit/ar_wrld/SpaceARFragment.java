@@ -71,7 +71,7 @@ public class SpaceARFragment extends Fragment {
     private CountDownTimer countDownTimer;
     private long timeLeftInMilliseconds = 10000;
     int numOfModels = 0;
-    private int scoreNumber;
+    private long scoreNumber;
     private int scoreTillClockModel = 2000;
     private String scoreString;
     private String aliensLeftString;
@@ -697,7 +697,7 @@ public class SpaceARFragment extends Fragment {
                 numOfModels--;
                 shootSound();
                 getStringRes();
-                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
                 Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 scorekeepingTv.setText(scoreString);
@@ -737,7 +737,7 @@ public class SpaceARFragment extends Fragment {
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
                 stopAudio();
-                sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
+                sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 goToResultPage();
             }
         };
