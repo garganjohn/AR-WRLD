@@ -6,4 +6,6 @@
     <color name="warningColor">#E00000</color>
     <color name="status_navbar_color">#000B19</color>
     <color name="neutral_hit">#000000</color>
+    <color name="purple_app_color">#6320b5</color>
+    <color name="silver_app_color">#E1E2E7</color>
 </resources>

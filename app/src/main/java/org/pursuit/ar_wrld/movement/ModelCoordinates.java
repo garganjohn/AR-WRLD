@@ -9,8 +9,8 @@ public class ModelCoordinates {
         Random random = new Random();
 
         if (isX) {
-            float min = -.3f;
-            float max = .3f;
+            float min = -.2f;
+            float max = .4f;
             return (min + random.nextFloat() * (max - min));
         }
 
@@ -19,14 +19,15 @@ public class ModelCoordinates {
 
     // Number is displayed between -.7 and -1
     public float randomZCoordinates() {
-        Random random = new Random();
-        Float minFloat = .7f;
-        Float maxFloat = 1f;
+//        Random random = new Random();
+//        Float minFloat = .7f;
+//        Float maxFloat = 1f;
         //Location behind user
 //        if (new Random().nextInt(2) == 0) {
 //            return minFloat + random.nextFloat() * (maxFloat - minFloat);
 //        }
         //Location infront of user
-        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+//        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+        return -3f;
     }
 }
