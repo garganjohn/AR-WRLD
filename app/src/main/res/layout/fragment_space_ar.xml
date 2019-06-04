@@ -15,6 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!--Weapon layout begins here-->
+
     <TextView
         android:id="@+id/damage_for_med_weapon"
         android:layout_width="wrap_content"
@@ -29,7 +31,7 @@
 
     <ImageView
         android:id="@+id/med_weapon"
-        android:layout_width="50dp"
+        android:layout_width="75dp"
         android:layout_height="50dp"
         android:layout_marginEnd="24dp"
         android:src="@drawable/space_gun"
@@ -49,12 +51,14 @@
 
     <ImageView
         android:id="@+id/weak_weapon"
-        android:layout_width="50dp"
+        android:layout_width="75dp"
         android:layout_height="50dp"
         android:layout_marginEnd="24dp"
         android:src="@drawable/gun"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/med_weapon" />
+
+    <!--Weapon layout ends here-->
 
     <!--This is where the HUD views start-->
 
@@ -97,7 +101,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:fontFamily="@font/aansa"
+            android:fontFamily="@font/pixel_operator"
             android:padding="8dp"
             android:text="@string/aliens_remaining_string"
             android:textAlignment="center"
@@ -123,8 +127,8 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:fontFamily="@font/aansa"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/pixel_operator"
             android:text="@string/countdown_timer"
             android:textAlignment="gravity"
             android:textColor="#fff"

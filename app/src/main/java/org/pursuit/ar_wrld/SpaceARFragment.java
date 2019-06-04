@@ -119,6 +119,8 @@ public class SpaceARFragment extends Fragment {
     private int increaseScoreTillClockModelMed = 15000;
     private ArrayList<ModelRenderable> modelRenderablesList;
     private ArrayList<TransformableNode> transformableNodesList;
+    private float hideWeapon;
+    private float usingWeapon;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -375,7 +377,8 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void weaponSetup() {
-        medWeapon.setAlpha(0.125f);
+        hideWeapon = 0.500f;
+        medWeapon.setAlpha(hideWeapon);
         setWeaponListener();
         weaponSelection = new WeaponsAvailable(startingMedAmmo);
         weaponDamage = weaponSelection.getWeakWeaponDamage();
@@ -383,16 +386,17 @@ public class SpaceARFragment extends Fragment {
 
     private void weaponSwitch() {
         if (!isWeakWeaponChosen) {
-            weakWeapon.setAlpha(0.125f);
+            weakWeapon.setAlpha(hideWeapon);
         } else {
             weaponDamage = weaponSelection.getWeakWeaponDamage();
-            weakWeapon.setAlpha(1f);
+            usingWeapon = 1f;
+            weakWeapon.setAlpha(usingWeapon);
         }
         if (!isMedWeaponChosen) {
-            medWeapon.setAlpha(0.125f);
+            medWeapon.setAlpha(hideWeapon);
         } else {
             weaponDamage = weaponSelection.getMedWeaponDamage();
-            medWeapon.setAlpha(1f);
+            medWeapon.setAlpha(usingWeapon);
         }
     }
 
