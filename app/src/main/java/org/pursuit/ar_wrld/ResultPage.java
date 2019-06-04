@@ -43,7 +43,7 @@ public class ResultPage extends AppCompatActivity {
         String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
         nameTextView.setText(playerName);
 
-        long userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+        long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, -1);
         scoreTextView.setText(String.valueOf(userScore));
 
         //retrieveUsername();
