@@ -23,8 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
             Intent tempIntent = new Intent(SplashActivity.this, PerkPickForUser.class);
-            SplashActivity.this.startActivity(mainIntent);
-            SplashActivity.this.finish();
+            startActivity(mainIntent);
         }, SPLASH_LENGTH);
     }
 

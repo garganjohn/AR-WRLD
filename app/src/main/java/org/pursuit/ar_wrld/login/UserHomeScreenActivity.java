@@ -18,6 +18,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.SplashActivity;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
@@ -57,7 +58,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_home_screen);
         firebaseAuth = FirebaseAuth.getInstance();
 
-
+        retrieveUsername();
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
         userTitleTextView = findViewById(R.id.user_title);
@@ -70,7 +71,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         perkChosen = findViewById(R.id.perk_selected);
         perkImage = findViewById(R.id.perk_selected_image);
 
-        retrieveUsername();
         userPerkChosen = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
         setPerkInfo();
 
@@ -94,8 +94,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
             finish();
         });
-
-
     }
 
     private void retrieveUsername() {
