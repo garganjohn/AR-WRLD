@@ -61,7 +61,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         findViews();
         retrieveUsername();
-        
+
         userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null);
         userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
         setPerkInfo();
