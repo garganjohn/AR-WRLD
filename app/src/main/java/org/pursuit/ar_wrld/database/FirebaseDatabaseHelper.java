@@ -2,6 +2,7 @@ package org.pursuit.ar_wrld.database;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -118,6 +120,17 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public void addUser(UserInformation userInformation, final DataStatus dataStatus){
+        String keyForDB = myRef.push().getKey();
+        myRef.child(keyForDB).setValue(userInformation)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        dataStatus.dataIsInserted();
+                    }
+                });
+
+    }
 
     public void displayScore() {
 //        userOptions = new FirebaseRecyclerOptions.Builder<UserInformation>()
