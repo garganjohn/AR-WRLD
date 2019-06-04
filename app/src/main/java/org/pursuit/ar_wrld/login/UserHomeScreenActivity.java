@@ -18,6 +18,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.SplashActivity;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
@@ -58,7 +59,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_home_screen);
         firebaseAuth = FirebaseAuth.getInstance();
 
-
         findViews();
         retrieveUsername();
 
@@ -86,8 +86,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
             finish();
         });
-
-
     }
 
     private void findViews() {
