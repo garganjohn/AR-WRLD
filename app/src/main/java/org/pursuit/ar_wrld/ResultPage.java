@@ -1,81 +1,97 @@
 package org.pursuit.ar_wrld;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.pursuit.ar_wrld.login.SignInActivity;
-import org.pursuit.ar_wrld.login.SignUpActivity;
+import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
+import org.pursuit.ar_wrld.usermodel.UserInformation;
 
-import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
+import java.util.List;
 
 public class ResultPage extends AppCompatActivity {
 
     private TextView nameTextView;
     private TextView scoreTextView;
+    private TextView titleForScore;
     private Button playAgainButton;
-    FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener authStateListener;
-    FirebaseUser user;
+    private Button saveScoreButton;
+    private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private SharedPreferences sharedPreferences;
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        firebaseAuth.addAuthStateListener(authStateListener);
-//    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultpage);
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
         nameTextView = findViewById(R.id.player_name);
+        titleForScore = findViewById(R.id.title_for_player_score);
         scoreTextView = findViewById(R.id.player_score);
+        saveScoreButton = findViewById(R.id.save_score_button);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        retrieveUsername();
-        retrieveUserScore();
+        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        nameTextView.setText(playerName);
+
+        long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, -1);
+        scoreTextView.setText(String.valueOf(userScore));
+
+        //retrieveUsername();
+        //retrieveUserScore();
+
+        saveScoreButton.setOnClickListener(v -> {
+            UserInformation userInformation = new UserInformation();
+            userInformation.setUsername(playerName);
+            userInformation.setUserscore(userScore);
+
+            new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+                @Override
+                public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+
+                }
+
+                @Override
+                public void dataIsInserted() {
+                    Toast.makeText(ResultPage.this, "Data has been saved successfully!", Toast.LENGTH_SHORT).show();
+
+                }
+
+                @Override
+                public void dataIsUpdated() {
+
+                }
+            });
+
+        });
 
         playAgainButton.setOnClickListener(v -> {
-            startActivity(new Intent(ResultPage.this, MainActivity.class));
+            startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
             finish();
         });
 
-//        if(firebaseAuth.getCurrentUser() != null ){
-//            user = firebaseAuth.getCurrentUser();
-//            updateUI(user);
-//        }
-
     }
 
-    private void retrieveUsername() {
-        sharedPreferences = getSharedPreferences(SignUpActivity.MYSHAREDPREF, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(USERNAME_KEY)) {
-            nameTextView.setText(sharedPreferences.getString(USERNAME_KEY, ""));
-        }
-    }
+//    private void retrieveUsername() {
+//        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+//        nameTextView.setText(playerName);
+//    }
 
-    private void retrieveUserScore() {
-        sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
-        if (sharedPreferences.contains(GameInformation.USER_SCORE_KEY)) {
-            scoreTextView.setText(sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, 0));
-        }
-    }
+//    public void retrieveUserScore() {
+//        int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
+//        scoreTextView.setText(String.valueOf(userScore));
+//    }
 
-//    public  void updateUI (FirebaseUser user){
-//        if(user != null){
-//            String name = user.getDisplayName();
-//            nameTextView.setText(name);
-//        }
 }
 

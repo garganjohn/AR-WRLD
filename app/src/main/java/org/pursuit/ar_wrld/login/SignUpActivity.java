@@ -15,7 +15,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -27,6 +31,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Button signupBtn;
     private TextView toLogIn;
     private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
     private static final String TAG = "SIGNUP_PAGE";
     private ProgressBar progressBar;
     private SharedPreferences sharedPreferences;
@@ -39,6 +45,10 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+
 
         username = findViewById(R.id.input_username);
         emailId = findViewById(R.id.input_email);
@@ -58,6 +68,9 @@ public class SignUpActivity extends AppCompatActivity {
 
         signupBtn.setOnClickListener(v -> {
             String userName = username.getText().toString();
+            sharedPreferences.edit().putString(GameInformation.USERNAME_KEY, userName).apply();
+            Log.d(TAG, "Khaing" + sharedPreferences.getString(GameInformation.USERNAME_KEY, "a"));
+
             String email = emailId.getText().toString();
             String password = passwordCheck.getText().toString();
 
@@ -84,9 +97,13 @@ public class SignUpActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
-                            startActivity(intent);
-                            finish();
+                            UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(userName)
+                                    .build();
+                            user.updateProfile(request);
+                            goBacktoLogIn();
+                            Log.d(TAG, "signUpNewUsers: " + username);
+                            Log.d(TAG, "createUserWithEmail:success" + user.getDisplayName());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -96,14 +113,13 @@ public class SignUpActivity extends AppCompatActivity {
                     });
         });
 
-        saveUsername();
     }
 
-    public void saveUsername() {
-        String userName = username.getText().toString();
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(USERNAME_KEY, userName);
-        editor.commit();
+
+    public void goBacktoLogIn(){
+        Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }

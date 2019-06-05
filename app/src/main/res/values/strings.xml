@@ -14,7 +14,7 @@
     <string name="log_in">Log In</string>
     <string name="create_a_new_account">Create A New Account</string>
     <string name="failed">Attempt Unsuccessful!</string>
-    <string name="med_weapon_info">Damage: 3 \n Ammo: %d</string>
+    <string name="med_weapon_info">Damage: %1$d \n Ammo: %2$d</string>
     <string name="damage_weak_weapon">Damage: 1 \n Ammo: ∞</string>
     <string name="practice">Practice</string>
     <string name="play">Play</string>
@@ -37,11 +37,47 @@
         \nIf you didn\'t mean to reset your password, you can just ignore this email and your password will not change.</string>
     <string name="insert_email_message">Please insert an email!</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pick_a_username">Pick a username</string>
-    <string name="play_again">Play Again?</string>
+    <string name="play_again">Back To Home Page</string>
+    <string name="choose_hero_text">Choose your perk for an advantage against the invasion</string>
+    <string name="confirmation">Choose this class</string>
+
+    <string name="more_ammo_perk">Need more powerful ammo? Get an additional 50% more ammo for all of your weapons.</string>
+    <string name="more_time_perk">Not enough time to destroy the aliens? Your time starts with +20 seconds at the start of every game.</string>
+    <string name="slow_time_perk">Feel confident with your shooting? Clocks that appear on screen become more frequent.</string>
+    <string name="more_damage_park">Need some juice to destroy more often? Your special weapons do 1 more damage to the enemies.</string>
+    <string name="your_score_is">Your score is</string>
+    <string name="pick_a_perk">Pick a perk</string>
+
+    <string name="more_ammo_level_1">+10% damage to enemies</string>
+    <string name="more_ammo_level_2">+15% damage to enemies</string>
+    <string name="more_ammo_level_3">+25% damage to enemies</string>
+    <string name="more_ammo_level_4">+50% damage to enemies</string>
+
+    <string name="more_time_level_1">+2 seconds to timer</string>
+    <string name="more_time_level_2">+4 seconds to timer</string>
+    <string name="more_time_level_3">+6 seconds to timer</string>
+    <string name="more_time_level_4">+10 seconds to timer</string>
+
+    <string name="slow_time_level_1">Points required for clock to appear is reduced</string>
+    <string name="slow_time_level_2">Points required for clock to appear is greatly reduced</string>
+    <string name="slow_time_level_3">Points required for clock to appear is dramatically reduced</string>
+    <string name="slow_time_level_4">Destroying martians increase your score by an additional 1000 points</string>
+
+    <string name="more_damage_level_1">Special weapons do +1 damage</string>
+    <string name="more_damage_level_2">Special weapons do +2 damage</string>
+    <string name="more_damage_level_3">Special weapons do +3 damage</string>
+    <string name="more_damage_level_4">Starting weapon does +1 damage</string>
+
+    <string name="level_exp">%1$d xp / %2$d xp to unlock</string>
+
+
+    <string name="game_over_if_models_exceed_amount">Oh no! Seems like the models have overtaken you, going to the results page now…</string>
+    <string name="game_over_if_timer_runs_out">You protected the Earth… for now. Keep on playing to collect more weapons</string>
+    <string name="save_score">Save Score</string>
+    <string name="perk_selected_text">Perk Selected: \n %s</string>
+    <string name="perk_selected">Perk selected:</string>
 
 
 </resources>

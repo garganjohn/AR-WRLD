@@ -73,8 +73,6 @@ public class AudioLoader {
         mediaPlayer.seekTo(0);
         mediaPlayer.setVolume(20f, 20f);
         mediaPlayer.start();
-
-
     }
 
     public void backGroundMusic() {
@@ -83,11 +81,14 @@ public class AudioLoader {
         mediaPlayer.setLooping(true);
         mediaPlayer.setVolume(20f, 20f);
         mediaPlayer.start();
-
-
+    }
+  
+    public void stopAudio(){
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
-    public void stopAudio() {
-        mediaPlayer.release();
+    public void nullMediaPlayer(){
+        mediaPlayer = null;
     }
 }
