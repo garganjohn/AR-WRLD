@@ -123,23 +123,13 @@ public class FirebaseDatabaseHelper {
     public void addUser(UserInformation userInformation, final DataStatus dataStatus) {
         String key = myRef.push().getKey();
         myRef.child(key).setValue(userInformation)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        dataStatus.dataIsInserted();
-                    }
-                });
+                .addOnSuccessListener(aVoid -> dataStatus.dataIsInserted());
 
     }
 
     public void updateScore(String key, UserInformation userInformation, final DataStatus dataStatus) {
         myRef.child(key).setValue(userInformation)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        dataStatus.dataIsUpdated();
-                    }
-                });
+                .addOnSuccessListener(aVoid -> dataStatus.dataIsUpdated());
 
     }
 
