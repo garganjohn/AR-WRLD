@@ -139,6 +139,7 @@ public class SpaceARFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        backgroundMusic();
     }
 
     @Override
@@ -724,8 +725,6 @@ public class SpaceARFragment extends Fragment {
     }
 
     public void startGameTimer() {
-        backgroundMusic();
-
         startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTimerTick(long timeRemaining) {
