@@ -72,7 +72,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         RxView.clicks(playButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             String spinnerValue = levelSpinner.getSelectedItem().toString();
             Intent playIntent = new Intent(UserHomeScreenActivity.this, MainActivity.class);
-            playIntent.putExtra(GameInformation.GAME_DIFFICULTY, spinnerValue);
+            sharedPreferences.edit().putString(GameInformation.GAME_DIFFICULTY, spinnerValue).apply();
             startActivity(playIntent);
             finish();
 

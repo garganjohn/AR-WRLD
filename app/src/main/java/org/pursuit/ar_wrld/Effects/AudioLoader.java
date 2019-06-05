@@ -18,57 +18,18 @@ public class AudioLoader {
     private MediaPlayer shootingSound;
     private MediaPlayer pointUp;
     private MediaPlayer explosionSound;
-
-    public MediaPlayer getExplosionSound() {
-        return explosionSound;
-    }
-
-    public void setExplosionSound(int rawNameSound) {
-        explosionSound = MediaPlayer.create(context, rawNameSound);
-    }
-
     private MediaPlayer miss;
-
-    public MediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-
-    public void setMediaPlayer(MediaPlayer mediaPlayer) {
-        this.mediaPlayer = mediaPlayer;
-    }
-
     private MediaPlayer mediaPlayer;
 
     public AudioLoader(Context context) {
         this.context = context;
     }
 
-    public void setShootingSound(int rawNameSound) {
-        shootingSound = MediaPlayer.create(context, rawNameSound);
-    }
-
-    public void setPointUp(int rawNameSound) {
-        pointUp = MediaPlayer.create(context, rawNameSound);
-    }
-
-    public void setMiss(int rawNameSound) {
-        miss = MediaPlayer.create(context, rawNameSound);
-    }
-
     public MediaPlayer getShootingSound() {
         return shootingSound;
     }
 
-    public MediaPlayer getPointUp() {
-        return pointUp;
-    }
-
-    public MediaPlayer getMiss() {
-        return miss;
-    }
-
     public void laserSound() {
-        mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(context, R.raw.laserbeam);
         mediaPlayer.seekTo(0);
         mediaPlayer.setVolume(20f, 20f);
@@ -76,16 +37,22 @@ public class AudioLoader {
     }
 
     public void backGroundMusic() {
-        mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(context, R.raw.backgroundmusic);
         mediaPlayer.setLooping(true);
         mediaPlayer.setVolume(20f, 20f);
         mediaPlayer.start();
     }
+
+    public void explosionSound(){
+        mediaPlayer = MediaPlayer.create(context, R.raw.explosion8bit);
+        mediaPlayer.seekTo(0);
+        mediaPlayer.setVolume(20f, 20f);
+        mediaPlayer.start();
+    }
   
     public void stopAudio(){
-//        mediaPlayer.stop();
-//        mediaPlayer.release();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     public void nullMediaPlayer(){

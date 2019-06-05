@@ -107,6 +107,7 @@ public class SpaceARFragment extends Fragment {
     private AudioLoader audioLoader;
     private View mainActBG;
     private ModelCoordinates modelCoordinates;
+    private SpaceARFragment spaceARFragment;
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -126,11 +127,10 @@ public class SpaceARFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SpaceARFragment getInstance(String diff) {
-        SpaceARFragment spaceARFragment = new SpaceARFragment();
+    public SpaceARFragment getInstance(String diff) {
+        spaceARFragment = new SpaceARFragment();
         Bundle b = new Bundle();
         b.putString(DIFFCIULTY_KEY, diff);
-        spaceARFragment = new SpaceARFragment();
         spaceARFragment.setArguments(b);
 
         return spaceARFragment;
@@ -139,7 +139,8 @@ public class SpaceARFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        backgroundMusic();
+        audioSetup(context);
+        audioLoader.backGroundMusic();
     }
 
     @Override
@@ -147,9 +148,6 @@ public class SpaceARFragment extends Fragment {
         super.onCreate(savedInstanceState);
         modelRenderablesList = new ArrayList<>();
         transformableNodesList = new ArrayList<>();
-        if (getArguments() != null) {
-            difficulty = getArguments().getString(DIFFCIULTY_KEY);
-        }
         modelCoordinates = new ModelCoordinates();
 
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
@@ -158,6 +156,7 @@ public class SpaceARFragment extends Fragment {
         vector = new Vector3();
         renderableList = new ArrayList<>();
         nodeList = new ArrayList<>();
+        difficulty = sharedPreferences.getString(GameInformation.GAME_DIFFICULTY, null);
         // If user misses their shot account here
 
     }
@@ -176,7 +175,6 @@ public class SpaceARFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
         findViews(view);
-        audioSetup();
         weaponSetup();
         getStringRes();
         setupGameInfo();
@@ -337,10 +335,6 @@ public class SpaceARFragment extends Fragment {
 
     }
 
-    private void audioSetup() {
-        audioLoader = new AudioLoader(getContext());
-
-    }
 
     private void onTapForMissInteraction() {
         arFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> {
@@ -647,10 +641,11 @@ public class SpaceARFragment extends Fragment {
 
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
-                laserSound();
+                audioLoader.laserSound();
                 Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
+                audioLoader.explosionSound();
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
@@ -700,7 +695,7 @@ public class SpaceARFragment extends Fragment {
                 }
 
                 numOfModels--;
-                shootSound();
+                audioLoader.laserSound();
                 getStringRes();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -739,7 +734,7 @@ public class SpaceARFragment extends Fragment {
             @Override
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
-                stopAudio();
+                audioLoader.stopAudio();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 goToResultPage();
             }
@@ -832,24 +827,7 @@ public class SpaceARFragment extends Fragment {
         if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
-
-    public void shootSound() {
-        audioSetup();
-        //audioLoader.explodeSound();
+    private void audioSetup(Context c) {
+        audioLoader = new AudioLoader(c);
     }
-
-    public void laserSound() {
-        audioSetup();
-        audioLoader.laserSound();
-    }
-
-    public void backgroundMusic() {
-        audioSetup();
-        audioLoader.backGroundMusic();
-    }
-
-    public void stopAudio() {
-        audioLoader.stopAudio();
-    }
-
 }
