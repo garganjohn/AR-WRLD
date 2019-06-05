@@ -188,4 +188,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="8dp" />
 
+    <!--Perk selected in ar game-->
+
+    <TextView
+        android:id="@+id/perk_selected_ar_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/perk_selected"
+        app:layout_constraintBottom_toTopOf="@id/perk_selected_ar_image"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/perk_selected_ar_image"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>
