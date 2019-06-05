@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -69,7 +70,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 10000;
+    private long timeLeftInMilliseconds = 20000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -92,6 +93,7 @@ public class SpaceARFragment extends Fragment {
     private Hourglass startGame;
     private ImageView weakWeapon;
     private ImageView medWeapon;
+    private ImageView perkChosenImage;
     private WeaponsAvailable weaponSelection;
     private TextView gameInfoTv;
     private boolean isUserTimeWarned = false;
@@ -167,6 +169,7 @@ public class SpaceARFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
+        findViews(rootView);
         setUpAR();
         return rootView;
     }
@@ -175,7 +178,6 @@ public class SpaceARFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
-        findViews(view);
         audioSetup();
         weaponSetup();
         getStringRes();
@@ -226,22 +228,33 @@ public class SpaceARFragment extends Fragment {
             case GameInformation.MORE_AMMO_PERK:
                 weaponSelection.setMedWeaponAmmo(startingMedAmmo + (startingMedAmmo / 2));
                 setMedAmmoTv();
+                setPerkDrawable(R.drawable.ammo_perk);
                 break;
             case GameInformation.MORE_DAMAGE_PERK:
                 weaponSelection.setMedWeaponDamage(4);
                 setMedAmmoTv();
+                setPerkDrawable(R.drawable.more_damage_perk_image);
                 break;
             case GameInformation.MORE_TIME_PERK:
                 startGame.pauseTimer();
                 startGame = null;
                 timeLeftInMilliseconds += 20000;
                 startGameTimer();
+                setPerkDrawable(R.drawable.more_time_perk_image);
                 break;
             case GameInformation.SLOW_TIME_PERK:
                 increaseScoreTillClockModelEasy = 2500;
                 increaseScoreTillClockModelMed = 7500;
+                setPerkDrawable(R.drawable.slow_time_perk);
                 break;
+                default:
+                    setPerkDrawable(R.drawable.noperk_chosen_image);
         }
+    }
+
+    private void setPerkDrawable(int drawable){
+        if (getActivity() != null)
+        perkChosenImage.setImageDrawable(getActivity().getDrawable(drawable));
     }
 
     private void setupGameInfo() {
@@ -430,6 +443,8 @@ public class SpaceARFragment extends Fragment {
         rightArrow = v.findViewById(R.id.left_marker);
         leftArrow = v.findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
+
+        perkChosenImage = v.findViewById(R.id.perk_selected_ar_image);
 
         gameInfoTv = v.findViewById(R.id.game_info_textview);
 

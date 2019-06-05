@@ -28,6 +28,9 @@ public class ModelCoordinates {
 //        }
         //Location infront of user
 //        return -(minFloat + random.nextFloat() * (maxFloat - minFloat));
+        if (new Random().nextInt(2) < 1){
+            return 3f;
+        }
         return -3f;
     }
 }
