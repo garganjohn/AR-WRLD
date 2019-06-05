@@ -77,6 +77,7 @@
     <string name="game_over_if_timer_runs_out">You protected the Earth… for now. Keep on playing to collect more weapons</string>
     <string name="save_score">Save Score</string>
     <string name="perk_selected_text">Perk Selected: \n %s</string>
+    <string name="perk_chosen_string">Perk:</string>
 
 
 </resources>
