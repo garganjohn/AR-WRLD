@@ -34,5 +34,6 @@ public class PerkPickForUser extends FragmentActivity implements ViewPagerListen
     @Override
     public void goToUserHome() {
         startActivity(new Intent(this, UserHomeScreenActivity.class));
+        this.finish();
     }
 }
