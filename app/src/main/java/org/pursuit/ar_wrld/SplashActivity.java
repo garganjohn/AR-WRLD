@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
             Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
             Intent tempIntent = new Intent(SplashActivity.this, PerkPickForUser.class);
             startActivity(mainIntent);
+            SplashActivity.this.finish();
         }, SPLASH_LENGTH);
     }
 
