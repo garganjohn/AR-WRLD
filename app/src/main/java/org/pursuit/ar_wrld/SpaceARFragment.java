@@ -574,7 +574,7 @@ public class SpaceARFragment extends Fragment {
                 }
         }
 
-        anchorNode = new MovementNode();
+        anchorNode = new MovementNode(null);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
 
         transformableNodesList.add(node);
@@ -835,7 +835,7 @@ public class SpaceARFragment extends Fragment {
 
     public void shootSound() {
         audioSetup();
-        audioLoader.explodeSound();
+        //audioLoader.explodeSound();
     }
 
     public void laserSound() {
