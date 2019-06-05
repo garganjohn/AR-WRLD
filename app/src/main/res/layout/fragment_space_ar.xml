@@ -194,7 +194,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/perk_chosen_string"
-        android:textSize="16sp"
+        android:textSize="24sp"
         android:fontFamily="@font/pixel_operator"
         app:layout_constraintBottom_toTopOf="@id/perk_chosen_image_ar"
         app:layout_constraintStart_toStartOf="parent" />
