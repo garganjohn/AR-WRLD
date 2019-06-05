@@ -26,7 +26,6 @@ public class ResultPage extends AppCompatActivity {
     private TextView scoreTextView;
     private TextView titleForScore;
     private Button playAgainButton;
-    private Button saveScoreButton;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private SharedPreferences sharedPreferences;
 
@@ -39,42 +38,10 @@ public class ResultPage extends AppCompatActivity {
         nameTextView = findViewById(R.id.player_name);
         titleForScore = findViewById(R.id.title_for_player_score);
         scoreTextView = findViewById(R.id.player_score);
-        saveScoreButton = findViewById(R.id.save_score_button);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
-        nameTextView.setText(playerName);
+        retrieveUserNameAndScore();
 
-        long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
-        scoreTextView.setText(String.valueOf(userScore));
-
-        //retrieveUsername();
-        //retrieveUserScore();
-
-        saveScoreButton.setOnClickListener(v -> {
-            UserInformation userInformation = new UserInformation();
-            userInformation.setUsername(playerName);
-            userInformation.setUserscore(userScore);
-
-            new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
-                @Override
-                public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
-
-                }
-
-                @Override
-                public void dataIsInserted() {
-                    Toast.makeText(ResultPage.this, "Data has been saved successfully!", Toast.LENGTH_SHORT).show();
-
-                }
-
-                @Override
-                public void dataIsUpdated() {
-
-                }
-            });
-
-        });
 
         playAgainButton.setOnClickListener(v -> {
             startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
@@ -83,15 +50,35 @@ public class ResultPage extends AppCompatActivity {
 
     }
 
-//    private void retrieveUsername() {
-//        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
-//        nameTextView.setText(playerName);
-//    }
+    public void retrieveUserNameAndScore() {
+        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        nameTextView.setText(playerName);
 
-//    public void retrieveUserScore() {
-//        int userScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
-//        scoreTextView.setText(String.valueOf(userScore));
-//    }
+        long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
+        scoreTextView.setText(String.valueOf(userScore));
+
+        UserInformation userInformation = new UserInformation();
+        userInformation.setUsername(playerName);
+        userInformation.setUserscore(userScore);
+
+        new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+            @Override
+            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+
+            }
+
+            @Override
+            public void dataIsInserted() {
+                Toast.makeText(ResultPage.this, "Data has been saved successfully!", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void dataIsUpdated() {
+
+            }
+        });
+    }
 
 }
 

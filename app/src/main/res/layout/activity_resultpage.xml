@@ -60,17 +60,6 @@
     </android.support.v7.widget.CardView>
 
     <Button
-        android:id="@+id/save_score_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="#6320b5"
-        android:text="@string/save_score"
-        android:textAlignment="center"
-        android:textColor="#E1E2E7"
-        android:textSize="20sp" />
-
-    <Button
         android:id="@+id/playagain_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
