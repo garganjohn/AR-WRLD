@@ -61,8 +61,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         findViews();
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
+        //TODO issue with perk not being set if user is a first time user
+//        if (userPerkFromSharedPref == null) {
+//            sharedPreferences.edit().putString(GameInformation.GAME_PERK_KEY, GameInformation.MORE_AMMO_PERK).apply();
+//        }
         userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, "-1");
-
         userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
 
 
