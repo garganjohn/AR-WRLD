@@ -65,7 +65,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 //        if (userPerkFromSharedPref == null) {
 //            sharedPreferences.edit().putString(GameInformation.GAME_PERK_KEY, GameInformation.MORE_AMMO_PERK).apply();
 //        }
-        userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, "Choose perk");
+        userPerkFromSharedPref = sharedPreferences.getString(GameInformation.GAME_PERK_KEY, "-1");
         userPerkChosen = getString(R.string.perk_selected_text, userPerkFromSharedPref);
 
 
