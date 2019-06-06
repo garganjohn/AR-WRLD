@@ -97,8 +97,8 @@ public class SpaceARFragment extends Fragment {
     private TextView gameInfoTv;
     private boolean isUserTimeWarned = false;
     private int weaponDamage;
-    private boolean isWeakWeaponChosen;
-    private boolean isMedWeaponChosen;
+    private boolean isWeakWeaponChosen = true;
+    private boolean isMedWeaponChosen = false;
     private Animation startFromBottom;
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
@@ -111,6 +111,7 @@ public class SpaceARFragment extends Fragment {
     private SpaceARFragment spaceARFragment;
     private ImageView imageForPerk;
 
+
     // Controls animation playback.
     private ModelAnimator animator;
     // Index of the current animation playing.
@@ -122,8 +123,8 @@ public class SpaceARFragment extends Fragment {
     private int increaseScoreTillClockModelMed = 15000;
     private ArrayList<ModelRenderable> modelRenderablesList;
     private ArrayList<TransformableNode> transformableNodesList;
-    private float hideWeapon;
-    private float usingWeapon;
+    private float hideWeapon = .5f;
+    private float usingWeapon = 1f;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -384,7 +385,6 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void weaponSetup() {
-        hideWeapon = 0.500f;
         medWeapon.setAlpha(hideWeapon);
         setWeaponListener();
         weaponSelection = new WeaponsAvailable(startingMedAmmo);
@@ -396,7 +396,6 @@ public class SpaceARFragment extends Fragment {
             weakWeapon.setAlpha(hideWeapon);
         } else {
             weaponDamage = weaponSelection.getWeakWeaponDamage();
-            usingWeapon = 1f;
             weakWeapon.setAlpha(usingWeapon);
         }
         if (!isMedWeaponChosen) {
@@ -415,6 +414,10 @@ public class SpaceARFragment extends Fragment {
         });
 
         medWeapon.setOnClickListener(v -> {
+            Log.d(TAG, "setWeaponListener: Is med weapon chosen: "+isMedWeaponChosen);
+            Log.d(TAG, "setWeaponListener: Is weak weapon chosen: "+isWeakWeaponChosen);
+            Log.d(TAG, "setWeaponListener: Weak weapon alpha: "+weakWeapon.getAlpha());
+            Log.d(TAG, "setWeaponListener: Med Weapon alpha: "+medWeapon.getAlpha());
             if (weaponSelection.getMedWeaponAmmo() > 0) {
                 isMedWeaponChosen = true;
                 isWeakWeaponChosen = false;
