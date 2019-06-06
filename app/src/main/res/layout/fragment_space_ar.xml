@@ -27,6 +27,7 @@
         android:textColor="#ffff"
         android:fontFamily="@font/pixel_operator"
         android:textSize="16sp"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/med_weapon"
         app:layout_constraintEnd_toEndOf="@id/med_weapon"
         app:layout_constraintStart_toStartOf="@id/med_weapon" />
@@ -49,6 +50,7 @@
         android:textColor="#ffff"
         android:fontFamily="@font/pixel_operator"
         android:textSize="16sp"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/weak_weapon"
         app:layout_constraintEnd_toEndOf="@id/weak_weapon"
         app:layout_constraintStart_toStartOf="@id/weak_weapon" />
