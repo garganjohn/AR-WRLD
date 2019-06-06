@@ -14,15 +14,25 @@
         android:scaleType="centerCrop"
         android:src="@drawable/space_background" />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/splash_logo"-->
-        <!--android:layout_width="80dp"-->
-        <!--android:layout_height="80dp"-->
-        <!--android:elevation="2dp"-->
-        <!--android:src="@drawable/logofinalnoface"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
+    <io.supercharge.shimmerlayout.ShimmerLayout
+        android:id="@+id/shimmer_text"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shimmer_animation_duration="1500">
 
+        <ImageView
+            android:id="@+id/splash_logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:elevation="2dp"
+            android:src="@drawable/logo_splash_transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </io.supercharge.shimmerlayout.ShimmerLayout>
 </android.support.constraint.ConstraintLayout>

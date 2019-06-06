@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import org.pursuit.ar_wrld.login.SignInActivity;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
+import io.supercharge.shimmerlayout.ShimmerLayout;
+
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_LENGTH = 1500;
 
@@ -19,8 +21,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         hideActionBar();
         changeStatusBarColor();
-
+        ShimmerLayout shimmerText = (ShimmerLayout) findViewById(R.id.shimmer_text);
+        shimmerText.startShimmerAnimation();
         new Handler().postDelayed(() -> {
+
             Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
             Intent tempIntent = new Intent(SplashActivity.this, PerkPickForUser.class);
             startActivity(mainIntent);

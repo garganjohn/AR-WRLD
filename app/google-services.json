@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1087655528162",
+    "firebase_url": "https://ar-wrld.firebaseio.com",
+    "project_id": "ar-wrld",
+    "storage_bucket": "ar-wrld.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087655528162:android:4fe1d445af7227f6",
+        "android_client_info": {
+          "package_name": "org.pursuit.ar_wrld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087655528162-7anb178vu4gt1j1opotm5osbi3017pae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.pursuit.ar_wrld",
+            "certificate_hash": "55945fdef1d51e57fa32ca32dff75d45df99bed6"
+          }
+        },
+        {
+          "client_id": "1087655528162-ss4rp88vud0c57lljf79b1kvlv70enl0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0pB2VXcU2z7OjpZM3U5lFxdiMPUvsJMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087655528162-ss4rp88vud0c57lljf79b1kvlv70enl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

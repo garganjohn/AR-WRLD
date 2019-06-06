@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -96,8 +97,8 @@ public class SpaceARFragment extends Fragment {
     private TextView gameInfoTv;
     private boolean isUserTimeWarned = false;
     private int weaponDamage;
-    private boolean isWeakWeaponChosen;
-    private boolean isMedWeaponChosen;
+    private boolean isWeakWeaponChosen = true;
+    private boolean isMedWeaponChosen = false;
     private Animation startFromBottom;
     private Animation exitToBottom;
     private CountDownTimer exitAnimationTimer;
@@ -107,6 +108,9 @@ public class SpaceARFragment extends Fragment {
     private AudioLoader audioLoader;
     private View mainActBG;
     private ModelCoordinates modelCoordinates;
+    private SpaceARFragment spaceARFragment;
+    private ImageView imageForPerk;
+
 
     // Controls animation playback.
     private ModelAnimator animator;
@@ -119,18 +123,17 @@ public class SpaceARFragment extends Fragment {
     private int increaseScoreTillClockModelMed = 15000;
     private ArrayList<ModelRenderable> modelRenderablesList;
     private ArrayList<TransformableNode> transformableNodesList;
-    private float hideWeapon;
-    private float usingWeapon;
+    private float hideWeapon = .5f;
+    private float usingWeapon = 1f;
 
     public SpaceARFragment() {
         // Required empty public constructor
     }
 
-    public static SpaceARFragment getInstance(String diff) {
-        SpaceARFragment spaceARFragment = new SpaceARFragment();
+    public SpaceARFragment getInstance(String diff) {
+        spaceARFragment = new SpaceARFragment();
         Bundle b = new Bundle();
         b.putString(DIFFCIULTY_KEY, diff);
-        spaceARFragment = new SpaceARFragment();
         spaceARFragment.setArguments(b);
 
         return spaceARFragment;
@@ -139,7 +142,8 @@ public class SpaceARFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        backgroundMusic();
+        audioSetup(context);
+        audioLoader.backGroundMusic();
     }
 
     @Override
@@ -147,9 +151,6 @@ public class SpaceARFragment extends Fragment {
         super.onCreate(savedInstanceState);
         modelRenderablesList = new ArrayList<>();
         transformableNodesList = new ArrayList<>();
-        if (getArguments() != null) {
-            difficulty = getArguments().getString(DIFFCIULTY_KEY);
-        }
         modelCoordinates = new ModelCoordinates();
 
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
@@ -158,6 +159,7 @@ public class SpaceARFragment extends Fragment {
         vector = new Vector3();
         renderableList = new ArrayList<>();
         nodeList = new ArrayList<>();
+        difficulty = sharedPreferences.getString(GameInformation.GAME_DIFFICULTY, null);
         // If user misses their shot account here
 
     }
@@ -167,6 +169,7 @@ public class SpaceARFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
+        findViews(rootView);
         setUpAR();
         return rootView;
     }
@@ -176,7 +179,6 @@ public class SpaceARFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
         findViews(view);
-        audioSetup();
         weaponSetup();
         getStringRes();
         setupGameInfo();
@@ -220,28 +222,37 @@ public class SpaceARFragment extends Fragment {
 
     private void applyPerkToUser(String whichPerk) {
         if (whichPerk == null) {
+            setPerkDrawable(R.drawable.noperk_chosen_image);
             return;
         }
         switch (whichPerk) {
             case GameInformation.MORE_AMMO_PERK:
                 weaponSelection.setMedWeaponAmmo(startingMedAmmo + (startingMedAmmo / 2));
                 setMedAmmoTv();
+                setPerkDrawable(R.drawable.ammo_perk);
                 break;
             case GameInformation.MORE_DAMAGE_PERK:
                 weaponSelection.setMedWeaponDamage(4);
                 setMedAmmoTv();
+                setPerkDrawable(R.drawable.more_damage_perk_image);
                 break;
             case GameInformation.MORE_TIME_PERK:
                 startGame.pauseTimer();
                 startGame = null;
                 timeLeftInMilliseconds += 20000;
                 startGameTimer();
+                setPerkDrawable(R.drawable.more_time_perk_image);
                 break;
             case GameInformation.SLOW_TIME_PERK:
                 increaseScoreTillClockModelEasy = 2500;
                 increaseScoreTillClockModelMed = 7500;
+                setPerkDrawable(R.drawable.slow_time_perk);
                 break;
         }
+    }
+
+    private void setPerkDrawable(int drawable){
+        imageForPerk.setImageDrawable(getActivity().getDrawable(drawable));
     }
 
     private void setupGameInfo() {
@@ -337,10 +348,6 @@ public class SpaceARFragment extends Fragment {
 
     }
 
-    private void audioSetup() {
-        audioLoader = new AudioLoader(getContext());
-
-    }
 
     private void onTapForMissInteraction() {
         arFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> {
@@ -378,7 +385,6 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void weaponSetup() {
-        hideWeapon = 0.500f;
         medWeapon.setAlpha(hideWeapon);
         setWeaponListener();
         weaponSelection = new WeaponsAvailable(startingMedAmmo);
@@ -390,7 +396,6 @@ public class SpaceARFragment extends Fragment {
             weakWeapon.setAlpha(hideWeapon);
         } else {
             weaponDamage = weaponSelection.getWeakWeaponDamage();
-            usingWeapon = 1f;
             weakWeapon.setAlpha(usingWeapon);
         }
         if (!isMedWeaponChosen) {
@@ -409,6 +414,10 @@ public class SpaceARFragment extends Fragment {
         });
 
         medWeapon.setOnClickListener(v -> {
+            Log.d(TAG, "setWeaponListener: Is med weapon chosen: "+isMedWeaponChosen);
+            Log.d(TAG, "setWeaponListener: Is weak weapon chosen: "+isWeakWeaponChosen);
+            Log.d(TAG, "setWeaponListener: Weak weapon alpha: "+weakWeapon.getAlpha());
+            Log.d(TAG, "setWeaponListener: Med Weapon alpha: "+medWeapon.getAlpha());
             if (weaponSelection.getMedWeaponAmmo() > 0) {
                 isMedWeaponChosen = true;
                 isWeakWeaponChosen = false;
@@ -431,12 +440,13 @@ public class SpaceARFragment extends Fragment {
         leftArrow = v.findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
 
+        imageForPerk = v.findViewById(R.id.perk_chosen_image_ar);
+
         gameInfoTv = v.findViewById(R.id.game_info_textview);
 
     }
 
     private void spawningAliens(boolean isBoss) {
-
         sceneNode = new AnchorNode();
         sceneNode.setWorldPosition(new Vector3(0, 0, 0));
 
@@ -574,7 +584,7 @@ public class SpaceARFragment extends Fragment {
                 }
         }
 
-        anchorNode = new MovementNode();
+        anchorNode = new MovementNode(null);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
 
         transformableNodesList.add(node);
@@ -647,10 +657,11 @@ public class SpaceARFragment extends Fragment {
 
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
-                laserSound();
+                audioLoader.laserSound();
                 Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
+                audioLoader.explosionSound();
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
@@ -700,7 +711,7 @@ public class SpaceARFragment extends Fragment {
                 }
 
                 numOfModels--;
-                shootSound();
+                audioLoader.laserSound();
                 getStringRes();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -739,7 +750,7 @@ public class SpaceARFragment extends Fragment {
             @Override
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
-                stopAudio();
+                audioLoader.stopAudio();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 goToResultPage();
             }
@@ -832,24 +843,7 @@ public class SpaceARFragment extends Fragment {
         if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
-
-    public void shootSound() {
-        audioSetup();
-        audioLoader.explodeSound();
+    private void audioSetup(Context c) {
+        audioLoader = new AudioLoader(c);
     }
-
-    public void laserSound() {
-        audioSetup();
-        audioLoader.laserSound();
-    }
-
-    public void backgroundMusic() {
-        audioSetup();
-        audioLoader.backGroundMusic();
-    }
-
-    public void stopAudio() {
-        audioLoader.stopAudio();
-    }
-
 }

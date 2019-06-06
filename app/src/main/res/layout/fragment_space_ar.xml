@@ -25,6 +25,9 @@
         android:background="#70000000"
         android:text="@string/med_weapon_info"
         android:textColor="#ffff"
+        android:fontFamily="@font/pixel_operator"
+        android:textSize="16sp"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/med_weapon"
         app:layout_constraintEnd_toEndOf="@id/med_weapon"
         app:layout_constraintStart_toStartOf="@id/med_weapon" />
@@ -45,6 +48,9 @@
         android:background="#70000000"
         android:text="@string/damage_weak_weapon"
         android:textColor="#ffff"
+        android:fontFamily="@font/pixel_operator"
+        android:textSize="16sp"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/weak_weapon"
         app:layout_constraintEnd_toEndOf="@id/weak_weapon"
         app:layout_constraintStart_toStartOf="@id/weak_weapon" />
@@ -187,5 +193,26 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="8dp" />
+
+    <TextView
+        android:id="@+id/perk_chosen_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/pixel_operator"
+        android:text="@string/perk_chosen_string"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@id/perk_chosen_image_ar"
+        app:layout_constraintEnd_toEndOf="@+id/perk_chosen_image_ar"
+        app:layout_constraintStart_toStartOf="@+id/perk_chosen_image_ar" />
+
+    <ImageView
+        android:id="@+id/perk_chosen_image_ar"
+        android:layout_width="75dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp" />
 
 </android.support.constraint.ConstraintLayout>
