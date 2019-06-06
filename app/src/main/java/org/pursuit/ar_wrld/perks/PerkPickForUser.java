@@ -48,5 +48,5 @@ public class PerkPickForUser extends FragmentActivity implements ViewPagerListen
             return super.onKeyDown(keyCode, event);
         }
     }
-    
+
 }
