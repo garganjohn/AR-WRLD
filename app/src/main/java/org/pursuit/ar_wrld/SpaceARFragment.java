@@ -447,7 +447,6 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void spawningAliens(boolean isBoss) {
-
         sceneNode = new AnchorNode();
         sceneNode.setWorldPosition(new Vector3(0, 0, 0));
 
