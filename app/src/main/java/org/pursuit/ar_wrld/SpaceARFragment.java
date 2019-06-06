@@ -143,7 +143,9 @@ public class SpaceARFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         audioSetup(context);
-        audioLoader.backGroundMusic();
+        audioLoader.setBackGroundMusic(R.raw.backgroundmusic);
+        audioLoader.getBackGroundMusic().setLooping(true);
+
     }
 
     @Override

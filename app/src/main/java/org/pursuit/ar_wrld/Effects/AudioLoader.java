@@ -20,6 +20,18 @@ public class AudioLoader {
     private MediaPlayer explosionSound;
     private MediaPlayer miss;
     private MediaPlayer mediaPlayer;
+    private MediaPlayer backGroundMusic;
+
+
+    public MediaPlayer getBackGroundMusic() {
+        return backGroundMusic;
+    }
+
+    public void setBackGroundMusic(int rawSoundResource) {
+        backGroundMusic = MediaPlayer.create(context,rawSoundResource);
+
+    }
+
 
     public AudioLoader(Context context) {
         this.context = context;
@@ -43,19 +55,20 @@ public class AudioLoader {
         mediaPlayer.start();
     }
 
-    public void explosionSound(){
+    public void explosionSound() {
         mediaPlayer = MediaPlayer.create(context, R.raw.explosion8bit);
         mediaPlayer.seekTo(0);
         mediaPlayer.setVolume(20f, 20f);
         mediaPlayer.start();
     }
-  
-    public void stopAudio(){
+
+    public void stopAudio() {
         mediaPlayer.stop();
         mediaPlayer.release();
     }
 
-    public void nullMediaPlayer(){
+    public void nullMediaPlayer() {
+        mediaPlayer.release();
         mediaPlayer = null;
     }
 }
