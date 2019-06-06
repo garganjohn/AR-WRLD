@@ -130,14 +130,19 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private Drawable setUserPerk() {
         switch (userPerkFromSharedPref) {
             case GameInformation.MORE_AMMO_PERK:
+                perkChosen.setText(getString(R.string.more_ammo_perk_name));
                 return getDrawable(R.drawable.ammo_perk);
             case GameInformation.MORE_DAMAGE_PERK:
+                perkChosen.setText(getString(R.string.more_damage_perk_name));
                 return getDrawable(R.drawable.more_damage_perk_image);
             case GameInformation.MORE_TIME_PERK:
+                perkChosen.setText(getString(R.string.more_time_perk_name));
                 return getDrawable(R.drawable.more_time_perk_image);
             case GameInformation.SLOW_TIME_PERK:
+                perkChosen.setText(getString(R.string.slow_time_perk_name));
                 return getDrawable(R.drawable.slow_time_perk);
             default:
+                perkChosen.setText("No Perks Chosen");
                 return getDrawable(R.drawable.noperk_chosen_image);
         }
     }
