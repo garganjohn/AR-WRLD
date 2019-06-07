@@ -108,6 +108,7 @@ public class SpaceARFragment extends Fragment {
     private CountDownTimer hitChangeColor;
     private CountDownTimer backToOriginalColor;
     private int repitionForColors = 0;
+    private int maxModels;
     private AudioLoader audioLoader;
     private View mainActBG;
     private ModelCoordinates modelCoordinates;
@@ -184,6 +185,7 @@ public class SpaceARFragment extends Fragment {
         mainActBG = view.findViewById(R.id.background_for_ar_view);
         findViews(view);
         weaponSetup();
+        setMaxNumOfModels();
         getStringRes();
         setupGameInfo();
         setUpRedLight();
@@ -199,6 +201,20 @@ public class SpaceARFragment extends Fragment {
             spawningAliens(false);
         }
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
+    }
+
+    private void setMaxNumOfModels() {
+        switch (difficulty){
+            case UserHomeScreenActivity.EASY_STRING:
+                maxModels = 15;
+                break;
+            case UserHomeScreenActivity.MEDIUM_STRING:
+                maxModels = 12;
+                break;
+            case UserHomeScreenActivity.HARD_STRING:
+                maxModels = 10;
+                break;
+        }
     }
 
     @Override
@@ -539,7 +555,7 @@ public class SpaceARFragment extends Fragment {
     @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
-        aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
+        aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels, maxModels);
 //        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
@@ -577,7 +593,9 @@ public class SpaceARFragment extends Fragment {
         numOfModels++;
 
         modelRenderablesList.add(renderable);
+        Log.d(TAG, "addNodeToScene: "+numOfModels);
 
+        //Game is over once a certain number of models is higher than the limit shown below
         switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
                 if (numOfModels > 9) {
