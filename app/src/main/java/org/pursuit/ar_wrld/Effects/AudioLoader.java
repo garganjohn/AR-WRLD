@@ -51,7 +51,6 @@ public class AudioLoader {
     }
 
     public void stopAudio() {
-        mediaPlayer.stop();
         mediaPlayer.release();
     }
 

@@ -78,3 +78,9 @@ sceneform.asset('sampledata/boss_saucer/FlyingSacuer.obj',
         'default',
         'sampledata/boss_saucer/FlyingSacuer.sfa',
         'src/main/assets/FlyingSacuer')
+
+
+sceneform.asset('sampledata/asteroid_debris/Asteroids.OBJ',
+        'default',
+        'sampledata/asteroid_debris/Asteroids.sfa',
+        'src/main/assets/Asteroids')

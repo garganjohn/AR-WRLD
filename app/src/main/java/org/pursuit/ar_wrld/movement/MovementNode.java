@@ -78,19 +78,38 @@ public class MovementNode extends AnchorNode {
 
         Vector3 postion = getRandomElement(vector3List);
 
+        Quaternion[] orientations = new Quaternion[4];
+        // Rotation to apply first, to tilt its axis.
+        Quaternion baseOrientation = Quaternion.axisAngle(new Vector3(1.0f, 0f, 0.0f), 5f);
+        for (int i = 0; i < orientations.length; i++) {
+            float angle = i * 360 / (orientations.length - 1);
+        }
+//            if (clockwise) {
+//                angle = 360 - angle;
+//            }
+//            Quaternion orientation = Quaternion.axisAngle(new Vector3(0.0f, 1.0f, 0.0f), angle);
+//            orientations[i] = Quaternion.multiply(baseOrientation, orientation);
+//        }
 
         //get nodes original coordinates
 
         //set new coordinates
-        Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
+        Vector3 up = Vector3.up();
+       // Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
         Vector3 left = new Vector3(0.700f, 0.5f, -0.300f);
-        Vector3 down = new Vector3(-0.5f, -0.5f, -0.5f);
+        Vector3 down = Vector3.down();
+       // Vector3 vector31 = Vecto
+        Vector3 cross = Vector3.cross(originalNodePosition,down);
+
+
         ObjectAnimator objectAnimator = new ObjectAnimator();
 
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
         objectAnimator.setPropertyName("localPosition");
-        objectAnimator.setObjectValues(originalNodePosition, postion, left, down, up,left,up,down);
+
+        // Use Sceneform's QuaternionEvaluator.
+
 
 
         //requires the setter name of what you are manipulating
@@ -98,8 +117,9 @@ public class MovementNode extends AnchorNode {
         //evaluator of what values your are passing
 
         //set multiple coordinates to be called one after the other
-        //objectAnimator.setObjectValues(originalNodePosition, up, left, down, originalNodePosition);
+        objectAnimator.setObjectValues(originalNodePosition, up, left, down, cross);
         objectAnimator.setEvaluator(new Vector3Evaluator());
+
         //animation happens forever
         objectAnimator.setRepeatCount(ObjectAnimator.INFINITE);
         //animation is the called in reverse
