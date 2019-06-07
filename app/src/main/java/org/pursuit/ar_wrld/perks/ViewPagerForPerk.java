@@ -19,9 +19,9 @@ import org.pursuit.ar_wrld.R;
 public class ViewPagerForPerk extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    public static final String ARG_PARAM3 = "PARAM3";
+    private static final String PERK_DESCRIPTION_KEY = "param1";
+    private static final String IMAGE_DRAWABLE_KEY = "param2";
+    public static final String WHICH_PERK_KEY = "PARAM3";
 
     // TODO: Rename and change types of parameters
     private String perkInfo;
@@ -52,12 +52,12 @@ public class ViewPagerForPerk extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ViewPagerForPerk newInstance(String param1, int imageDrawable, String whichPerk) {
+    public static ViewPagerForPerk newInstance(String perkDescription, int imageDrawable, String whichPerk) {
         ViewPagerForPerk fragment = new ViewPagerForPerk();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putInt(ARG_PARAM2, imageDrawable);
-        args.putString(ARG_PARAM3, whichPerk);
+        args.putString(PERK_DESCRIPTION_KEY, perkDescription);
+        args.putInt(IMAGE_DRAWABLE_KEY, imageDrawable);
+        args.putString(WHICH_PERK_KEY, whichPerk);
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,9 +66,9 @@ public class ViewPagerForPerk extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            perkInfo = getArguments().getString(ARG_PARAM1);
-            perkImageRes = getArguments().getInt(ARG_PARAM2);
-            whichGamePerk = getArguments().getString(ARG_PARAM3);
+            perkInfo = getArguments().getString(PERK_DESCRIPTION_KEY);
+            perkImageRes = getArguments().getInt(IMAGE_DRAWABLE_KEY);
+            whichGamePerk = getArguments().getString(WHICH_PERK_KEY);
         }
     }
 
