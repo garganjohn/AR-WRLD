@@ -9,22 +9,33 @@
     tools:context=".perks.ViewPagerForPerk">
 
     <TextView
-        android:id="@+id/class_description"
+        android:id="@+id/perk_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:fontFamily="@font/pixel_operator"
+        android:layout_margin="8dp"
+        android:textSize="24sp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/perk_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pixel_operator"
         android:gravity="center"
         android:layout_margin="8dp"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/perk_name" />
 
     <ImageView
-        android:id="@+id/class_image"
+        android:id="@+id/perk_image"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         app:layout_constraintBottom_toTopOf="@id/perk_level_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/class_description"/>
+        app:layout_constraintTop_toBottomOf="@id/perk_description"/>
 
     <TextView
         android:id="@+id/perk_level_1"
