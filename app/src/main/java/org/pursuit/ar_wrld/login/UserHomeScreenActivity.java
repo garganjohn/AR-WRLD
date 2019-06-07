@@ -108,7 +108,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         perkImage = findViewById(R.id.perk_selected_image);
     }
 
-    private String retrieveUsername() {
+    public String retrieveUsername() {
         return sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
     }
 
@@ -147,10 +147,4 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         }
     }
 
-//    public  void updateUI (FirebaseUser user){
-//        if(user != null){
-//            String name = user.getDisplayName();
-//            usernameTextView.setText(name);
-//        }
-//    }
 }

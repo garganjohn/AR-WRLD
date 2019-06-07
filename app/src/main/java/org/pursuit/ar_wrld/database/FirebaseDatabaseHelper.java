@@ -26,11 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class FirebaseDatabaseHelper {
 
@@ -45,8 +48,10 @@ public class FirebaseDatabaseHelper {
     private FirebaseDatabase database;
     private DatabaseReference myRef;
     private List<UserInformation> userInformationList;
+    private UserHomeScreenActivity userHomeScreenActivity;
     FirebaseRecyclerOptions<UserInformation> userOptions;
     FirebaseRecyclerAdapter<UserInformation, TopScoreViewHolder> adapter;
+
 
     public interface DataStatus {
         void dataIsLoaded(List<UserInformation> userInformations, List<String> keys);
@@ -61,24 +66,6 @@ public class FirebaseDatabaseHelper {
         myRef = database.getReference("mARtians");
     }
 
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        firebaseAuth = FirebaseAuth.getInstance();
-//        user = firebaseAuth.getCurrentUser();
-//        database = FirebaseDatabase.getInstance();
-//        myRef = database.getReference();
-//
-//        sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-//
-//        Log.e("Checking if name and score are here", "khaing" + name + playerScore);
-//
-//        savePlayerInfo();
-//        displayScore();
-//
-//
-//    }
 
     public void savePlayerInfo(final DataStatus dataStatus) {
 
@@ -129,8 +116,42 @@ public class FirebaseDatabaseHelper {
 
     public void updateScore(String key, UserInformation userInformation, final DataStatus dataStatus) {
         myRef.child(key).setValue(userInformation)
-                .addOnSuccessListener(aVoid -> dataStatus.dataIsUpdated());
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        dataStatus.dataIsUpdated();
+                    }
+                });
 
+//        final String userName = "userX";
+//        final int score = 55;
+//        FirebaseDatabase db = FirebaseDatabase.getInstance();
+//        db.getReference("Score").child(userName).child("Score").setValue(score).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Log.d(TAG, "onSuccess: updated " + userName + "'s score (" + score + ")");
+//            }
+//        });
+
+        /**
+         * private void updateData() {
+         * database = FirebaseDatabase.getInstance();
+         * myref = database.getReference();
+         * myref.child("myDb").child("awais@gmailcom").addListenerForSingleValueEvent(new ValueEventListener() {
+         *     @Override
+         *     public void onDataChange(DataSnapshot dataSnapshot) {
+         *
+         *         dataSnapshot.getRef().child("leftSpace").setValue(newValue);
+         *         dialog.dismiss();
+         *
+         *     }
+         *     @Override
+         *     public void onCancelled(DatabaseError databaseError) {
+         *         Log.d("User", databaseError.getMessage());
+         *     }
+         * });
+         * }
+         */
     }
 
 
