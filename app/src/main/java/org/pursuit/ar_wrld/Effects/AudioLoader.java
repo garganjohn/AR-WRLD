@@ -20,17 +20,6 @@ public class AudioLoader {
     private MediaPlayer explosionSound;
     private MediaPlayer miss;
     private MediaPlayer mediaPlayer;
-    private MediaPlayer backGroundMusic;
-
-
-    public MediaPlayer getBackGroundMusic() {
-        return backGroundMusic;
-    }
-
-    public void setBackGroundMusic(int rawSoundResource) {
-        backGroundMusic = MediaPlayer.create(context,rawSoundResource);
-
-    }
 
 
     public AudioLoader(Context context) {
@@ -51,7 +40,6 @@ public class AudioLoader {
     public void backGroundMusic() {
         mediaPlayer = MediaPlayer.create(context, R.raw.backgroundmusic);
         mediaPlayer.setLooping(true);
-        mediaPlayer.setVolume(20f, 20f);
         mediaPlayer.start();
     }
 
