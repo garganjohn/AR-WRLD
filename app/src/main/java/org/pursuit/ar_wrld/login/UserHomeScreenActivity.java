@@ -123,28 +123,31 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private void setPerkInfo() {
-        perkChosen.setText(userPerkChosen);
         perkImage.setImageDrawable(setUserPerk());
     }
 
     private Drawable setUserPerk() {
         switch (userPerkFromSharedPref) {
             case GameInformation.MORE_AMMO_PERK:
-                perkChosen.setText(getString(R.string.more_ammo_perk_name));
+                setUserPerkText(getString(R.string.more_ammo_perk_name));
                 return getDrawable(R.drawable.ammo_perk);
             case GameInformation.MORE_DAMAGE_PERK:
-                perkChosen.setText(getString(R.string.more_damage_perk_name));
+                setUserPerkText(getString(R.string.more_damage_perk_name));
                 return getDrawable(R.drawable.more_damage_perk_image);
             case GameInformation.MORE_TIME_PERK:
-                perkChosen.setText(getString(R.string.more_time_perk_name));
+                setUserPerkText(getString(R.string.more_time_perk_name));
                 return getDrawable(R.drawable.more_time_perk_image);
             case GameInformation.SLOW_TIME_PERK:
-                perkChosen.setText(getString(R.string.slow_time_perk_name));
+                setUserPerkText(getString(R.string.slow_time_perk_name));
                 return getDrawable(R.drawable.slow_time_perk);
             default:
-                perkChosen.setText("No Perks Chosen");
+                perkChosen.setText(getString(R.string.no_perk_text));
                 return getDrawable(R.drawable.noperk_chosen_image);
         }
+    }
+
+    private void setUserPerkText(String perk){
+        perkChosen.setText(getString(R.string.perk_selected_text, perk));
     }
 
 }
