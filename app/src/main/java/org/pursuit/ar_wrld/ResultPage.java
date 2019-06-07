@@ -76,6 +76,7 @@ public class ResultPage extends AppCompatActivity {
             @Override
             public void dataIsUpdated() {
 
+
             }
         });
     }

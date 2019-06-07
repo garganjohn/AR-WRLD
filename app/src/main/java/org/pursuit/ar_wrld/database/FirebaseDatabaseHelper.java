@@ -31,7 +31,9 @@ import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -64,6 +66,7 @@ public class FirebaseDatabaseHelper {
     public FirebaseDatabaseHelper() {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("mARtians");
+
     }
 
 
@@ -119,6 +122,9 @@ public class FirebaseDatabaseHelper {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        String dbRef = myRef.getKey();
+                        Map<String, Object> scoreUpdates = new HashMap<>();
+                        scoreUpdates.put(dbRef, userInformation.getUserscore());
                         dataStatus.dataIsUpdated();
                     }
                 });
@@ -132,6 +138,14 @@ public class FirebaseDatabaseHelper {
 //                Log.d(TAG, "onSuccess: updated " + userName + "'s score (" + score + ")");
 //            }
 //        });
+
+        /**
+         * DatabaseReference hopperRef = usersRef.child("gracehop");
+         * Map<String, Object> hopperUpdates = new HashMap<>();
+         * hopperUpdates.put("nickname", "Amazing Grace");
+         *
+         * hopperRef.updateChildrenAsync(hopperUpdates);
+         */
 
         /**
          * private void updateData() {
