@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -60,10 +59,10 @@ import static android.content.Context.MODE_PRIVATE;
  * A simple {@link Fragment} subclass.
  */
 public class SpaceARFragment extends Fragment {
-    private String difficulty;
-    public static final String DIFFCIULTY_KEY = "DIFFICULTY";
-    private ArFragment arFragment;
+    public static final String DIFFICULTY_KEY = "DIFFICULTY";
     public static final String TAG = "FINDME";
+    private String difficulty;
+    private ArFragment arFragment;
     private AnchorNode sceneNode;
     private ModelLocationIndicator mli;
     private ImageView leftArrow;
@@ -73,7 +72,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 20000;
+    private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -108,6 +107,7 @@ public class SpaceARFragment extends Fragment {
     private CountDownTimer hitChangeColor;
     private CountDownTimer backToOriginalColor;
     private int repitionForColors = 0;
+    private int maxModels;
     private AudioLoader audioLoader;
     private View mainActBG;
     private ModelCoordinates modelCoordinates;
@@ -137,7 +137,7 @@ public class SpaceARFragment extends Fragment {
     public SpaceARFragment getInstance(String diff) {
         spaceARFragment = new SpaceARFragment();
         Bundle b = new Bundle();
-        b.putString(DIFFCIULTY_KEY, diff);
+        b.putString(DIFFICULTY_KEY, diff);
         spaceARFragment.setArguments(b);
 
         return spaceARFragment;
@@ -184,6 +184,7 @@ public class SpaceARFragment extends Fragment {
         mainActBG = view.findViewById(R.id.background_for_ar_view);
         findViews(view);
         weaponSetup();
+        setMaxNumOfModels();
         getStringRes();
         setupGameInfo();
         setUpRedLight();
@@ -199,6 +200,20 @@ public class SpaceARFragment extends Fragment {
             spawningAliens(false);
         }
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
+    }
+
+    private void setMaxNumOfModels() {
+        switch (difficulty){
+            case UserHomeScreenActivity.EASY_STRING:
+                maxModels = 15;
+                break;
+            case UserHomeScreenActivity.MEDIUM_STRING:
+                maxModels = 12;
+                break;
+            case UserHomeScreenActivity.HARD_STRING:
+                maxModels = 10;
+                break;
+        }
     }
 
     @Override
@@ -467,7 +482,7 @@ public class SpaceARFragment extends Fragment {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
-            easyAlienSpawn = new Hourglass(4000, 1000) {
+            easyAlienSpawn = new Hourglass(2500, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -487,7 +502,7 @@ public class SpaceARFragment extends Fragment {
                 }
             };
 
-            medAlienSpawn = new Hourglass(5000, 1000) {
+            medAlienSpawn = new Hourglass(3500, 1000) {
                 @Override
                 public void onTimerTick(long timeRemaining) {
 
@@ -526,7 +541,7 @@ public class SpaceARFragment extends Fragment {
                     medAlienSpawn.startTimer();
                     break;
                 case UserHomeScreenActivity.HARD_STRING:
-                    hardAlienSpawn.setTime(2000);
+                    hardAlienSpawn.setTime(3000);
                     hardAlienSpawn.startTimer();
                     break;
             }
@@ -539,7 +554,7 @@ public class SpaceARFragment extends Fragment {
     @SuppressLint({"StringFormatInvalid", "StringFormatMatches"})
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
-        aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels);
+        aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels, maxModels);
 //        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
@@ -577,19 +592,20 @@ public class SpaceARFragment extends Fragment {
         numOfModels++;
 
         modelRenderablesList.add(renderable);
+        Log.d(TAG, "addNodeToScene: "+numOfModels);
 
+        //Game is over once a certain number of models is higher than the limit shown below
         switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
-                if (numOfModels > 9) {
+                if (numOfModels >= maxModels) {
                     goToResultPage();
                 }
             case UserHomeScreenActivity.MEDIUM_STRING:
-                if (numOfModels > 6) {
+                if (numOfModels >= maxModels) {
                     goToResultPage();
                 }
             case UserHomeScreenActivity.HARD_STRING:
-                Log.d(TAG, "setNodeListener: " + numOfModels);
-                if (numOfModels > 4) {
+                if (numOfModels >= maxModels) {
                     goToResultPage();
                 }
         }
@@ -761,6 +777,10 @@ public class SpaceARFragment extends Fragment {
                     isUserTimeWarned = true;
                     gameInfoPopup(R.string.timer_warning, true);
                 }
+                if (timeLeftInMilliseconds < 10000){
+                    countDownText.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
+                }
+                setNumOfAliensTextColor();
             }
 
             @Override
@@ -772,6 +792,18 @@ public class SpaceARFragment extends Fragment {
             }
         };
         startGame.startTimer();
+    }
+
+    private void setNumOfAliensTextColor() {
+        if (numOfModels >= (maxModels-2)){
+            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
+        }
+        else if (numOfModels >= (maxModels/2) ){
+            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
+        }
+        else {
+            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
+        }
     }
 
     public void updateTimer() {

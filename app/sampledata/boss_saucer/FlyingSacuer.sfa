@@ -37,7 +37,7 @@
     file: 'sampledata/boss_saucer/FlyingSacuer.obj',
     name: 'FlyingSacuer',
     recenter: 'root',
-    scale: 0.24093500000000001,
+    scale: 0.17093500000000001,
   },
   samplers: [
     {

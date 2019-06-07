@@ -8,4 +8,6 @@
     <color name="neutral_hit">#000000</color>
     <color name="purple_app_color">#6320b5</color>
     <color name="silver_app_color">#E1E2E7</color>
+    <color name="mid_warning_color">#E08C0D</color>
+    <color name="doing_great_color">#049600</color>
 </resources>

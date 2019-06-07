@@ -201,6 +201,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/pixel_operator"
         android:text="@string/perk_chosen_string"
+        android:textColor="#fff"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/perk_chosen_image_ar"
         app:layout_constraintEnd_toEndOf="@+id/perk_chosen_image_ar"
