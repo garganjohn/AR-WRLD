@@ -1,6 +1,7 @@
 package org.pursuit.ar_wrld;
 
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +35,8 @@ import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.AnimationData;
+import com.google.ar.sceneform.rendering.Color;
+import com.google.ar.sceneform.rendering.Light;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -70,7 +73,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 10000;
+    private long timeLeftInMilliseconds = 20000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -125,6 +128,7 @@ public class SpaceARFragment extends Fragment {
     private ArrayList<TransformableNode> transformableNodesList;
     private float hideWeapon = .5f;
     private float usingWeapon = 1f;
+    private Light modelLight = null;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -182,6 +186,7 @@ public class SpaceARFragment extends Fragment {
         weaponSetup();
         getStringRes();
         setupGameInfo();
+        setUpRedLight();
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
         medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
@@ -251,7 +256,7 @@ public class SpaceARFragment extends Fragment {
         }
     }
 
-    private void setPerkDrawable(int drawable){
+    private void setPerkDrawable(int drawable) {
         imageForPerk.setImageDrawable(getActivity().getDrawable(drawable));
     }
 
@@ -414,10 +419,10 @@ public class SpaceARFragment extends Fragment {
         });
 
         medWeapon.setOnClickListener(v -> {
-            Log.d(TAG, "setWeaponListener: Is med weapon chosen: "+isMedWeaponChosen);
-            Log.d(TAG, "setWeaponListener: Is weak weapon chosen: "+isWeakWeaponChosen);
-            Log.d(TAG, "setWeaponListener: Weak weapon alpha: "+weakWeapon.getAlpha());
-            Log.d(TAG, "setWeaponListener: Med Weapon alpha: "+medWeapon.getAlpha());
+            Log.d(TAG, "setWeaponListener: Is med weapon chosen: " + isMedWeaponChosen);
+            Log.d(TAG, "setWeaponListener: Is weak weapon chosen: " + isWeakWeaponChosen);
+            Log.d(TAG, "setWeaponListener: Weak weapon alpha: " + weakWeapon.getAlpha());
+            Log.d(TAG, "setWeaponListener: Med Weapon alpha: " + medWeapon.getAlpha());
             if (weaponSelection.getMedWeaponAmmo() > 0) {
                 isMedWeaponChosen = true;
                 isWeakWeaponChosen = false;
@@ -602,6 +607,7 @@ public class SpaceARFragment extends Fragment {
         anchorNode.randomMovement();
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
+//        node.setLight(modelLight);
         mli.indicate(vector);
 
         ModelLives modelLives = new ModelLives();
@@ -657,6 +663,11 @@ public class SpaceARFragment extends Fragment {
 
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
+                if (modelLives.getNumofLivesModel0() > 1) {
+                    lightsYellow(node, modelLight);
+                } else {
+                    lightsRed(node, modelLight);
+                }
                 audioLoader.laserSound();
                 Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
@@ -846,4 +857,43 @@ public class SpaceARFragment extends Fragment {
     private void audioSetup(Context c) {
         audioLoader = new AudioLoader(c);
     }
+
+    private void lightsRed(Node node, Light light) {
+        light.setColor(new Color(android.graphics.Color.RED));
+        node.setLight(light);
+
+        modelBlink(light, 6, 0f, 100000f, 500);
+
+
+    }
+
+    private void lightsYellow(Node node, Light light) {
+        light.setColor(new Color(android.graphics.Color.YELLOW));
+        node.setLight(light);
+
+        modelBlink(light, 6, 0f, 100000f, 500);
+
+
+    }
+
+    public void modelBlink(Light receiver, int times, float from, float to, long inMs) {
+        ObjectAnimator intensityAnimator = ObjectAnimator.ofFloat(receiver, "intensity", from, to);
+        intensityAnimator.setDuration(inMs);
+        intensityAnimator.setRepeatCount(times * 2 - 1);
+        intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        intensityAnimator.start();
+    }
+
+    private Light setUpRedLight() {
+        modelLight =
+                Light.builder(Light.Type.POINT)
+                        // .setColor(new Color(android.graphics.Color.RED))
+                        .setFalloffRadius(0.5f)
+                        .setShadowCastingEnabled(true)
+                        .setIntensity(45f)
+                        .build();
+        return modelLight;
+
+    }
+
 }
