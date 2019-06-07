@@ -615,13 +615,13 @@ public class SpaceARFragment extends Fragment {
 
         switch (whichEnemy) {
             case GameInformation.EASY_ENEMY:
-                modelLives.setNumofLivesModel0(2);
-                break;
-            case GameInformation.MEDIUM_ENEMY:
                 modelLives.setNumofLivesModel0(3);
                 break;
-            case GameInformation.HARD_ENEMY:
+            case GameInformation.MEDIUM_ENEMY:
                 modelLives.setNumofLivesModel0(4);
+                break;
+            case GameInformation.HARD_ENEMY:
+                modelLives.setNumofLivesModel0(5);
                 break;
             case GameInformation.TIME_INCREASE_MODEL:
                 modelLives.setNumofLivesModel0(1);
@@ -629,7 +629,7 @@ public class SpaceARFragment extends Fragment {
                 Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
                 break;
             case GameInformation.BOSS_ENEMY:
-                modelLives.setNumofLivesModel0(30);
+                modelLives.setNumofLivesModel0(50);
                 break;
         }
 
