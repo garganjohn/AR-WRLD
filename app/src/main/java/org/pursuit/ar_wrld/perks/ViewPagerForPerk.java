@@ -36,7 +36,7 @@ public class ViewPagerForPerk extends Fragment {
     private int level2xpMax = 25000;
     private int level3xpMax = 50000;
     private int level4xpMax = 100000;
-    private float lockedPerk = 0.350f;
+    private float lockedPerk = 0.600f;
 
 
     public ViewPagerForPerk() {
