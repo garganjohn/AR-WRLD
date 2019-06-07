@@ -459,6 +459,11 @@ public class SpaceARFragment extends Fragment {
             Log.d(TAG, "spawningAliens: ");
             loadModel(Uri.parse(GameInformation.BOSS_ENEMY), GameInformation.BOSS_ENEMY);
         } else {
+            if (GameInformation.HARD_ENEMY.equals(difficulty)) {
+                loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+            } else {
+                loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+            }
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 

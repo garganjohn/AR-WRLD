@@ -83,6 +83,7 @@
     <string name="more_time_perk_name">More Time</string>
     <string name="slow_time_perk_name">Slow Time</string>
     <string name="more_damage_perk_name">More Damage</string>
+    <string name="no_perk_text">No Perk Chosen</string>
 
 
 </resources>

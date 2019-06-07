@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
+    android:background="@drawable/space_home_bg"
     tools:context=".login.UserHomeScreenActivity">
 
     <LinearLayout
@@ -167,6 +168,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textSize="16sp"
+        android:textColor="#fff"
         android:text="@string/perk_selected_text"
         android:textAlignment="center"/>
 
@@ -174,8 +176,10 @@
         android:id="@+id/perk_selected_image"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:backgroundTint="#94FFFFFF"
         android:background="@drawable/border_for_perks"
         android:layout_marginTop="8dp"
+        android:padding="8dp"
         android:layout_gravity="center"/>
     </LinearLayout>
 </ScrollView>
