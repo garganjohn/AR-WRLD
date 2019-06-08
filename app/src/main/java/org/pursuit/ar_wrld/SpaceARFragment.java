@@ -222,7 +222,6 @@ public class SpaceARFragment extends Fragment {
         audioLoader.stopAudio();
         audioLoader.nullMediaPlayer();
         arFragment.getArSceneView().clearAnimation();
-        arFragment.onDestroy();
         transformableNodesList.clear();
         modelRenderablesList.clear();
         modelRenderablesList = null;
@@ -487,7 +486,6 @@ public class SpaceARFragment extends Fragment {
                 public void onTimerTick(long timeRemaining) {
 
                 }
-
 
                 @Override
                 public void onTimerFinish() {
@@ -802,6 +800,7 @@ public class SpaceARFragment extends Fragment {
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
         }
         else {
+            //TODO null pointer exception when device is in ar and rotates
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
     }
