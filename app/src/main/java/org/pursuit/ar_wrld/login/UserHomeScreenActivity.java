@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -109,7 +110,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
         userTitleTextView = findViewById(R.id.user_title);
-        recyclerView = findViewById(R.id.top_play_recyclerview);
         levelSpinner = findViewById(R.id.level_spinner);
         pickAPerkButton = findViewById(R.id.pick_a_perk);
         practiceButton = findViewById(R.id.practice_button);
@@ -146,9 +146,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                         long updatedScore = dataSnapshot.getValue(Long.class);
                     } catch (NullPointerException npe) {
                         updatedScore = 0;
+                    } catch (DatabaseException dbe){
+                        updatedScore = 0;
                     }
-                    userscoreTextView.setText(String.valueOf(updatedScore));
-
+                    String userScoreText = getString(R.string.user_score, updatedScore);
+                    userscoreTextView.setText(userScoreText);
                 }
 
                 @Override
