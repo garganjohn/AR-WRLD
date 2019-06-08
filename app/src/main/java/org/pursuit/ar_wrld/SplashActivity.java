@@ -18,7 +18,6 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        hideActionBar();
 
         changeStatusBarColor();
         ShimmerLayout shimmerText = (ShimmerLayout) findViewById(R.id.shimmer_text);
@@ -29,11 +28,6 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(mainIntent);
             SplashActivity.this.finish();
         }, SPLASH_LENGTH);
-    }
-
-    private void hideActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
     }
 
     private void changeStatusBarColor() {
