@@ -143,8 +143,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     } catch (NullPointerException npe) {
                         updatedScore = 0;
                     }
-                    userscoreTextView.setText(String.valueOf(updatedScore));
-
+                    String userScoreText = getString(R.string.user_score, updatedScore);
+                    userscoreTextView.setText(userScoreText);
                 }
 
                 @Override
