@@ -1,9 +1,10 @@
 package org.pursuit.ar_wrld.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -14,17 +15,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxbinding.view.RxView;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 import org.pursuit.ar_wrld.SplashActivity;
+import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
-
-import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
 
 public class UserHomeScreenActivity extends AppCompatActivity {
 
@@ -43,6 +48,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private String userPerkFromSharedPref;
     private RecyclerView recyclerView;
     private String perkChosenSharedPref;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private long updatedScore;
+    private FirebaseDatabaseHelper firebaseDatabaseHelper;
 
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
@@ -107,6 +116,13 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
         perkChosen = findViewById(R.id.perk_selected);
         perkImage = findViewById(R.id.perk_selected_image);
+        changeStatusBarColor();
+    }
+
+    private void changeStatusBarColor() {
+        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //Makes both status and navbar transparent
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); //status bar or the time bar at the top
     }
 
     public String retrieveUsername() {
@@ -114,14 +130,34 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private long retrieveUserScore() {
-        long longVal = 0;
         try {
-             longVal = (long) sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("mARtians");
+            String playName = retrieveUsername();
+            DatabaseReference updatedRef = databaseReference.child(playName);
+            updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    try {
+                        long updatedScore = dataSnapshot.getValue(Long.class);
+                    } catch (NullPointerException npe) {
+                        updatedScore = 0;
+                    }
+                    userscoreTextView.setText(String.valueOf(updatedScore));
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         } catch (Exception e) {
             Log.d("MURICA", "retrieveUserScore: " + e.toString());
         }
-        return longVal;
+        return updatedScore;
     }
+
 
     private void setPerkInfo() {
         perkImage.setImageDrawable(setUserPerk());
@@ -147,7 +183,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void setUserPerkText(String perk){
+    private void setUserPerkText(String perk) {
         perkChosen.setText(getString(R.string.perk_selected_text, perk));
     }
 

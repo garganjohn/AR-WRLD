@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.ResultPage;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
@@ -66,7 +67,6 @@ public class FirebaseDatabaseHelper {
     public FirebaseDatabaseHelper() {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("mARtians");
-
     }
 
 
@@ -92,105 +92,57 @@ public class FirebaseDatabaseHelper {
             }
         });
 
-//        name = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
-//        playerScore = sharedPreferences.getInt(GameInformation.USER_SCORE_KEY, -1);
-//
-//        if(!TextUtils.isEmpty(name) && !TextUtils.isEmpty(String.valueOf(playerScore))) {
-//
-//            String aName = myRef.push().getKey();
-//
-//            UserInformation userInformation = new UserInformation(this.name, playerScore, playerTitle);
-//
-//            myRef.child(aName).setValue(userInformation);
-//        }else {
-//            //Toast.makeText(this, "Please enter a name!", Toast.LENGTH_SHORT).show();
-//        }
-//
-//        adapter.notifyDataSetChanged();
-
     }
 
     public void addUser(UserInformation userInformation, final DataStatus dataStatus) {
-        String key = myRef.push().getKey();
-        myRef.child(key).setValue(userInformation)
-                .addOnSuccessListener(aVoid -> dataStatus.dataIsInserted());
-
-    }
-
-    public void updateScore(String key, UserInformation userInformation, final DataStatus dataStatus) {
+        String key = myRef.child(sharedPreferences.getString(GameInformation.USERNAME_KEY, "")).toString();
         myRef.child(key).setValue(userInformation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        String dbRef = myRef.getKey();
-                        Map<String, Object> scoreUpdates = new HashMap<>();
-                        scoreUpdates.put(dbRef, userInformation.getUserscore());
-                        dataStatus.dataIsUpdated();
+                        dataStatus.dataIsInserted();
+                        Log.e("newUserCreated: ", key);
                     }
                 });
 
-//        final String userName = "userX";
-//        final int score = 55;
-//        FirebaseDatabase db = FirebaseDatabase.getInstance();
-//        db.getReference("Score").child(userName).child("Score").setValue(score).addOnSuccessListener(new OnSuccessListener<Void>() {
-//            @Override
-//            public void onSuccess(Void aVoid) {
-//                Log.d(TAG, "onSuccess: updated " + userName + "'s score (" + score + ")");
-//            }
-//        });
+    }
 
-        /**
-         * DatabaseReference hopperRef = usersRef.child("gracehop");
-         * Map<String, Object> hopperUpdates = new HashMap<>();
-         * hopperUpdates.put("nickname", "Amazing Grace");
-         *
-         * hopperRef.updateChildrenAsync(hopperUpdates);
-         */
+    public long displayScore() {
+        long score = 0;
 
-        /**
-         * private void updateData() {
-         * database = FirebaseDatabase.getInstance();
-         * myref = database.getReference();
-         * myref.child("myDb").child("awais@gmailcom").addListenerForSingleValueEvent(new ValueEventListener() {
-         *     @Override
-         *     public void onDataChange(DataSnapshot dataSnapshot) {
-         *
-         *         dataSnapshot.getRef().child("leftSpace").setValue(newValue);
-         *         dialog.dismiss();
-         *
-         *     }
-         *     @Override
-         *     public void onCancelled(DatabaseError databaseError) {
-         *         Log.d("User", databaseError.getMessage());
-         *     }
-         * });
-         * }
-         */
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long score = dataSnapshot.getValue(Long.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return score;
+    }
+
+    public void updateScore(String name, long score) {
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long previousScore = dataSnapshot.getValue(Long.class);
+                long newScore = score + previousScore;
+                myRef.child(name).setValue(newScore);
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
-    public void displayScore() {
-//        userOptions = new FirebaseRecyclerOptions.Builder<UserInformation>()
-//                .setQuery(myRef, UserInformation.class)
-//                .build();
-//
-//        adapter =
-//                new FirebaseRecyclerAdapter<UserInformation, TopScoreViewHolder>(userOptions) {
-//                    @Override
-//                    protected void onBindViewHolder(@NonNull TopScoreViewHolder holder, long position, @NonNull UserInformation model) {
-//                        holder.selectedUsername.setText(model.getUsername());
-//                        holder.selectedUserTitle.setText(model.getUsertitle());
-//                        holder.selectedUserScore.setText(model.getUserscore());
-//                    }
-//
-//                    @NonNull
-//                    @Override
-//                    public TopScoreViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-//                        return new TopScoreViewHolder(LayoutInflater.from(getBaseContext()).inflate(R.layout.activity_itemviews, viewGroup, false));
-//                    }
-//                };
-//        adapter.startListening();
-//        recyclerView.setAdapter(adapter);
 
-    }
 }

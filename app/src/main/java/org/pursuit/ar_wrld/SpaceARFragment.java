@@ -65,8 +65,6 @@ public class SpaceARFragment extends Fragment {
     private ArFragment arFragment;
     private AnchorNode sceneNode;
     private ModelLocationIndicator mli;
-    private ImageView leftArrow;
-    private ImageView rightArrow;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -220,7 +218,7 @@ public class SpaceARFragment extends Fragment {
         audioLoader.stopAudio();
         audioLoader.nullMediaPlayer();
         arFragment.getArSceneView().clearAnimation();
-        arFragment.onDestroy();
+        arFragment = null;
         transformableNodesList.clear();
         modelRenderablesList.clear();
         modelRenderablesList = null;
@@ -445,8 +443,8 @@ public class SpaceARFragment extends Fragment {
         weakWeapon = v.findViewById(R.id.weak_weapon);
         medWeapon = v.findViewById(R.id.med_weapon);
 
-        rightArrow = v.findViewById(R.id.left_marker);
-        leftArrow = v.findViewById(R.id.right_marker);
+        ImageView rightArrow = v.findViewById(R.id.left_marker);
+        ImageView leftArrow = v.findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
 
         imageForPerk = v.findViewById(R.id.perk_chosen_image_ar);
@@ -473,7 +471,6 @@ public class SpaceARFragment extends Fragment {
                 public void onTimerTick(long timeRemaining) {
 
                 }
-
 
                 @Override
                 public void onTimerFinish() {
@@ -680,6 +677,7 @@ public class SpaceARFragment extends Fragment {
             } else {
                 node.setRenderable(null);
                 audioLoader.explosionSound();
+                sceneNode.removeChild(node);
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
@@ -787,6 +785,7 @@ public class SpaceARFragment extends Fragment {
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
         }
         else {
+            //TODO null pointer exception when device is in ar and rotates
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
     }
