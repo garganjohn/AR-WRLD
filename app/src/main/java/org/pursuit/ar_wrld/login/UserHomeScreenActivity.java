@@ -3,6 +3,7 @@ package org.pursuit.ar_wrld.login;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -115,6 +116,13 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
         perkChosen = findViewById(R.id.perk_selected);
         perkImage = findViewById(R.id.perk_selected_image);
+        changeStatusBarColor();
+    }
+
+    private void changeStatusBarColor() {
+        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //Makes both status and navbar transparent
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); //status bar or the time bar at the top
     }
 
     public String retrieveUsername() {
@@ -130,7 +138,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    long updatedScore = dataSnapshot.getValue(Long.class);
+                    try {
+                        long updatedScore = dataSnapshot.getValue(Long.class);
+                    } catch (NullPointerException npe) {
+                        updatedScore = 0;
+                    }
                     userscoreTextView.setText(String.valueOf(updatedScore));
 
                 }
@@ -145,7 +157,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         }
         return updatedScore;
     }
-
 
 
     private void setPerkInfo() {
@@ -172,7 +183,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void setUserPerkText(String perk){
+    private void setUserPerkText(String perk) {
         perkChosen.setText(getString(R.string.perk_selected_text, perk));
     }
 

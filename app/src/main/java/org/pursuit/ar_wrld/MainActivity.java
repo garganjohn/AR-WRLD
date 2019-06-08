@@ -12,7 +12,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showActionBar();
 
         initSpaceFragment();
     }
@@ -26,10 +25,5 @@ public class MainActivity extends AppCompatActivity {
                 .disallowAddToBackStack()
                 .commit();
 
-    }
-
-    private void showActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.show();
     }
 }
