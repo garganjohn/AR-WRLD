@@ -92,12 +92,11 @@ public class ResultPage extends AppCompatActivity {
 //                    Log.d("FINDME", "onDataChange: " + dataSnapshot.getValue().toString());
 //                    dataSnapshot.child(playerName).child("game 1").getValue();
 //                    Log.d("FINDME", "getting game number" + dataSnapshot.child(playerName).child("game 1").getValue());
-                    currentRef.child("game 1").setValue(100);
-                    currentRef.child("game 1").child("score").setValue(userScore);
+//                    currentRef.child("game 1").setValue(100);
+                    currentRef.child("score").setValue(userScore);
                 } else {
                     UserInformation userInformation = new UserInformation();
                     userInformation.setUserscore(userScore);
-                    userInformation.setGameNumber(1);
 
                     new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
                         @Override
