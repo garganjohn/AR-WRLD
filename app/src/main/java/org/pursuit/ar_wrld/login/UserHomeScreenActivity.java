@@ -92,7 +92,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
         setPerkInfo();
         usernameTextView.setText(retrieveUsername());
-        userscoreTextView.setText(String.valueOf(retrieveUserScore()));
+        String userScoreText = getString(R.string.user_score, retrieveUserScore());
+        userscoreTextView.setText(userScoreText);
     }
 
     private void findViews() {
