@@ -74,7 +74,8 @@ public class FirebaseDatabaseHelper {
 
     public void addUser(UserInformation userInformation, final DataStatus dataStatus) {
         String key = myRef.child(sharedPreferences.getString(GameInformation.USERNAME_KEY, "")).toString();
-        myRef.child(key).setValue(userInformation)
+        String gameNumber = "Game Number";
+        myRef.child(key).child(gameNumber).setValue(userInformation)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

@@ -779,13 +779,16 @@ public class SpaceARFragment extends Fragment {
 
     private void setNumOfAliensTextColor() {
         if (numOfModels >= (maxModels-2)){
-            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
+            if (getContext() != null)
+                numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
         }
         else if (numOfModels >= (maxModels/2) ){
-            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
+            if (getContext() != null)
+                numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
         }
         else {
             //TODO null pointer exception when device is in ar and rotates
+            if (getContext() != null)
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
     }

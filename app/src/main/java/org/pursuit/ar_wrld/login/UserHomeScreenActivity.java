@@ -62,6 +62,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private long updatedScore;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
+    private String nameShown;
 
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
@@ -151,119 +152,155 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
     private long retrieveUserScore() {
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("mARtians");
 
-        String playName = retrieveUsername();
-        //DatabaseReference users = databaseReference.child(playName);
-
-        try {
-           // Log.e("DB", "username" + users );
-            DatabaseReference updatedRef = databaseReference.child(playName);
-            updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    try {
-                        long updatedScore = dataSnapshot.getValue(Long.class);
-                    } catch (NullPointerException npe) {
-                        updatedScore = 0;
-                    } catch (DatabaseException dbe){
-                        updatedRef.child(playName).setValue(updatedScore);
-                    }
-                    String userScoreText = getString(R.string.user_score, updatedScore);
-                    userscoreTextView.setText(userScoreText);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } catch (Exception e) {
-            Log.d("MURICA", "retrieveUserScore: " + e.toString());
-        }
+//        try {
+//            firebaseDatabase = FirebaseDatabase.getInstance();
+//            databaseReference = firebaseDatabase.getReference("mARtians");
+//            //String name = gettingNameFromDB();
+//            DatabaseReference updatedRef = databaseReference.child("name");
+//            updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    try {
+//                        long updatedScore = dataSnapshot.getValue(Long.class);
+//                    } catch (NullPointerException npe) {
+//                        updatedScore = 0;
+//                    } catch (DatabaseException dbe) {
+//
+//                        updatedScore = 0;
+//                    }
+//                    String userScoreText = getString(R.string.user_score, updatedScore);
+//                    userscoreTextView.setText(userScoreText);
+//                }
+//
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//        } catch (Exception e) {
+//            Log.d("MURICA", "retrieveUserScore: " + e.toString());
+//        }
         return updatedScore;
     }
 
+//    private long gettingNameFromDB() {
+//        String playName = retrieveUsername();
+//        DatabaseReference root = FirebaseDatabase.getInstance().getReference("mARtians");
+//        DatabaseReference users = root.child(playName);
+//        users.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                if (snapshot.child(playName).exists()) {
+//                    nameShown = root.child(playName).toString();
+//                    updatedScore = snapshot.getValue(Long.class);
+//                    root.child(nameShown).setValue(updatedScore);
+//                } else {
+//                    databaseReference = FirebaseDatabase.getInstance().getReference("mARtians");
+//                    DatabaseReference updatedRef = databaseReference.child(playName);
+//                    updatedRef.addValueEventListener(new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                            updatedRef.child(playName).setValue(0);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                        }
+//                    });
+//                }
+//            }
+//                    @Override
+//                    public void onCancelled (DatabaseError databaseError){
+//
+//                    }
+//                });
+//        return updatedScore;
+//
+//            }
 
-    private void setPerkInfo() {
-        perkImage.setImageDrawable(setUserPerk());
-    }
 
-    private Drawable setUserPerk() {
-        switch (userPerkFromSharedPref) {
-            case GameInformation.MORE_AMMO_PERK:
-                setUserPerkText(getString(R.string.more_ammo_perk_name));
-                return getDrawable(R.drawable.ammo_perk);
-            case GameInformation.MORE_DAMAGE_PERK:
-                setUserPerkText(getString(R.string.more_damage_perk_name));
-                return getDrawable(R.drawable.more_damage_perk_image);
-            case GameInformation.MORE_TIME_PERK:
-                setUserPerkText(getString(R.string.more_time_perk_name));
-                return getDrawable(R.drawable.more_time_perk_image);
-            case GameInformation.SLOW_TIME_PERK:
-                setUserPerkText(getString(R.string.slow_time_perk_name));
-                return getDrawable(R.drawable.slow_time_perk);
-            default:
-                perkChosen.setText(getString(R.string.no_perk_text));
-                return getDrawable(R.drawable.noperk_chosen_image);
-        }
-    }
+            private void setPerkInfo() {
+                perkImage.setImageDrawable(setUserPerk());
+            }
 
-    private void setUserPerkText(String perk) {
-        perkChosen.setText(getString(R.string.perk_selected_text, perk));
-    }
-
-    private boolean checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            return false;
-        }
-        return true;
-    }
-
-    private void requestPermission() {
-
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.CAMERA},
-                PERMISSION_REQUEST_CODE);
-    }
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
-
-                    // main logic
-                } else {
-                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                                != PackageManager.PERMISSION_GRANTED) {
-                            showMessageOKCancel("You need to allow access permissions",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermission();
-                                            }
-                                        }
-                                    });
-                        }
-                    }
+            private Drawable setUserPerk() {
+                switch (userPerkFromSharedPref) {
+                    case GameInformation.MORE_AMMO_PERK:
+                        setUserPerkText(getString(R.string.more_ammo_perk_name));
+                        return getDrawable(R.drawable.ammo_perk);
+                    case GameInformation.MORE_DAMAGE_PERK:
+                        setUserPerkText(getString(R.string.more_damage_perk_name));
+                        return getDrawable(R.drawable.more_damage_perk_image);
+                    case GameInformation.MORE_TIME_PERK:
+                        setUserPerkText(getString(R.string.more_time_perk_name));
+                        return getDrawable(R.drawable.more_time_perk_image);
+                    case GameInformation.SLOW_TIME_PERK:
+                        setUserPerkText(getString(R.string.slow_time_perk_name));
+                        return getDrawable(R.drawable.slow_time_perk);
+                    default:
+                        perkChosen.setText(getString(R.string.no_perk_text));
+                        return getDrawable(R.drawable.noperk_chosen_image);
                 }
-                break;
-        }
-    }
+            }
 
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-}
+            private void setUserPerkText(String perk) {
+                perkChosen.setText(getString(R.string.perk_selected_text, perk));
+            }
+
+            private boolean checkPermission() {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    // Permission is not granted
+                    return false;
+                }
+                return true;
+            }
+
+            private void requestPermission() {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        PERMISSION_REQUEST_CODE);
+            }
+
+            @Override
+            public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+                switch (requestCode) {
+                    case PERMISSION_REQUEST_CODE:
+                        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
+                            // main logic
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                                        != PackageManager.PERMISSION_GRANTED) {
+                                    showMessageOKCancel("You need to allow access permissions",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                        requestPermission();
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
+            private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+                new AlertDialog.Builder(this)
+                        .setMessage(message)
+                        .setPositiveButton("OK", okListener)
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                        .show();
+            }
+        }

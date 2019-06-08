@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
+import org.pursuit.ar_wrld.usermodel.UserInformation;
+
+import java.util.List;
 
 public class ResultPage extends AppCompatActivity {
 
@@ -68,21 +72,56 @@ public class ResultPage extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userID = user.getUid();
+        Log.d("user", "USER" + userID);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
-        //databaseReference.child(playerName).setValue(userScore);
 
         DatabaseReference currentRef = databaseReference.child(playerName);
+
+        Log.d("DB", "db" + currentRef);
+
+
 
         currentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long previousScore = dataSnapshot.getValue(Long.class);
-                long newScore = userScore + previousScore;
-                databaseReference.child(playerName).setValue(newScore);
-                Log.e("Key from db", "previous " + previousScore);
-                Log.e("Key from db", "current " + userScore);
-                Log.e("Key from db", "updated " + newScore);
+                if(dataSnapshot.child(playerName).exists()) {
+
+                    Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
+
+//                    Log.d("FINDME", "onDataChange: " + dataSnapshot.getValue().toString());
+//                    dataSnapshot.child(playerName).child("game 1").getValue();
+//                    Log.d("FINDME", "getting game number" + dataSnapshot.child(playerName).child("game 1").getValue());
+                    currentRef.child("game 1").setValue(100);
+                    currentRef.child("game 1").child("score").setValue(userScore);
+                } else {
+                    UserInformation userInformation = new UserInformation();
+                    userInformation.setUserscore(userScore);
+                    userInformation.setGameNumber(1);
+
+                    new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+                        @Override
+                        public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+
+                        }
+
+                        @Override
+                        public void dataIsInserted() {
+                            Toast.makeText(ResultPage.this, "Score is saved successfully!", Toast.LENGTH_SHORT).show();
+
+                        }
+
+                    });
+
+                }
+
+
+//                long previousScore = dataSnapshot.getValue(Long.class);
+//                long newScore = userScore + previousScore;
+//                databaseReference.child(playerName).setValue(newScore);
+//                Log.e("Key from db", "previous " + previousScore);
+//                Log.e("Key from db", "current " + userScore);
+//                Log.e("Key from db", "updated " + newScore);
 
             }
 
