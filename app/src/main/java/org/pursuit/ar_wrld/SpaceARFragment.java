@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -36,7 +37,9 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.Light;
+import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.ShapeFactory;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
@@ -127,6 +130,8 @@ public class SpaceARFragment extends Fragment {
     private float hideWeapon = .5f;
     private float usingWeapon = 1f;
     private Light modelLight = null;
+    private Node newNode;
+    private Color Red = new Color(android.graphics.Color.RED);
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -666,6 +671,7 @@ public class SpaceARFragment extends Fragment {
             }
 
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            fireLasers(anchorNode,node);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -889,7 +895,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void lightsYellow(Node node, Light light) {
-        light.setColor(new Color(android.graphics.Color.YELLOW));
+        light.setColor(Red);
         node.setLight(light);
 
         modelBlink(light, 6, 0f, 100000f, 500);
@@ -916,5 +922,59 @@ public class SpaceARFragment extends Fragment {
         return modelLight;
 
     }
+
+
+    public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
+
+        newNode = new Node();
+
+//
+        Vector3 point1, point2;
+//            Vector3 motionPoint = new Vector3( motionEvent.getX(),motionEvent.getY(),0f);
+        Vector3 cameraPosition  = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+       // point1 = anchorNode.getWorldPosition();
+        point2 = transformableNode.getWorldPosition();
+
+        /*
+            First, find the vector extending between the two points and define a look rotation
+            in terms of this Vector.
+        */
+        final Vector3 difference = Vector3.subtract(cameraPosition, point2);
+        final Vector3 directionFromTopToBottom = difference.normalized();
+        final Quaternion rotationFromAToB =
+                Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
+        MaterialFactory.makeOpaqueWithColor(getContext(), Red)
+                .thenAccept(
+                        material -> {
+/* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
+       to extend to the necessary length.  */
+                            ModelRenderable model = ShapeFactory.makeCube(
+                                    new Vector3(.01f, .01f, difference.length()),
+                                    Vector3.zero(), material);
+/* Last, set the world rotation of the node to the rotation calculated earlier and set the world position to
+       the midpoint between the given points . */
+
+                            newNode.setParent(anchorNode);
+                            newNode.setRenderable(model);
+                            newNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(.5f));
+                            newNode.setWorldRotation(rotationFromAToB);
+
+                        });
+
+        new CountDownTimer(500, 200) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                anchorNode.removeChild(newNode);
+                newNode.setRenderable(null);
+            }
+        }.start();
+
+    }
+
 
 }
