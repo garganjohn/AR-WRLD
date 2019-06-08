@@ -220,6 +220,7 @@ public class SpaceARFragment extends Fragment {
         audioLoader.stopAudio();
         audioLoader.nullMediaPlayer();
         arFragment.getArSceneView().clearAnimation();
+        arFragment = null;
         transformableNodesList.clear();
         modelRenderablesList.clear();
         modelRenderablesList = null;
@@ -690,6 +691,7 @@ public class SpaceARFragment extends Fragment {
             } else {
                 node.setRenderable(null);
                 audioLoader.explosionSound();
+                sceneNode.removeChild(node);
                 anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
