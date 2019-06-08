@@ -24,10 +24,10 @@ public class PerkPickForUser extends FragmentActivity implements ViewPagerListen
 
         List<Fragment> fragmentList = new ArrayList<>();
 
-        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_ammo_perk), R.drawable.ammo_perk, GameInformation.MORE_AMMO_PERK));
-        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_time_perk), R.drawable.more_time_perk_image, GameInformation.MORE_TIME_PERK));
-        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.slow_time_perk), R.drawable.slow_time_perk, GameInformation.SLOW_TIME_PERK));
-        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_damage_park), R.drawable.more_damage_perk_image, GameInformation.MORE_DAMAGE_PERK));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_ammo_perk), R.drawable.ammo_perk, GameInformation.MORE_AMMO_PERK, getString(R.string.more_ammo_perk_name)));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_time_perk), R.drawable.more_time_perk_image, GameInformation.MORE_TIME_PERK, getString(R.string.more_time_perk_name)));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.slow_time_perk), R.drawable.slow_time_perk, GameInformation.SLOW_TIME_PERK, getString(R.string.slow_time_perk_name)));
+        fragmentList.add(ViewPagerForPerk.newInstance(getResources().getString(R.string.more_damage_park), R.drawable.more_damage_perk_image, GameInformation.MORE_DAMAGE_PERK, getString(R.string.more_damage_perk_name)));
 
         viewPager = findViewById(R.id.mainActivity_viewPager);
         viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), fragmentList));

@@ -21,13 +21,15 @@ public class ViewPagerForPerk extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String PERK_DESCRIPTION_KEY = "param1";
     private static final String IMAGE_DRAWABLE_KEY = "param2";
-    public static final String WHICH_PERK_KEY = "PARAM3";
+    private static final String WHICH_PERK_KEY = "PARAM3";
+    private static final String PERK_NAME_KEY = "PERK NAME";
 
     // TODO: Rename and change types of parameters
     private String perkInfo;
     private String whichGamePerk;
+    private String perkName;
     private int perkImageRes;
-    private TextView classDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv,levelOneExpTv,levelTwoExpTv,levelThreeExpTv,levelFourExpTv;
+    private TextView perkNameTv, perkDescriptionTv, levelOneTv, levelTwoTv, levelThreeTv, levelFourTv,levelOneExpTv,levelTwoExpTv,levelThreeExpTv,levelFourExpTv;
     private ImageView imageView;
     private ViewPagerListener vpl;
     private View rootView;
@@ -52,12 +54,13 @@ public class ViewPagerForPerk extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ViewPagerForPerk newInstance(String perkDescription, int imageDrawable, String whichPerk) {
+    public static ViewPagerForPerk newInstance(String perkDescription, int imageDrawable, String whichPerk, String perkName) {
         ViewPagerForPerk fragment = new ViewPagerForPerk();
         Bundle args = new Bundle();
         args.putString(PERK_DESCRIPTION_KEY, perkDescription);
         args.putInt(IMAGE_DRAWABLE_KEY, imageDrawable);
         args.putString(WHICH_PERK_KEY, whichPerk);
+        args.putString(PERK_NAME_KEY, perkName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +72,7 @@ public class ViewPagerForPerk extends Fragment {
             perkInfo = getArguments().getString(PERK_DESCRIPTION_KEY);
             perkImageRes = getArguments().getInt(IMAGE_DRAWABLE_KEY);
             whichGamePerk = getArguments().getString(WHICH_PERK_KEY);
+            perkName = getArguments().getString(PERK_NAME_KEY);
         }
     }
 
@@ -77,6 +81,11 @@ public class ViewPagerForPerk extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_view_pager_for_class, container, false);
+        findViews();
+        return rootView;
+    }
+
+    private void findViews() {
         levelOneTv = rootView.findViewById(R.id.perk_level_1);
         levelTwoTv = rootView.findViewById(R.id.perk_level_2);
         levelThreeTv = rootView.findViewById(R.id.perk_level_3);
@@ -87,8 +96,7 @@ public class ViewPagerForPerk extends Fragment {
         levelThreeExpTv = rootView.findViewById(R.id.perk_level_3_exp);
         levelFourExpTv = rootView.findViewById(R.id.perk_level_4_exp);
 
-
-        return rootView;
+        perkNameTv = rootView.findViewById(R.id.perk_name);
     }
 
     @Override
@@ -97,12 +105,12 @@ public class ViewPagerForPerk extends Fragment {
 
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
 
-        classDescriptionTv = view.findViewById(R.id.class_description);
-        imageView = view.findViewById(R.id.class_image);
-        classDescriptionTv.setText(perkInfo);
+        perkDescriptionTv = view.findViewById(R.id.perk_description);
+        imageView = view.findViewById(R.id.perk_image);
+        perkDescriptionTv.setText(perkInfo);
         imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), perkImageRes));
         setLevelDescriptionBasedOnPerk();
-
+        perkNameTv.setText(perkName);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
