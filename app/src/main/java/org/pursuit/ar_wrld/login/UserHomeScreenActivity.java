@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -34,7 +35,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
-import org.pursuit.ar_wrld.SplashActivity;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
@@ -150,10 +150,15 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private long retrieveUserScore() {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("mARtians");
+
+        String playName = retrieveUsername();
+        //DatabaseReference users = databaseReference.child(playName);
+
         try {
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("mARtians");
-            String playName = retrieveUsername();
+           // Log.e("DB", "username" + users );
             DatabaseReference updatedRef = databaseReference.child(playName);
             updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -162,8 +167,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                         long updatedScore = dataSnapshot.getValue(Long.class);
                     } catch (NullPointerException npe) {
                         updatedScore = 0;
-                    } catch (DatabaseException dbe) {
-                        updatedScore = 0;
+                    } catch (DatabaseException dbe){
+                        updatedRef.child(playName).setValue(updatedScore);
                     }
                     String userScoreText = getString(R.string.user_score, updatedScore);
                     userscoreTextView.setText(userScoreText);

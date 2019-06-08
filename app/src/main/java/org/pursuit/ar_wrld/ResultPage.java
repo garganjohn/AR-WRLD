@@ -5,16 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,9 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
-import org.pursuit.ar_wrld.usermodel.UserInformation;
-
-import java.util.List;
 
 public class ResultPage extends AppCompatActivity {
 
@@ -39,7 +35,6 @@ public class ResultPage extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private String userID;
-    private long newScore;
 
 
     @Override
@@ -54,7 +49,6 @@ public class ResultPage extends AppCompatActivity {
         playAgainButton = findViewById(R.id.playagain_button);
 
         retrieveUserNameAndScore();
-
 
         playAgainButton.setOnClickListener(v -> {
             startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
@@ -76,8 +70,28 @@ public class ResultPage extends AppCompatActivity {
         userID = user.getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
+        //databaseReference.child(playerName).setValue(userScore);
 
-        firebaseDatabaseHelper.updateScore(playerName, userScore);
+        DatabaseReference currentRef = databaseReference.child(playerName);
+
+        currentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long previousScore = dataSnapshot.getValue(Long.class);
+                long newScore = userScore + previousScore;
+                databaseReference.child(playerName).setValue(newScore);
+                Log.e("Key from db", "previous " + previousScore);
+                Log.e("Key from db", "current " + userScore);
+                Log.e("Key from db", "updated " + newScore);
+
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

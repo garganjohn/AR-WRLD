@@ -21,6 +21,7 @@ public interface GameInformation {
     String EASY_PEASY = "Challenge me, come on!!!";
     String GOAT = "Greatest of All Time";
     String NOOB = "Work Hard!.. or harder, no seriously, you need to work hard";
+    String UPHILLCLIMBER = "You'll get to the top ... someday";
     String USERNAME_KEY = "username";
 
 }
