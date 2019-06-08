@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="@drawable/space_home_bg"
+    android:background="@drawable/splash_bg_gradient"
     tools:context=".login.UserHomeScreenActivity">
 
     <LinearLayout
@@ -13,18 +13,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:padding="16dp"
-        app:cardBackgroundColor="@color/neutral_hit"
-        >
-
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/neutral_hit">
 
             <TextView
                 android:id="@+id/user_name"
@@ -53,33 +46,25 @@
                 android:textColor="#E1E2E7"
                 android:fontFamily="@font/pixel_operator"
                 android:textSize="25sp" />
-        </android.support.v7.widget.LinearLayoutCompat>
-    </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="#6320b5">
+        </android.support.v7.widget.LinearLayoutCompat>
 
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="#E6400469">
 
                 <TextView
                     android:id="@+id/game_levels"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/choose_a_level"
+                    android:fontFamily="@font/pixel_operator"
                     android:textAlignment="center"
-                    android:textColor="#6320b5"
-                    android:textSize="30sp"
-                    android:textStyle="italic"
-                    app:layout_constraintBottom_toTopOf="@id/level_spinner"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp" />
 
                 <Spinner
                     android:id="@+id/level_spinner"
@@ -89,13 +74,9 @@
                     android:layout_marginBottom="8dp"
                     android:entries="@array/level_array"
                     android:scrollbarSize="30dp"
-                    android:textAlignment="center"
-                    app:layout_constraintBottom_toTopOf="@id/practice_button"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/game_levels" />
+                    android:textAlignment="center"/>
+
             </android.support.v7.widget.LinearLayoutCompat>
-        </android.support.v7.widget.CardView>
 
         <Button
             android:id="@+id/practice_button"
@@ -125,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_bg"
-        android:fontFamily="@font/pixel_operator"
+        android:fontFamily="@font/pixel_operator8_bold"
         android:text="@string/play"
         android:textColor="#E1E2E7"
         android:textSize="25sp" />
