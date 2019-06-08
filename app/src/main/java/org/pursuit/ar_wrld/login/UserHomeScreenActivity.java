@@ -25,11 +25,8 @@ import com.jakewharton.rxbinding.view.RxView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
-<<<<<<< HEAD
 import org.pursuit.ar_wrld.SplashActivity;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
-=======
->>>>>>> added gradient bg to splashactivity, removed unused imports, fields and methods
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
@@ -122,6 +119,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         perkImage = findViewById(R.id.perk_selected_image);
         changeStatusBarColor();
     }
+
     private void changeStatusBarColor() {
         // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //Makes both status and navbar transparent
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series
@@ -141,7 +139,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    long updatedScore = dataSnapshot.getValue(Long.class);
+                    try {
+                        long updatedScore = dataSnapshot.getValue(Long.class);
+                    } catch (NullPointerException npe) {
+                        updatedScore = 0;
+                    }
                     userscoreTextView.setText(String.valueOf(updatedScore));
 
                 }
@@ -156,7 +158,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         }
         return updatedScore;
     }
-
 
 
     private void setPerkInfo() {
@@ -183,7 +184,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void setUserPerkText(String perk){
+    private void setUserPerkText(String perk) {
         perkChosen.setText(getString(R.string.perk_selected_text, perk));
     }
 
