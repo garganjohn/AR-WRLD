@@ -932,6 +932,8 @@ public class SpaceARFragment extends Fragment {
         Vector3 point1, point2;
 //            Vector3 motionPoint = new Vector3( motionEvent.getX(),motionEvent.getY(),0f);
         Vector3 cameraPosition  = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+        //Vector3 startPos  = sceneNode.getWorldPosition();
+        Vector3 startVctor = new Vector3(0f,0f,0f);
        // point1 = anchorNode.getWorldPosition();
         point2 = transformableNode.getWorldPosition();
 
@@ -939,7 +941,7 @@ public class SpaceARFragment extends Fragment {
             First, find the vector extending between the two points and define a look rotation
             in terms of this Vector.
         */
-        final Vector3 difference = Vector3.subtract(cameraPosition, point2);
+        final Vector3 difference = Vector3.subtract(startVctor, point2);
         final Vector3 directionFromTopToBottom = difference.normalized();
         final Quaternion rotationFromAToB =
                 Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
@@ -961,7 +963,7 @@ public class SpaceARFragment extends Fragment {
 
                         });
 
-        new CountDownTimer(500, 200) {
+        new CountDownTimer(200, 200) {
             @Override
             public void onTick(long millisUntilFinished) {
 
