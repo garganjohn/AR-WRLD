@@ -1,6 +1,5 @@
 package org.pursuit.ar_wrld.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -26,13 +25,14 @@ import com.jakewharton.rxbinding.view.RxView;
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+<<<<<<< HEAD
 import org.pursuit.ar_wrld.SplashActivity;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
+=======
+>>>>>>> added gradient bg to splashactivity, removed unused imports, fields and methods
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import java.util.concurrent.TimeUnit;
-
-import static org.pursuit.ar_wrld.login.SignUpActivity.USERNAME_KEY;
 
 public class UserHomeScreenActivity extends AppCompatActivity {
 

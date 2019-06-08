@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/splash_activity_container"
     tools:context=".SplashActivity">
 
     <ImageView
@@ -12,7 +13,7 @@
         android:layout_height="match_parent"
         android:elevation="0dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/space_background" />
+        android:src="@drawable/splash_bg_gradient"/>
 
     <io.supercharge.shimmerlayout.ShimmerLayout
         android:id="@+id/shimmer_text"

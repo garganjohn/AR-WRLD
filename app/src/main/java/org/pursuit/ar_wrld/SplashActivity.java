@@ -6,10 +6,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.WindowManager;
 
 import org.pursuit.ar_wrld.login.SignInActivity;
-import org.pursuit.ar_wrld.perks.PerkPickForUser;
 
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
@@ -21,13 +19,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         hideActionBar();
+
         changeStatusBarColor();
         ShimmerLayout shimmerText = (ShimmerLayout) findViewById(R.id.shimmer_text);
         shimmerText.startShimmerAnimation();
         new Handler().postDelayed(() -> {
 
             Intent mainIntent = new Intent(SplashActivity.this, SignInActivity.class);
-            Intent tempIntent = new Intent(SplashActivity.this, PerkPickForUser.class);
             startActivity(mainIntent);
             SplashActivity.this.finish();
         }, SPLASH_LENGTH);
@@ -43,4 +41,6 @@ public class SplashActivity extends AppCompatActivity {
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); //status bar or the time bar at the top
     }
+
+
 }

@@ -65,8 +65,6 @@ public class SpaceARFragment extends Fragment {
     private ArFragment arFragment;
     private AnchorNode sceneNode;
     private ModelLocationIndicator mli;
-    private ImageView leftArrow;
-    private ImageView rightArrow;
     private TextView scorekeepingTv;
     private TextView msgForUser;
     private TextView countDownText;
@@ -455,8 +453,8 @@ public class SpaceARFragment extends Fragment {
         weakWeapon = v.findViewById(R.id.weak_weapon);
         medWeapon = v.findViewById(R.id.med_weapon);
 
-        rightArrow = v.findViewById(R.id.left_marker);
-        leftArrow = v.findViewById(R.id.right_marker);
+        ImageView rightArrow = v.findViewById(R.id.left_marker);
+        ImageView leftArrow = v.findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
 
         imageForPerk = v.findViewById(R.id.perk_chosen_image_ar);
