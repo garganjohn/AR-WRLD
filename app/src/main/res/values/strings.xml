@@ -85,5 +85,7 @@
     <string name="more_damage_perk_name">More Damage</string>
     <string name="no_perk_text">No Perk Chosen</string>
 
+    <string name="user_score">Top Score: \n %d</string>
+
 
 </resources>
