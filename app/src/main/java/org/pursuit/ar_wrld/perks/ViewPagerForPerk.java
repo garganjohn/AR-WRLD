@@ -88,6 +88,8 @@ public class ViewPagerForPerk extends Fragment {
 
     private void findViews() {
         perkNameTv = rootView.findViewById(R.id.perk_name);
+        imageView = rootView.findViewById(R.id.perk_image);
+        perkDescriptionTv = rootView.findViewById(R.id.perk_description);
     }
 
     @Override
@@ -96,11 +98,8 @@ public class ViewPagerForPerk extends Fragment {
 
         SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, Context.MODE_PRIVATE);
 
-        perkDescriptionTv = view.findViewById(R.id.perk_description);
-        imageView = view.findViewById(R.id.perk_image);
         perkDescriptionTv.setText(perkInfo);
         imageView.setImageDrawable(ContextCompat.getDrawable(getContext(), perkImageRes));
-
         perkNameTv.setText(perkName);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +109,6 @@ public class ViewPagerForPerk extends Fragment {
             }
         });
     }
-
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
         return super.onCreateAnimator(transit, enter, nextAnim);

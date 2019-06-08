@@ -182,19 +182,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/game_info_textview"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:layout_marginBottom="104dp"
-        android:background="#72000000"
-        android:fontFamily="@font/aansa"
-        android:padding="8dp"
-        android:textColor="#fff"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="8dp" />
-
-    <TextView
         android:id="@+id/perk_chosen_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -110,7 +110,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
         userTitleTextView = findViewById(R.id.user_title);
-        recyclerView = findViewById(R.id.top_play_recyclerview);
         levelSpinner = findViewById(R.id.level_spinner);
         pickAPerkButton = findViewById(R.id.pick_a_perk);
         practiceButton = findViewById(R.id.practice_button);
@@ -147,8 +146,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     } catch (DatabaseException dbe){
                         updatedScore = 0;
                     }
-                    userscoreTextView.setText(String.valueOf(updatedScore));
-
+                    String userScoreText = getString(R.string.user_score, updatedScore);
+                    userscoreTextView.setText(userScoreText);
                 }
 
                 @Override
