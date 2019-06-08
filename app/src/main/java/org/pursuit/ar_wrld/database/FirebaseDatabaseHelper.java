@@ -9,6 +9,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -87,12 +88,21 @@ public class FirebaseDatabaseHelper {
 
     public void updateScore(String name, long score) {
 
+        long newScore = 0 ;
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long previousScore = dataSnapshot.getValue(Long.class);
-                long newScore = score + previousScore;
-                myRef.child(name).setValue(newScore);
+                try {
+                    final String name = myRef.child(sharedPreferences.getString(GameInformation.USERNAME_KEY, "")).toString();
+                    long previousScore = dataSnapshot.getValue(Long.class);
+                    myRef.child(name).setValue(previousScore);
+                } catch (NullPointerException npe) {
+                    long previousScore = 0;
+                    long newScore = score + previousScore;
+                    myRef.child(name).setValue(newScore);
+                } catch (DatabaseException dbe){
+                    myRef.child(name).setValue(newScore);
+                }
             }
 
             @Override

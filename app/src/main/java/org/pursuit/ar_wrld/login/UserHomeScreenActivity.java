@@ -103,7 +103,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         setPerkInfo();
         usernameTextView.setText(retrieveUsername());
         String userScoreText = getString(R.string.user_score, retrieveUserScore());
-        userscoreTextView.setText(userScoreText);
+        userscoreTextView.setText(String.valueOf(retrieveUserScore()));
     }
 
     private void findViews() {
@@ -131,17 +131,15 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private long retrieveUserScore() {
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("mARtians");
+
+        String playName = retrieveUsername();
+        //DatabaseReference users = databaseReference.child(playName);
+
         try {
-//            firebaseAuth = FirebaseAuth.getInstance();
-//            FirebaseUser user = firebaseAuth.getCurrentUser();
-//            String userID = user.getUid();
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("mARtians");
-
-            String playName = retrieveUsername();
-            DatabaseReference users = databaseReference.child(playName);
-
-            Log.e("DB", "username" + users );
+           // Log.e("DB", "username" + users );
             DatabaseReference updatedRef = databaseReference.child(playName);
             updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -151,7 +149,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     } catch (NullPointerException npe) {
                         updatedScore = 0;
                     } catch (DatabaseException dbe){
-                        updatedScore = 0;
+                        updatedRef.child(playName).setValue(updatedScore);
                     }
                     String userScoreText = getString(R.string.user_score, updatedScore);
                     userscoreTextView.setText(userScoreText);

@@ -45,7 +45,6 @@ public class ResultPage extends AppCompatActivity {
 
         retrieveUserNameAndScore();
 
-
         playAgainButton.setOnClickListener(v -> {
             startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
             finish();
