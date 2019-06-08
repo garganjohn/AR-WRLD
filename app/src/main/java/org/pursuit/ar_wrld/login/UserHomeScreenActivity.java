@@ -117,6 +117,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logout_button);
         perkChosen = findViewById(R.id.perk_selected);
         perkImage = findViewById(R.id.perk_selected_image);
+
+        levelSpinner.getBackground().setTint(getColor(R.color.silver_app_color));
         changeStatusBarColor();
     }
 
