@@ -25,9 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:autofillHints="Email"
+        android:textColorHighlight="@color/silver_app_color"
         android:hint="@string/user_email"
         android:inputType="textEmailAddress"
-        android:textColor="@android:color/black"
+        android:textColor="@color/silver_app_color"
         android:textColorHint="@android:color/darker_gray" />
 
 
