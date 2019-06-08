@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld.perks;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -110,51 +111,9 @@ public class ViewPagerForPerk extends Fragment {
         });
     }
 
-//    public void setLevelDescriptionBasedOnPerk(){
-//        switch (whichGamePerk){
-//            case GameInformation.MORE_TIME_PERK:
-//                levelCurrentExp = 7832;
-//                setLevelDescription(getString(R.string.more_time_level_1), getString(R.string.more_time_level_2), getString(R.string.more_time_level_3), getString(R.string.more_time_level_4));
-//                break;
-//            case GameInformation.MORE_DAMAGE_PERK:
-//                levelCurrentExp = 6323;
-//                setLevelDescription(getString(R.string.more_damage_level_1), getString(R.string.more_damage_level_2), getString(R.string.more_damage_level_3), getString(R.string.more_damage_level_4));
-//                break;
-//            case GameInformation.MORE_AMMO_PERK:
-//                levelCurrentExp = 9854;
-//                setLevelDescription(getString(R.string.more_ammo_level_1), getString(R.string.more_ammo_level_2), getString(R.string.more_ammo_level_3), getString(R.string.more_ammo_level_4));
-//                break;
-//            case GameInformation.SLOW_TIME_PERK:
-//                levelCurrentExp = 232;
-//                setLevelDescription(getString(R.string.slow_time_level_1), getString(R.string.slow_time_level_2), getString(R.string.slow_time_level_3), getString(R.string.slow_time_level_4));
-//                break;
-//
-//        }
-//    }
-//
-//    private void setLevelDescription(String level1, String level2, String level3, String level4){
-//        levelOneTv.setText(level1);
-//        levelOneExpTv.setText(getString(R.string.level_exp, levelCurrentExp, level1xpMax));
-//        levelTwoTv.setText(level2);
-//        levelTwoExpTv.setText(getString(R.string.level_exp,levelCurrentExp, level2xpMax));
-//        levelThreeTv.setText(level3);
-//        levelThreeExpTv.setText(getString(R.string.level_exp,levelCurrentExp, level3xpMax));
-//        levelFourTv.setText(level4);
-//        levelFourExpTv.setText(getString(R.string.level_exp,levelCurrentExp, level4xpMax));
-//
-//        if (levelCurrentExp < level1xpMax){
-//            levelOneTv.setAlpha(lockedPerk);
-//        }
-//        if (levelCurrentExp < level3xpMax){
-//            levelTwoTv.setAlpha(lockedPerk);
-//        }
-//        if (levelCurrentExp < level3xpMax){
-//            levelThreeTv.setAlpha(lockedPerk);
-//        }
-//        if (levelCurrentExp < level4xpMax){
-//            levelFourTv.setAlpha(lockedPerk);
-//        }
-//    }
-
-
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+        return super.onCreateAnimator(transit, enter, nextAnim);
+        
+    }
 }
