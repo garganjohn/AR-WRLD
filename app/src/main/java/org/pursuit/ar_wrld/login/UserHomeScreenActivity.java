@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -141,6 +142,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     try {
                         long updatedScore = dataSnapshot.getValue(Long.class);
                     } catch (NullPointerException npe) {
+                        updatedScore = 0;
+                    } catch (DatabaseException dbe){
                         updatedScore = 0;
                     }
                     String userScoreText = getString(R.string.user_score, updatedScore);

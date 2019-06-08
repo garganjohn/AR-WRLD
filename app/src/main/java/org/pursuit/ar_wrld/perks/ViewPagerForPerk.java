@@ -1,5 +1,6 @@
 package org.pursuit.ar_wrld.perks;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -107,5 +108,10 @@ public class ViewPagerForPerk extends Fragment {
                 vpl.goToUserHome();
             }
         });
+    }
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+        return super.onCreateAnimator(transit, enter, nextAnim);
+        
     }
 }
