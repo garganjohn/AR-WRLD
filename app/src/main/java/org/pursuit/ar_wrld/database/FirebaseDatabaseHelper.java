@@ -88,17 +88,16 @@ public class FirebaseDatabaseHelper {
 
     public void updateScore(String name, long score) {
 
-        long newScore = 0 ;
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long newScore = 0;
                 try {
-                    final String name = myRef.child(sharedPreferences.getString(GameInformation.USERNAME_KEY, "")).toString();
                     long previousScore = dataSnapshot.getValue(Long.class);
                     myRef.child(name).setValue(previousScore);
                 } catch (NullPointerException npe) {
                     long previousScore = 0;
-                    long newScore = score + previousScore;
+                    newScore = score + previousScore;
                     myRef.child(name).setValue(newScore);
                 } catch (DatabaseException dbe){
                     myRef.child(name).setValue(newScore);
