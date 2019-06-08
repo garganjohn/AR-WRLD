@@ -132,12 +132,16 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
     private long retrieveUserScore() {
         try {
-            firebaseAuth = FirebaseAuth.getInstance();
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            String userID = user.getUid();
+//            firebaseAuth = FirebaseAuth.getInstance();
+//            FirebaseUser user = firebaseAuth.getCurrentUser();
+//            String userID = user.getUid();
             firebaseDatabase = FirebaseDatabase.getInstance();
             databaseReference = firebaseDatabase.getReference("mARtians");
+
             String playName = retrieveUsername();
+            DatabaseReference users = databaseReference.child(playName);
+
+            Log.e("DB", "username" + users );
             DatabaseReference updatedRef = databaseReference.child(playName);
             updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
