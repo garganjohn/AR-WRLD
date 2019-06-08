@@ -193,10 +193,8 @@ public class SpaceARFragment extends Fragment {
         medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
         onTapForMissInteraction();
         if (difficulty.equals(UserHomeScreenActivity.BOSS_LEVEL)) {
-            gameInfoPopup(R.string.boss_level, false);
             spawningAliens(true);
         } else {
-            gameInfoPopup(R.string.game_intro, false);
             spawningAliens(false);
         }
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
@@ -359,15 +357,6 @@ public class SpaceARFragment extends Fragment {
         };
     }
 
-    private void gameInfoPopup(int stringToDisplay, boolean isWarning) {
-        gameInfoTv.setText(stringToDisplay);
-        if (gameInfoTv.getVisibility() == View.INVISIBLE) gameInfoTv.setVisibility(View.VISIBLE);
-        if (isWarning)
-            gameInfoTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-        gameInfoTv.startAnimation(startFromBottom);
-
-    }
-
 
     private void onTapForMissInteraction() {
         arFragment.getArSceneView().getScene().setOnTouchListener((hitTestResult, motionEvent) -> {
@@ -461,9 +450,6 @@ public class SpaceARFragment extends Fragment {
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
 
         imageForPerk = v.findViewById(R.id.perk_chosen_image_ar);
-
-        gameInfoTv = v.findViewById(R.id.game_info_textview);
-
     }
 
     private void spawningAliens(boolean isBoss) {
@@ -775,7 +761,6 @@ public class SpaceARFragment extends Fragment {
                 updateTimer();
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
-                    gameInfoPopup(R.string.timer_warning, true);
                 }
                 if (timeLeftInMilliseconds < 10000){
                     countDownText.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
