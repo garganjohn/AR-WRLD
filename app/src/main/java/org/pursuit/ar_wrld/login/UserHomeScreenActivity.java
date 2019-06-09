@@ -193,7 +193,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     currentRef.child(keys).setValue(userInformation);
                 } else {
                     UserInformation userInformation = new UserInformation();
-                    userInformation.setUsername(retrieveUsername());
+                    //userInformation.setUsername(retrieveUsername());
                     userInformation.setUserscore(0);
 
                     currentRef.child(keys).setValue(userInformation);
@@ -230,7 +230,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
                         } else{
                             UserInformation userInformation = new UserInformation();
-                            userInformation.setUsername(playName);
+//                            userInformation.setUsername(playName);
                             userInformation.setUserscore(0);
                             // databaseReference.child(playName).child("score").setValue(0);
 

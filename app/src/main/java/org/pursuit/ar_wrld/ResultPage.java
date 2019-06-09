@@ -91,12 +91,11 @@ public class ResultPage extends AppCompatActivity {
                 }
                 if (dataSnapshot.child(keys).exists()) {
 
-                    Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName).getChildren().iterator().toString());
+                    Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName).getChildren().toString());
 
                     currentRef.child(keys).setValue(userScore);
                 } else {
                     UserInformation userInformation = new UserInformation();
-                    userInformation.setUsername(playerName);
                     userInformation.setUserscore(userScore);
 
                     currentRef.child(keys).setValue(userInformation);
