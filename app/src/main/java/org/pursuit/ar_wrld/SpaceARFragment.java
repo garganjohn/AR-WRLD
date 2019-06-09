@@ -77,7 +77,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 10000;
+    private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -94,9 +94,7 @@ public class SpaceARFragment extends Fragment {
     private List<TransformableNode> nodeList;
     private TextView numOfAliensTv;
     private TextView medWeaponInfo;
-    private CountDownTimer easyAlienSpawn;
-    private CountDownTimer medAlienSpawn;
-    private CountDownTimer hardAlienSpawn;
+
     private CountDownTimer startGame;
     private ImageView weakWeapon;
     private ImageView medWeapon;
@@ -216,7 +214,7 @@ public class SpaceARFragment extends Fragment {
         weaponSetup();
         setMaxNumOfModels();
         getStringRes();
-        setupGameInfo();
+        //setupGameInfo();
         setUpRedLight();
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -249,7 +247,7 @@ public class SpaceARFragment extends Fragment {
         super.onDestroy();
         audioLoader.stopAudio();
         audioLoader.nullMediaPlayer();
-        arFragment.getArSceneView().clearAnimation();
+        arFragment.getArSceneView().getSession().getAllAnchors().iterator().forEachRemaining(Anchor::detach);
         arFragment = null;
         transformableNodesList.clear();
         modelRenderablesList.clear();
@@ -285,8 +283,6 @@ public class SpaceARFragment extends Fragment {
                 setPerkDrawable(R.drawable.more_damage_perk_image);
                 break;
             case GameInformation.MORE_TIME_PERK:
-                startGame.cancel();
-                startGame = null;
                 timeLeftInMilliseconds += 20000;
                 startGameTimer();
                 setPerkDrawable(R.drawable.more_time_perk_image);
@@ -401,8 +397,6 @@ public class SpaceARFragment extends Fragment {
                 weaponSwitch();
             }
 
-            hitChangeColor.start();
-
             return false;
         });
     }
@@ -499,145 +493,7 @@ public class SpaceARFragment extends Fragment {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
-            easyAlienSpawn = new CountDownTimer(timeLeftInMilliseconds, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    if (spawnRateEasy < 2000) {
-                        spawnRateEasy += 1000;
-                    } else {
-                        loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
-                        spawnRateEasy = 0;
-                    }
 
-                }
-
-                @Override
-                public void onFinish() {
-//                    easyAlienSpawn.start();
-//
-//                    if (scoreNumber > 5000 && !isMedEnemyAdded[0]) {
-//                        isMedEnemyAdded[0] = true;
-//                        medAlienSpawn.onFinish();
-//                    }
-
-                }
-            };
-
-            medAlienSpawn = new CountDownTimer(timeLeftInMilliseconds, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    if (spawnRateMed < 4000) {
-                        spawnRateMed += 1000;
-                    } else {
-                        loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-                    }
-                }
-
-                @Override
-                public void onFinish() {
-
-//                    medAlienSpawn.start();
-//
-//                    if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
-//                        isHardEnemyAdded[0] = true;
-//                        hardAlienSpawn.onFinish();
-//                    }
-                }
-
-            };
-
-            hardAlienSpawn = new CountDownTimer(timeLeftInMilliseconds, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    if (spawnRateHard < 8000) {
-                        spawnRateHard += 1000;
-                    } else {
-                        loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
-                    }
-                }
-
-                @Override
-                public void onFinish() {
-
-                    // hardAlienSpawn.onFinish();
-                }
-            };
-            switch (difficulty) {
-                case UserHomeScreenActivity.EASY_STRING:
-                    easyAlienSpawn.start();
-                    break;
-                case UserHomeScreenActivity.MEDIUM_STRING:
-                    medAlienSpawn.start();
-                    break;
-                case UserHomeScreenActivity.HARD_STRING:
-                    hardAlienSpawn.start();
-                    break;
-            }
-//            easyAlienSpawn = new Hourglass(2500, 1000) {
-//                @Override
-//                public void onTimerTick(long timeRemaining) {
-//
-//                }
-//
-//                @Override
-//                public void onTimerFinish() {
-//                    loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
-//
-//                    easyAlienSpawn.startTimer();
-//
-//                    if (scoreNumber > 5000 && !isMedEnemyAdded[0]) {
-//                        isMedEnemyAdded[0] = true;
-//                        medAlienSpawn.startTimer();
-//                    }
-//                }
-//            };
-//
-//            medAlienSpawn = new Hourglass(3500, 1000) {
-//                @Override
-//                public void onTimerTick(long timeRemaining) {
-//
-//                }
-//
-//                @Override
-//                public void onTimerFinish() {
-//                    loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-//                    medAlienSpawn.startTimer();
-//
-//                    if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
-//                        isHardEnemyAdded[0] = true;
-//                        hardAlienSpawn.startTimer();
-//                    }
-//                }
-//            };
-//
-//            hardAlienSpawn = new Hourglass(8000, 1000) {
-//                @Override
-//                public void onTimerTick(long timeRemaining) {
-//
-//                }
-//
-//                @Override
-//                public void onTimerFinish() {
-//                    loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
-//                    hardAlienSpawn.startTimer();
-//                }
-//            };
-//
-//            switch (difficulty) {
-//                case UserHomeScreenActivity.EASY_STRING:
-//                    easyAlienSpawn.startTimer();
-//                    break;
-//                case UserHomeScreenActivity.MEDIUM_STRING:
-//                    medAlienSpawn.startTimer();
-//                    break;
-//                case UserHomeScreenActivity.HARD_STRING:
-//                    hardAlienSpawn.setTime(3000);
-//                    hardAlienSpawn.startTimer();
-//                    break;
-//            }
-//        }
-//
-//        startGameTimer();
         }
         startGameTimer();
     }
@@ -785,6 +641,8 @@ public class SpaceARFragment extends Fragment {
                 audioLoader.laserSound();
 //                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
+                anchorNode.setRenderable(null);
+                anchorNode.setParent(null);
                 node.setRenderable(null);
                 audioLoader.explosionSound();
                 sceneNode.removeChild(node);
@@ -808,6 +666,7 @@ public class SpaceARFragment extends Fragment {
 
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
+
                     timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
                     startGame.cancel();
@@ -865,6 +724,32 @@ public class SpaceARFragment extends Fragment {
         startGame = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long timeRemaining) {
+                switch (difficulty) {
+                    case UserHomeScreenActivity.EASY_STRING:
+                        if (spawnRateEasy < 2000){
+                            spawnRateEasy += 1000;
+                        }else{
+                            loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+                            spawnRateEasy = 0;
+                        }
+                        break;
+                    case UserHomeScreenActivity.MEDIUM_STRING:
+                        if (spawnRateMed < 4000){
+                            spawnRateMed += 1000;
+                        }else{
+                            loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                            spawnRateMed = 0;
+                        }
+                        break;
+                    case UserHomeScreenActivity.HARD_STRING:
+                        if (spawnRateHard < 8000){
+                            spawnRateHard += 1000;
+                        }else{
+                            loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                            spawnRateHard = 0;
+                        }
+                        break;
+                }
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
@@ -970,6 +855,7 @@ public class SpaceARFragment extends Fragment {
 
     @Override
     public void onPause() {
+        startGame.cancel();
         super.onPause();
 //        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
 //        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
