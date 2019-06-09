@@ -27,6 +27,7 @@
         android:autofillHints="Email"
         android:textColorHighlight="@color/silver_app_color"
         android:hint="@string/user_email"
+        android:layout_marginTop="16dp"
         android:inputType="textEmailAddress"
         android:textColor="@color/silver_app_color"
         android:textColorHint="@android:color/darker_gray" />
@@ -40,7 +41,7 @@
         android:autofillHints="@string/user_password"
         android:hint="@string/user_password"
         android:inputType="textPassword"
-        android:textColor="@android:color/black"
+        android:textColor="@color/silver_app_color"
         android:textColorHint="@android:color/darker_gray" />
 
     <TextView
@@ -55,9 +56,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@color/colorAccent"
+        android:background="@color/purple_app_color"
         android:text="@string/log_in"
-        android:textColor="#ffffff" />
+        android:textColor="@color/silver_app_color" />
 
     <Button
         android:id="@+id/sign_in_text"
