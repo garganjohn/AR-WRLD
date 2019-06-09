@@ -112,6 +112,7 @@ public class SpaceARFragment extends Fragment {
     private ModelCoordinates modelCoordinates;
     private SpaceARFragment spaceARFragment;
     private ImageView imageForPerk;
+    private TextView shootText;
 
 
     // Controls animation playback.
@@ -166,7 +167,20 @@ public class SpaceARFragment extends Fragment {
         nodeList = new ArrayList<>();
         difficulty = sharedPreferences.getString(GameInformation.GAME_DIFFICULTY, null);
         // If user misses their shot account here
+    }
 
+    private void shootingTextDissapearing() {
+        new CountDownTimer(6000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                shootText.setVisibility(View.INVISIBLE);
+            }
+        }.start();
     }
 
     @Override
@@ -183,7 +197,7 @@ public class SpaceARFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
-        findViews(view);
+        shootingTextDissapearing();
         weaponSetup();
         setMaxNumOfModels();
         getStringRes();
@@ -449,6 +463,8 @@ public class SpaceARFragment extends Fragment {
         ImageView rightArrow = v.findViewById(R.id.left_marker);
         ImageView leftArrow = v.findViewById(R.id.right_marker);
         mli = new ModelLocationIndicator(rightArrow, leftArrow);
+
+        shootText = v.findViewById(R.id.shooting_textview);
 
         imageForPerk = v.findViewById(R.id.perk_chosen_image_ar);
     }

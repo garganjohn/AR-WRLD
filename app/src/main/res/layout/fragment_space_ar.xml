@@ -203,4 +203,17 @@
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp" />
 
+    <TextView
+        android:id="@+id/shooting_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tap_to_shoot_string"
+        android:fontFamily="@font/pixel_operator"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>
