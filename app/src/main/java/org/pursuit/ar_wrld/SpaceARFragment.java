@@ -960,7 +960,7 @@ public class SpaceARFragment extends Fragment {
                             laserNode.setParent(anchorNode);
                             laserNode.setRenderable(model);
 //                            laserNode.setWorldPosition(startVctor);
-                            laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(.5f));
+                            laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
 
                         });
