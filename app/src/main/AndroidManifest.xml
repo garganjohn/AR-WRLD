@@ -28,36 +28,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".login.SignInActivity" />
-
         <activity
             android:name=".login.SignUpActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".login.ResetPasswordActivity"
             android:parentActivityName=".login.SignInActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ResultPage"
             android:parentActivityName=".login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".perks.PerkPickForUser"
             android:parentActivityName=".login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".login.UserHomeScreenActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".login.UserHomeScreenActivity"/>
-
+            android:parentActivityName=".login.UserHomeScreenActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:parentActivityName=".login.UserHomeScreenActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TutorialActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
