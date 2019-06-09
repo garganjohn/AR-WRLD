@@ -4,10 +4,10 @@
         android:radius="50dp"
         />
     <solid
-        android:color="#6320b5"
+        android:color="@color/purple_app_color"
         />
     <stroke
         android:width="2dp"
-        android:color="@color/button_stroke_color"
+        android:color="@color/silver_app_color"
         />
 </shape>

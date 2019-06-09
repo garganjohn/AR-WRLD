@@ -563,7 +563,7 @@ public class SpaceARFragment extends Fragment {
             ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
             for (Node node : overlappedNodes) {
                 if (node instanceof MovementNode) {
-                    Toast.makeText(getContext(), "Collision!", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Collision!", Toast.LENGTH_SHORT).show();
                     // May want to use a flag to check that the node wasn't overlapping the previous frame.
                     // Play sound if overlapping started.
                 }
@@ -673,7 +673,7 @@ public class SpaceARFragment extends Fragment {
                     lightsRed(node, modelLight);
                 }
                 audioLoader.laserSound();
-                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
                 audioLoader.explosionSound();
@@ -704,7 +704,7 @@ public class SpaceARFragment extends Fragment {
                     startGame = null;
                     startGameTimer();
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
-                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
                 if (scoreNumber >= scoreTillClockModel) {
