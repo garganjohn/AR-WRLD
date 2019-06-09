@@ -15,19 +15,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ankushgrover.hourglass.Hourglass;
+import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
+import com.google.ar.core.Session;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
@@ -144,6 +150,11 @@ public class SpaceARFragment extends Fragment {
         return spaceARFragment;
     }
 
+    private void setAnchorAtZZZ(){
+        Pose pose = Pose.makeTranslation(0, 0, 0);
+        //sceneNode = arFragment.getArSceneView().getSession().createAnchor(pose);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -157,7 +168,6 @@ public class SpaceARFragment extends Fragment {
         modelRenderablesList = new ArrayList<>();
         transformableNodesList = new ArrayList<>();
         modelCoordinates = new ModelCoordinates();
-
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
@@ -176,6 +186,8 @@ public class SpaceARFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
         findViews(rootView);
         setUpAR();
+        sceneNode = new AnchorNode();
+        sceneNode.setWorldPosition(new Vector3(0,0,0));
         return rootView;
     }
 
@@ -454,8 +466,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void spawningAliens(boolean isBoss) {
-        sceneNode = new AnchorNode();
-        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
+       // setAnchorAtZZZ();
 
         if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
@@ -597,6 +608,7 @@ public class SpaceARFragment extends Fragment {
         }
 
         anchorNode = new MovementNode(null);
+        anchorNode.setAnchor(sceneNode.getAnchor());
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
 
         transformableNodesList.add(node);
@@ -680,9 +692,8 @@ public class SpaceARFragment extends Fragment {
 //                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
+                node.setParent(null);
                 audioLoader.explosionSound();
-                sceneNode.removeChild(node);
-                anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
                 switch (whichEnemy) {
@@ -782,18 +793,15 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setNumOfAliensTextColor() {
-        if (numOfModels >= (maxModels-2)){
+        if (numOfModels >= (maxModels - 2)) {
             if (getContext() != null)
                 numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-        }
-        else if (numOfModels >= (maxModels/2) ){
+        } else if (numOfModels >= (maxModels / 2)) {
             if (getContext() != null)
                 numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
-        }
-        else {
-            //TODO null pointer exception when device is in ar and rotates
+        } else {
             if (getContext() != null)
-            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
+                numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
     }
 
@@ -847,7 +855,16 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
+        detachNodes();
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
+        easyAlienSpawn.stopTimer();
+        easyAlienSpawn = null;
+        medAlienSpawn.stopTimer();
+        medAlienSpawn = null;
+        hardAlienSpawn.stopTimer();
+        hardAlienSpawn = null;
+        startGame.stopTimer();
+        startGame = null;
         startActivity(goToResultPageIntent);
     }
 
@@ -858,28 +875,25 @@ public class SpaceARFragment extends Fragment {
         }
     }
 
-    private void nullNodes() {
-        for (int i = 0; i < nodeList.size(); i++) {
-            nodeList.get(i).setParent(null);
-            nodeList.get(i).setRenderable(null);
-        }
+    private void detachNodes() {
+        Collection<Anchor> anchorList = arFragment.getArSceneView().getSession().getAllAnchors();
+        anchorList.iterator().forEachRemaining(Anchor::detach);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
-        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
-        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
-
+//        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+//        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+//        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+//        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+//        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+//        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
     private void audioSetup(Context c) {
@@ -921,8 +935,8 @@ public class SpaceARFragment extends Fragment {
                         .setIntensity(45f)
                         .build();
         return modelLight;
-
     }
+
 
 
 
@@ -984,6 +998,4 @@ public class SpaceARFragment extends Fragment {
 
 
     }
-
-
 }
