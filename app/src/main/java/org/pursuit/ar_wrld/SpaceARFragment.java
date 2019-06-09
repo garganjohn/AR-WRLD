@@ -259,7 +259,7 @@ public class SpaceARFragment extends Fragment {
                 startGameTimer();
                 setPerkDrawable(R.drawable.more_time_perk_image);
                 break;
-            case GameInformation.SLOW_TIME_PERK:
+            case GameInformation.MORE_CLOCKS:
                 increaseScoreTillClockModelEasy = 2500;
                 increaseScoreTillClockModelMed = 7500;
                 setPerkDrawable(R.drawable.slow_time_perk);
