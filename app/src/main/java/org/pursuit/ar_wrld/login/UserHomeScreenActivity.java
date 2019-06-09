@@ -16,8 +16,6 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -31,11 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxbinding.view.RxView;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
+import org.pursuit.ar_wrld.TutorialActivity;
+import org.pursuit.ar_wrld.TutorialFragment;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
@@ -50,7 +49,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
 
     private Spinner levelSpinner;
-    private Button practiceButton;
+    private Button tutorialButton;
     private Button playButton;
     private Button logoutButton;
     private Button pickAPerkButton;
@@ -70,6 +69,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private String nameShown;
     private UserInformation userInformation;
+    private TutorialFragment tutorialFragment;
 
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
@@ -120,6 +120,15 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             finish();
         });
 
+        tutorialButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent = new Intent(getApplicationContext(), TutorialActivity.class);
+               startActivity(intent);
+
+            }
+        });
+
         RxView.clicks(logoutButton).throttleFirst(2000, TimeUnit.MILLISECONDS).subscribe(empty -> {
             firebaseAuth.signOut();
             startActivity(new Intent(UserHomeScreenActivity.this, SignInActivity.class));
@@ -137,7 +146,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         userTitleTextView = findViewById(R.id.user_title);
         levelSpinner = findViewById(R.id.level_spinner);
         pickAPerkButton = findViewById(R.id.pick_a_perk);
-        practiceButton = findViewById(R.id.practice_button);
+        tutorialButton = findViewById(R.id.practice_button);
         playButton = findViewById(R.id.play_button);
         logoutButton = findViewById(R.id.logout_button);
         perkChosen = findViewById(R.id.perk_selected);
