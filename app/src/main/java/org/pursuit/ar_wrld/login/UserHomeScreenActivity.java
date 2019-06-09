@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.annotation.NonNull;
@@ -23,10 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -41,7 +38,6 @@ import org.pursuit.ar_wrld.perks.PerkPickForUser;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Long.parseLong;
@@ -297,8 +293,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     case GameInformation.MORE_TIME_PERK:
                         setUserPerkText(getString(R.string.more_time_perk_name));
                         return getDrawable(R.drawable.more_time_perk_image);
-                    case GameInformation.SLOW_TIME_PERK:
-                        setUserPerkText(getString(R.string.slow_time_perk_name));
+                    case GameInformation.MORE_CLOCKS:
+                        setUserPerkText(getString(R.string.more_clocks_perk_name));
                         return getDrawable(R.drawable.slow_time_perk);
                     default:
                         perkChosen.setText(getString(R.string.no_perk_text));
