@@ -52,6 +52,7 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -167,6 +168,7 @@ public class SpaceARFragment extends Fragment {
         nodeList = new ArrayList<>();
         difficulty = sharedPreferences.getString(GameInformation.GAME_DIFFICULTY, null);
         // If user misses their shot account here
+
     }
 
     private void shootingTextDissapearing() {
@@ -942,7 +944,7 @@ public class SpaceARFragment extends Fragment {
 
 
 
-    public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
+    public synchronized void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
 
         if (anchorNode!= null){
         laserNode = new Node();}
@@ -962,7 +964,7 @@ public class SpaceARFragment extends Fragment {
         final Vector3 directionFromTopToBottom = difference.normalized();
         final Quaternion rotationFromAToB =
                 Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
-        MaterialFactory.makeOpaqueWithColor(getContext(), Red)
+         MaterialFactory.makeOpaqueWithColor(getContext(), Red)
                 .thenAccept(
                         material -> {
 /* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
@@ -979,25 +981,19 @@ public class SpaceARFragment extends Fragment {
                             laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
 
+                            new CountDownTimer(10, 800) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    laserNode.setRenderable(null);
+                                }
+                            }.start();
+
                         });
-
-        new CountDownTimer(100, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                //if (laserNode.getRenderable() != null) {
-                //laserNode.setRenderable(null);
-                anchorNode.removeChild(laserNode);
-                laserNode = null;
-
-
-            }
-        }.start();
-
 
     }
 
