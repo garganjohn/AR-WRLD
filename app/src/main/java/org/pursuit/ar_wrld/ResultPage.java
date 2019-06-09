@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -40,6 +41,7 @@ public class ResultPage extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String userID;
     private String dbKey;
+    private UserInformation userInfo;
 
 
     @Override
@@ -53,7 +55,9 @@ public class ResultPage extends AppCompatActivity {
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        retrieveUserNameAndScore();
+        //retrieveUserNameAndScore();
+
+        retrieve3();
 
         moveBackHome();
 
@@ -82,90 +86,46 @@ public class ResultPage extends AppCompatActivity {
         Log.d("user", "USER" + userID);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
-
-//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                UserInformation userInformation = dataSnapshot.getValue(UserInformation.class);
-//                Log.d("RESULTPAGE", "findme" + userInformation);
-//                for(DataSnapshot data: dataSnapshot.getChildren()){
-//                    String key = data.getKey();
-//                    if(dataSnapshot.child(key).exists()){
-//                        userInformation.setUsername(playerName);
-//                        userInformation.setUserscore(userScore);
-//                    } else {
-//                        UserInformation newUser = new UserInformation();
-//                        newUser.setUsername(playerName);
-//                        newUser.setUserscore(userScore);
-//
-//                        new FirebaseDatabaseHelper().addUser(newUser, new FirebaseDatabaseHelper.DataStatus() {
-//                            @Override
-//                            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
-//
-//                            }
-//
-//                            @Override
-//                            public void dataIsInserted() {
-//                                System.out.println("Score is saved!");
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                System.out.println("The read failed: " + databaseError.getCode());
-//
-//            }
-//        });
-       // DatabaseReference currentRef = databaseReference.child(playerName);
+        DatabaseReference currentRef = databaseReference.child(playerName);
 
         Log.d("DB", "db" + databaseReference);
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        currentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String keys = "";
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    String keys = datas.getKey();
+                    keys = datas.getKey();
+                }
+                if (dataSnapshot.child(keys).exists()) {
 
-                    if (dataSnapshot.child(keys).exists()) {
-
-                        Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
+                    Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
 
 //                    Log.d("FINDME", "onDataChange: " + dataSnapshot.getValue().toString());
 //                    dataSnapshot.child(playerName).child("game 1").getValue();
 //                    Log.d("FINDME", "getting game number" + dataSnapshot.child(playerName).child("game 1").getValue());
 //                    currentRef.child("game 1").setValue(100);
-                       // databaseReference.child(keys).setValue(userScore);
-                        // databaseReference.child("score").setValue(userScore);
+                    currentRef.child(keys).setValue(userScore);
+                    // databaseReference.child("score").setValue(userScore);
+                } else {
+                    UserInformation userInformation = new UserInformation();
+                    userInformation.setUsername(playerName);
+                    userInformation.setUserscore(userScore);
 
-                        UserInformation userInformation1 = dataSnapshot.getValue(UserInformation.class);
-                        userInformation1.setUsername(playerName);
-                        userInformation1.setUserscore(userScore);
-                        databaseReference.child(keys).setValue(userInformation1);
-                        finish();
+                    new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+                        @Override
+                        public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
 
-                    } else {
-                        UserInformation userInformation = new UserInformation();
-                        userInformation.setUsername(playerName);
-                        userInformation.setUserscore(userScore);
+                        }
 
-                        new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
-                            @Override
-                            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+                        @Override
+                        public void dataIsInserted() {
+                            Toast.makeText(ResultPage.this, "Score is saved successfully!", Toast.LENGTH_SHORT).show();
 
-                            }
+                        }
 
-                            @Override
-                            public void dataIsInserted() {
-                                Toast.makeText(ResultPage.this, "Score is saved successfully!", Toast.LENGTH_SHORT).show();
+                    });
 
-                            }
-
-                        });
-
-                    }
                 }
             }
 
@@ -179,12 +139,174 @@ public class ResultPage extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
 
             }
         });
 
+
     }
+
+    private void retrieve3(){
+        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+        nameTextView.setText(playerName);
+
+        final long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
+        scoreTextView.setText(String.valueOf(userScore));
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("mARtians");
+
+        String key = databaseReference.push().getKey();
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(key).exists()){
+                    databaseReference.child(key).setValue(userInfo).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            userInfo.setUsername(playerName);
+                            userInfo.setUserscore(userScore);
+                            finish();
+                        }
+                    });
+                } else {
+                    UserInformation newUser = new UserInformation();
+                    newUser.setUsername(playerName);
+                    newUser.setUserscore(userScore);
+                    databaseReference.child(key).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("Added", "New User added!" + newUser.getUsername() + newUser.getUserscore());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("Error", "onUpdatingUser" + databaseError.toString());
+            }
+        });
+
+
+    }
+
+//    private void retrieve2(){
+//        String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
+//        nameTextView.setText(playerName);
+//
+//        final long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
+//        scoreTextView.setText(String.valueOf(userScore));
+//
+//        firebaseAuth = FirebaseAuth.getInstance();
+//        FirebaseUser user = firebaseAuth.getCurrentUser();
+//        userID = user.getUid();
+//        Log.d("user", "USER" + userID);
+//        firebaseDatabase = FirebaseDatabase.getInstance();
+//        databaseReference = firebaseDatabase.getReference("mARtians");
+//
+////        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+////                UserInformation userInformation = dataSnapshot.getValue(UserInformation.class);
+////                Log.d("RESULTPAGE", "findme" + userInformation);
+////                for(DataSnapshot data: dataSnapshot.getChildren()){
+////                    String key = data.getKey();
+////                    if(dataSnapshot.child(key).exists()){
+////                        userInformation.setUsername(playerName);
+////                        userInformation.setUserscore(userScore);
+////                    } else {
+////                        UserInformation newUser = new UserInformation();
+////                        newUser.setUsername(playerName);
+////                        newUser.setUserscore(userScore);
+////
+////                        new FirebaseDatabaseHelper().addUser(newUser, new FirebaseDatabaseHelper.DataStatus() {
+////                            @Override
+////                            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+////
+////                            }
+////
+////                            @Override
+////                            public void dataIsInserted() {
+////                                System.out.println("Score is saved!");
+////                            }
+////                        });
+////                    }
+////                }
+////            }
+////
+////            @Override
+////            public void onCancelled(@NonNull DatabaseError databaseError) {
+////                System.out.println("The read failed: " + databaseError.getCode());
+////
+////            }
+////        });
+//        // DatabaseReference currentRef = databaseReference.child(playerName);
+//
+//        Log.d("DB", "db" + databaseReference);
+//
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+//                    String keys = datas.getKey();
+//
+//                    if (dataSnapshot.child(keys).exists()) {
+//
+//                        Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
+//
+////                    Log.d("FINDME", "onDataChange: " + dataSnapshot.getValue().toString());
+////                    dataSnapshot.child(playerName).child("game 1").getValue();
+////                    Log.d("FINDME", "getting game number" + dataSnapshot.child(playerName).child("game 1").getValue());
+////                    currentRef.child("game 1").setValue(100);
+//                        // databaseReference.child(keys).setValue(userScore);
+//                        // databaseReference.child("score").setValue(userScore);
+//
+//                        UserInformation userInformation1 = dataSnapshot.getValue(UserInformation.class);
+//                        userInformation1.setUsername(playerName);
+//                        userInformation1.setUserscore(userScore);
+//                        databaseReference.child(keys).setValue(userInformation1);
+//                        finish();
+//
+//                    } else {
+//                        UserInformation userInformation = new UserInformation();
+//                        userInformation.setUsername(playerName);
+//                        userInformation.setUserscore(userScore);
+//
+//                        new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+//                            @Override
+//                            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+//
+//                            }
+//
+//                            @Override
+//                            public void dataIsInserted() {
+//                                Toast.makeText(ResultPage.this, "Score is saved successfully!", Toast.LENGTH_SHORT).show();
+//
+//                            }
+//
+//                        });
+//
+//                    }
+//                }
+//            }
+//
+//
+////                long previousScore = dataSnapshot.getValue(Long.class);
+////                long newScore = userScore + previousScore;
+////                databaseReference.child(playerName).setValue(newScore);
+////                Log.e("Key from db", "previous " + previousScore);
+////                Log.e("Key from db", "current " + userScore);
+////                Log.e("Key from db", "updated " + newScore);
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                System.out.println("The read failed: " + databaseError.getCode());
+//
+//            }
+//        });
+//    }
 
 }
 
