@@ -112,17 +112,6 @@
         android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_bg"
-        android:fontFamily="@font/pixel_operator"
-        android:text="@string/logout"
-        android:textColor="@color/text_btn_color"
-        android:textSize="25sp" />
-
     <TextView
         android:id="@+id/perk_selected"
         android:layout_width="match_parent"
@@ -143,6 +132,25 @@
         android:layout_marginTop="8dp"
         android:padding="8dp"
         android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/logout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_bg"
+            android:fontFamily="@font/pixel_operator"
+            android:text="@string/logout"
+            android:textColor="@color/text_btn_color"
+            android:textSize="25sp"
+            android:layout_gravity="bottom"/>
+
     </LinearLayout>
 
 
