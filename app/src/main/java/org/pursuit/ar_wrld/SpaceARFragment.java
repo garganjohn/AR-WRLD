@@ -21,7 +21,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ankushgrover.hourglass.Hourglass;
 import com.google.ar.core.Frame;
@@ -36,7 +35,9 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.Light;
+import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.ShapeFactory;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
@@ -127,6 +128,8 @@ public class SpaceARFragment extends Fragment {
     private float hideWeapon = .5f;
     private float usingWeapon = 1f;
     private Light modelLight = null;
+    private Node laserNode = null;
+    private Color Red = new Color(android.graphics.Color.RED);
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -199,7 +202,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setMaxNumOfModels() {
-        switch (difficulty){
+        switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
                 maxModels = 15;
                 break;
@@ -575,7 +578,7 @@ public class SpaceARFragment extends Fragment {
         numOfModels++;
 
         modelRenderablesList.add(renderable);
-        Log.d(TAG, "addNodeToScene: "+numOfModels);
+        Log.d(TAG, "addNodeToScene: " + numOfModels);
 
         //Game is over once a certain number of models is higher than the limit shown below
         switch (difficulty) {
@@ -666,6 +669,7 @@ public class SpaceARFragment extends Fragment {
             }
 
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            fireLasers(anchorNode, node);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -760,7 +764,7 @@ public class SpaceARFragment extends Fragment {
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
                 }
-                if (timeLeftInMilliseconds < 10000){
+                if (timeLeftInMilliseconds < 10000) {
                     countDownText.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
                 }
                 setNumOfAliensTextColor();
@@ -892,7 +896,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void lightsYellow(Node node, Light light) {
-        light.setColor(new Color(android.graphics.Color.YELLOW));
+        light.setColor(Red);
         node.setLight(light);
 
         modelBlink(light, 6, 0f, 100000f, 500);
@@ -919,5 +923,67 @@ public class SpaceARFragment extends Fragment {
         return modelLight;
 
     }
+
+
+
+    public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
+
+        if (anchorNode!= null){
+        laserNode = new Node();}
+
+        Vector3 point1, point2;
+        Vector3 cameraPosition = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+        Vector3 startPos = sceneNode.getWorldPosition();
+        Vector3 startVctor = new Vector3(0f, 0f, 0f);
+
+        point2 = transformableNode.getWorldPosition();
+
+        /*
+            First, find the vector extending between the two points and define a look rotation
+            in terms of this Vector.
+        */
+        final Vector3 difference = Vector3.subtract(cameraPosition, point2);
+        final Vector3 directionFromTopToBottom = difference.normalized();
+        final Quaternion rotationFromAToB =
+                Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
+        MaterialFactory.makeOpaqueWithColor(getContext(), Red)
+                .thenAccept(
+                        material -> {
+/* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
+       to extend to the necessary length.  */
+                            ModelRenderable model = ShapeFactory.makeCube(
+                                    new Vector3(.01f, .01f, difference.length()),
+                                    Vector3.zero(), material);
+/* Last, set the world rotation of the node to the rotation calculated earlier and set the world position to
+       the midpoint between the given points . */
+
+                            laserNode.setParent(anchorNode);
+                            laserNode.setRenderable(model);
+//                            laserNode.setWorldPosition(startVctor);
+                            laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(.5f));
+                            laserNode.setWorldRotation(rotationFromAToB);
+
+                        });
+
+        new CountDownTimer(100, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                //if (laserNode.getRenderable() != null) {
+                //laserNode.setRenderable(null);
+                anchorNode.removeChild(laserNode);
+                laserNode = null;
+
+
+            }
+        }.start();
+
+
+    }
+
 
 }
