@@ -86,8 +86,8 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/button_bg"
             android:fontFamily="@font/pixel_operator"
-            android:text="@string/practice"
-            android:textColor="#E1E2E7"
+            android:text="@string/how_to_play"
+            android:textColor="@color/text_btn_color"
             android:textSize="25sp" />
 
     <Button
@@ -98,7 +98,7 @@
         android:background="@drawable/button_bg"
         android:fontFamily="@font/pixel_operator"
         android:text="@string/pick_a_perk"
-        android:textColor="#E1E2E7"
+        android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
     <Button
@@ -109,7 +109,7 @@
         android:background="@drawable/button_bg"
         android:fontFamily="@font/pixel_operator8_bold"
         android:text="@string/play"
-        android:textColor="#E1E2E7"
+        android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
     <Button
@@ -120,7 +120,7 @@
         android:background="@drawable/button_bg"
         android:fontFamily="@font/pixel_operator"
         android:text="@string/logout"
-        android:textColor="#E1E2E7"
+        android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
     <TextView

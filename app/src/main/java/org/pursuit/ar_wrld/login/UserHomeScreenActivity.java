@@ -191,9 +191,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                                 }
                             });
                         }
-
                         userscoreTextView.setText(String.valueOf(updatedScore));
-
                     }
 
 
