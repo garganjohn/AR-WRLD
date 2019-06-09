@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    android:background="@drawable/splash_bg_gradient"
+    android:background="@drawable/space_home_bg"
     tools:context=".login.UserHomeScreenActivity">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/neutral_hit">
+            android:background="@drawable/view_bg_non_button">
 
             <TextView
                 android:id="@+id/user_name"
@@ -54,14 +54,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:orientation="vertical"
-                android:background="#E6400469">
+                android:background="@drawable/view_bg_non_button">
 
                 <TextView
                     android:id="@+id/game_levels"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/choose_a_level"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/pixel_operator"
+                    android:text="@string/choose_a_level"
                     android:textAlignment="center"
                     android:textColor="#FFFFFF"
                     android:textSize="30sp" />
@@ -86,7 +87,7 @@
             android:background="@drawable/button_bg"
             android:fontFamily="@font/pixel_operator"
             android:text="@string/how_to_play"
-            android:textColor="#E1E2E7"
+            android:textColor="@color/text_btn_color"
             android:textSize="25sp" />
 
     <Button
@@ -97,7 +98,7 @@
         android:background="@drawable/button_bg"
         android:fontFamily="@font/pixel_operator"
         android:text="@string/pick_a_perk"
-        android:textColor="#E1E2E7"
+        android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
     <Button
@@ -108,7 +109,7 @@
         android:background="@drawable/button_bg"
         android:fontFamily="@font/pixel_operator8_bold"
         android:text="@string/play"
-        android:textColor="#E1E2E7"
+        android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
     <Button
@@ -119,7 +120,7 @@
         android:background="@drawable/button_bg"
         android:fontFamily="@font/pixel_operator"
         android:text="@string/logout"
-        android:textColor="#E1E2E7"
+        android:textColor="@color/text_btn_color"
         android:textSize="25sp" />
 
     <TextView

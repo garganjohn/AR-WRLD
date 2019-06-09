@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:fontFamily="@font/pixel_operator"
+        android:fontFamily="@font/pixel_operator_bold"
         android:text="@string/choose_hero_text"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
@@ -27,10 +27,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="8dp"
-        android:background="#B5FFFFFF"
+        android:background="@drawable/view_for_white_bg"
         app:layout_constraintTop_toBottomOf="@id/intro_for_choosing_class_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <me.relex.circleindicator.CircleIndicator
+        android:id="@+id/circle_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:ci_drawable="@drawable/circle_indicator_custom"
+        app:layout_constraintBottom_toBottomOf="@id/mainActivity_viewPager" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,4 +10,8 @@
     <color name="silver_app_color">#E1E2E7</color>
     <color name="mid_warning_color">#E08C0D</color>
     <color name="doing_great_color">#049600</color>
+    <color name="non_button_bg">#000000</color>
+    <color name="button_stroke_color">#E8F102</color>
+    <color name="transparentWhite">#A8FFFFFF</color>
+    <color name="text_btn_color">#FFFFFF</color>
 </resources>
