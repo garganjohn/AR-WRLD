@@ -1,12 +1,17 @@
 package org.pursuit.ar_wrld;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+
+import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 
 
 public class MainActivity extends AppCompatActivity {
+    private SpaceARFragment spaceARFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,13 +22,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initSpaceFragment() {
-        SpaceARFragment spaceARFragment = new SpaceARFragment();
+        spaceARFragment = new SpaceARFragment();
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.main_activity_container, spaceARFragment)
-                .disallowAddToBackStack()
+                .addToBackStack(null)
                 .commit();
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(MainActivity.this, UserHomeScreenActivity.class);
+            startActivity(intent);
+            this.finish();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        getSupportFragmentManager().beginTransaction().remove(spaceARFragment).commit();
+        super.onDestroy();
     }
 }
