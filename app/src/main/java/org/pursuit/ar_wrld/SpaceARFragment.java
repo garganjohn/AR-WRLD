@@ -14,30 +14,24 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ankushgrover.hourglass.Hourglass;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Plane;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
-import com.google.ar.sceneform.Camera;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.Light;
@@ -134,7 +128,7 @@ public class SpaceARFragment extends Fragment {
     private float hideWeapon = .5f;
     private float usingWeapon = 1f;
     private Light modelLight = null;
-    private Node newNode = null;
+    private Node laserNode = null;
     private Color Red = new Color(android.graphics.Color.RED);
 
     public SpaceARFragment() {
@@ -930,72 +924,12 @@ public class SpaceARFragment extends Fragment {
 
     }
 
-//    public void laserFire(Node node) {
-//        AnchorNode anchorNode = new AnchorNode();
-//        anchorNode.setWorldPosition(new Vector3(0f,0f,-.800f));
-//        newNode = new Node();
-//        newNode.setParent(anchorNode);
-//        Vector3 camera = arFragment.getArSceneView().getScene().getCamera().getLocalPosition();
-//        Vector3 sceneAnchor = sceneNode.getLocalPosition();
-//
-//        Vector3 nodePositions = node.getLocalPosition();
-//
-//        newNode.setLocalPosition(sceneAnchor);
-//
-//
-//
-//        ModelRenderable.builder()
-//                .setSource(getContext(), Uri.parse(GameInformation.BOSS_ENEMY))
-//                .build()
-//                .thenAccept(renderable ->
-//                {
-//                    newNode.setRenderable(renderable);
-//                })
-//                .exceptionally(
-//                        throwable -> {
-//                            Toast toast = Toast.makeText(getContext(), "Unable to load obj renderable", Toast.LENGTH_LONG);
-//                            toast.setGravity(Gravity.CENTER, 0, 0);
-//                            toast.show();
-//                            return null;
-//                        });
-//
-//
-//
-//
-//        ObjectAnimator objectAnimator = new ObjectAnimator();
-//
-//        objectAnimator.setAutoCancel(true);
-//        objectAnimator.setTarget(newNode);
-//        objectAnimator.setPropertyName("localPosition");
-//        objectAnimator.setObjectValues(newNode.getLocalPosition(), nodePositions);
-//
-//
-//        //requires the setter name of what you are manipulating
-//
-//        //evaluator of what values your are passing
-//
-//        //set multiple coordinates to be called one after the other
-//        objectAnimator.setEvaluator(new Vector3Evaluator());
-//        //animation happens forever
-//        //objectAnimator.setRepeatCount(OSbjectAnimator.);
-//        //animation is the called in reverse
-//        objectAnimator.setRepeatMode(ObjectAnimator.REVERSE);
-//        // This makes the animation linear (smooth and uniform).
-//        objectAnimator.setInterpolator(new LinearInterpolator());
-//        // Duration in ms of the animation.
-//        objectAnimator.setDuration(1000);
-//        objectAnimator.start();
-//
-//
-//    }
 
 
     public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
 
-
-        float distance = 1;
         if (anchorNode!= null){
-        newNode = new Node();}
+        laserNode = new Node();}
 
         Vector3 point1, point2;
         Vector3 cameraPosition = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
@@ -1023,11 +957,11 @@ public class SpaceARFragment extends Fragment {
 /* Last, set the world rotation of the node to the rotation calculated earlier and set the world position to
        the midpoint between the given points . */
 
-                            newNode.setParent(anchorNode);
-                            newNode.setRenderable(model);
-//                            newNode.setWorldPosition(startVctor);
-                            newNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(.5f));
-                            newNode.setWorldRotation(rotationFromAToB);
+                            laserNode.setParent(anchorNode);
+                            laserNode.setRenderable(model);
+//                            laserNode.setWorldPosition(startVctor);
+                            laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(.5f));
+                            laserNode.setWorldRotation(rotationFromAToB);
 
                         });
 
@@ -1039,10 +973,10 @@ public class SpaceARFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                //if (newNode.getRenderable() != null) {
-                //newNode.setRenderable(null);
-                anchorNode.removeChild(newNode);
-                newNode = null;
+                //if (laserNode.getRenderable() != null) {
+                //laserNode.setRenderable(null);
+                anchorNode.removeChild(laserNode);
+                laserNode = null;
 
 
             }
