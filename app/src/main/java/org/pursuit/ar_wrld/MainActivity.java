@@ -47,7 +47,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        getSupportFragmentManager().beginTransaction().remove(spaceARFragment).commit();
         super.onDestroy();
+
+    }
+
+    @Override
+    protected void onStop() {
+        getSupportFragmentManager().beginTransaction().remove(spaceARFragment).commit();
+        spaceARFragment = null;
+        this.finish();
+        super.onStop();
     }
 }
