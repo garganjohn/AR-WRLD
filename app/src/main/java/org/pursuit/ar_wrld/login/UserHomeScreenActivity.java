@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -166,6 +167,48 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         return sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
     }
 
+    private long retrieveScore(){
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference("mARtians");
+        DatabaseReference currentRef = databaseReference.child(retrieveUsername());
+
+        Log.d("DB", "db" + databaseReference);
+
+        //Query userQuery = databaseReference.child(retrieveUsername()).startAt(0).orderByChild()
+
+        currentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String keys = "";
+                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                    keys = datas.getKey();
+                    UserInformation existingUser = datas.getValue(UserInformation.class);
+                    Log.d("FINDME", "onUserHome: "+keys);
+                }
+                if (dataSnapshot.child(keys).exists()) {
+
+                    Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren().iterator().toString());
+
+                    currentRef.child(keys).setValue(userInformation);
+                } else {
+                    UserInformation userInformation = new UserInformation();
+                    //userInformation.setUsername(retrieveUsername());
+                    userInformation.setUserscore(0);
+
+                    currentRef.child(keys).setValue(userInformation);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return updatedScore;
+    }
+
     private long retrieveUserScore() {
 
         try {
@@ -187,7 +230,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
                         } else{
                             UserInformation userInformation = new UserInformation();
-                            userInformation.setUsername(playName);
+//                            userInformation.setUsername(playName);
                             userInformation.setUserscore(0);
                             // databaseReference.child(playName).child("score").setValue(0);
 
