@@ -87,8 +87,23 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void getKey(){
+    public String getKey(){
+        String keys = "";
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                    //keys = datas.getKey();
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return keys;
     }
 
 

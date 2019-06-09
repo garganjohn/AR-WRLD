@@ -39,6 +39,7 @@ public class ResultPage extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private String userID;
+    private String dbKey;
 
 
     @Override
@@ -54,12 +55,19 @@ public class ResultPage extends AppCompatActivity {
 
         retrieveUserNameAndScore();
 
+        moveBackHome();
+
+
+    }
+
+    public void moveBackHome(){
         playAgainButton.setOnClickListener(v -> {
             startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
             finish();
         });
-
     }
+
+
 
     public void retrieveUserNameAndScore() {
         String playerName = sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
@@ -68,10 +76,10 @@ public class ResultPage extends AppCompatActivity {
         final long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
         scoreTextView.setText(String.valueOf(userScore));
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        userID = user.getUid();
-        Log.d("user", "USER" + userID);
+//        firebaseAuth = FirebaseAuth.getInstance();
+//        FirebaseUser user = firebaseAuth.getCurrentUser();
+//        userID = user.getUid();
+//        Log.d("user", "USER" + userID);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
         DatabaseReference currentRef = databaseReference.child(playerName);
