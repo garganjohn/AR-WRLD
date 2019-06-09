@@ -119,11 +119,11 @@ public class ResultPage extends AppCompatActivity {
 //
 //            }
 //        });
-        DatabaseReference currentRef = databaseReference.child(playerName);
+       // DatabaseReference currentRef = databaseReference.child(playerName);
 
         Log.d("DB", "db" + databaseReference);
 
-        currentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
@@ -137,8 +137,15 @@ public class ResultPage extends AppCompatActivity {
 //                    dataSnapshot.child(playerName).child("game 1").getValue();
 //                    Log.d("FINDME", "getting game number" + dataSnapshot.child(playerName).child("game 1").getValue());
 //                    currentRef.child("game 1").setValue(100);
-                        currentRef.child(keys).setValue(userScore);
+                       // databaseReference.child(keys).setValue(userScore);
                         // databaseReference.child("score").setValue(userScore);
+
+                        UserInformation userInformation1 = dataSnapshot.getValue(UserInformation.class);
+                        userInformation1.setUsername(playerName);
+                        userInformation1.setUserscore(userScore);
+                        databaseReference.child(keys).setValue(userInformation1);
+                        finish();
+
                     } else {
                         UserInformation userInformation = new UserInformation();
                         userInformation.setUsername(playerName);
