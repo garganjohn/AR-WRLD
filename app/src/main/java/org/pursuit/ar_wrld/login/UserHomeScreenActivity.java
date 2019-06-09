@@ -137,8 +137,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
         setPerkInfo();
         usernameTextView.setText(retrieveUsername());
-        //String userScoreText = getString(R.string.user_score, retrieveUserScore());
-        //userscoreTextView.setText(userScoreText);
+//        String userScoreText = getString(R.string.user_score, retrieveScore());
+//        userscoreTextView.setText(userScoreText);
     }
 
     private void findViews() {
@@ -183,12 +183,12 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                 String keys = "";
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     keys = datas.getKey();
-                    UserInformation existingUser = datas.getValue(UserInformation.class);
-                    Log.d("FINDME", "onUserHome: "+keys);
+                    //updatedScore = datas.getValue(UserInformation.class).getUserscore();
+                    Log.d("FINDME", "onUserHome: "+ updatedScore);
                 }
                 if (dataSnapshot.child(keys).exists()) {
 
-                    Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren().iterator().toString());
+                    Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren());
 
                     currentRef.child(keys).setValue(userInformation);
                 } else {
