@@ -71,7 +71,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 30000;
+    private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -789,7 +789,6 @@ public class SpaceARFragment extends Fragment {
             @Override
             public void onTimerFinish() {
                 countDownText.setText("Time's Up");
-                audioLoader.stopAudio();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 goToResultPage();
             }
@@ -863,7 +862,8 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
-        Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
+        audioLoader.stopAudio();
+        Intent goToResultPageIntent = new Intent(getActivity(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
 
