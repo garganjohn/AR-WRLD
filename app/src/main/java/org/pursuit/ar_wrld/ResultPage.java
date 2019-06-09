@@ -38,8 +38,6 @@ public class ResultPage extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private FirebaseAuth firebaseAuth;
-    private String userID;
     private String dbKey;
     private UserInformation userInfo;
 
@@ -57,8 +55,6 @@ public class ResultPage extends AppCompatActivity {
 
         retrieveUserNameAndScore();
 
-        //retrieve3();
-
         moveBackHome();
 
 
@@ -70,7 +66,6 @@ public class ResultPage extends AppCompatActivity {
             finish();
         });
     }
-
 
 
     public void retrieveUserNameAndScore() {
