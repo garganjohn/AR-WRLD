@@ -14,11 +14,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,11 +31,13 @@ import com.google.ar.core.Frame;
 import com.google.ar.core.Plane;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.Camera;
 import com.google.ar.sceneform.FrameTime;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.AnimationData;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.Light;
@@ -130,7 +134,7 @@ public class SpaceARFragment extends Fragment {
     private float hideWeapon = .5f;
     private float usingWeapon = 1f;
     private Light modelLight = null;
-    private Node newNode;
+    private Node newNode = null;
     private Color Red = new Color(android.graphics.Color.RED);
 
     public SpaceARFragment() {
@@ -204,7 +208,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setMaxNumOfModels() {
-        switch (difficulty){
+        switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
                 maxModels = 15;
                 break;
@@ -580,7 +584,7 @@ public class SpaceARFragment extends Fragment {
         numOfModels++;
 
         modelRenderablesList.add(renderable);
-        Log.d(TAG, "addNodeToScene: "+numOfModels);
+        Log.d(TAG, "addNodeToScene: " + numOfModels);
 
         //Game is over once a certain number of models is higher than the limit shown below
         switch (difficulty) {
@@ -671,7 +675,7 @@ public class SpaceARFragment extends Fragment {
             }
 
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
-            fireLasers(anchorNode,node);
+            fireLasers(anchorNode, node);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -766,7 +770,7 @@ public class SpaceARFragment extends Fragment {
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
                     isUserTimeWarned = true;
                 }
-                if (timeLeftInMilliseconds < 10000){
+                if (timeLeftInMilliseconds < 10000) {
                     countDownText.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
                 }
                 setNumOfAliensTextColor();
@@ -784,13 +788,11 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setNumOfAliensTextColor() {
-        if (numOfModels >= (maxModels-2)){
+        if (numOfModels >= (maxModels - 2)) {
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-        }
-        else if (numOfModels >= (maxModels/2) ){
+        } else if (numOfModels >= (maxModels / 2)) {
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
-        }
-        else {
+        } else {
             //TODO null pointer exception when device is in ar and rotates
             numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
@@ -923,25 +925,85 @@ public class SpaceARFragment extends Fragment {
 
     }
 
+//    public void laserFire(Node node) {
+//        AnchorNode anchorNode = new AnchorNode();
+//        anchorNode.setWorldPosition(new Vector3(0f,0f,-.800f));
+//        newNode = new Node();
+//        newNode.setParent(anchorNode);
+//        Vector3 camera = arFragment.getArSceneView().getScene().getCamera().getLocalPosition();
+//        Vector3 sceneAnchor = sceneNode.getLocalPosition();
+//
+//        Vector3 nodePositions = node.getLocalPosition();
+//
+//        newNode.setLocalPosition(sceneAnchor);
+//
+//
+//
+//        ModelRenderable.builder()
+//                .setSource(getContext(), Uri.parse(GameInformation.BOSS_ENEMY))
+//                .build()
+//                .thenAccept(renderable ->
+//                {
+//                    newNode.setRenderable(renderable);
+//                })
+//                .exceptionally(
+//                        throwable -> {
+//                            Toast toast = Toast.makeText(getContext(), "Unable to load obj renderable", Toast.LENGTH_LONG);
+//                            toast.setGravity(Gravity.CENTER, 0, 0);
+//                            toast.show();
+//                            return null;
+//                        });
+//
+//
+//
+//
+//        ObjectAnimator objectAnimator = new ObjectAnimator();
+//
+//        objectAnimator.setAutoCancel(true);
+//        objectAnimator.setTarget(newNode);
+//        objectAnimator.setPropertyName("localPosition");
+//        objectAnimator.setObjectValues(newNode.getLocalPosition(), nodePositions);
+//
+//
+//        //requires the setter name of what you are manipulating
+//
+//        //evaluator of what values your are passing
+//
+//        //set multiple coordinates to be called one after the other
+//        objectAnimator.setEvaluator(new Vector3Evaluator());
+//        //animation happens forever
+//        //objectAnimator.setRepeatCount(OSbjectAnimator.);
+//        //animation is the called in reverse
+//        objectAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+//        // This makes the animation linear (smooth and uniform).
+//        objectAnimator.setInterpolator(new LinearInterpolator());
+//        // Duration in ms of the animation.
+//        objectAnimator.setDuration(1000);
+//        objectAnimator.start();
+//
+//
+//    }
+
 
     public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
 
-        newNode = new Node();
 
-//
+        float distance = 1;
+        if (anchorNode!= null){
+        newNode = new Node();}
+
         Vector3 point1, point2;
-//            Vector3 motionPoint = new Vector3( motionEvent.getX(),motionEvent.getY(),0f);
-        Vector3 cameraPosition  = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
-        //Vector3 startPos  = sceneNode.getWorldPosition();
-        Vector3 startVctor = new Vector3(0f,0f,0f);
-       // point1 = anchorNode.getWorldPosition();
+        Vector3 cameraPosition = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+        Vector3 startPos = sceneNode.getWorldPosition();
+        Vector3 startVctor = new Vector3(0f, 0f, 0f);
+
         point2 = transformableNode.getWorldPosition();
 
         /*
             First, find the vector extending between the two points and define a look rotation
             in terms of this Vector.
         */
-        final Vector3 difference = Vector3.subtract(startVctor, point2);
+        final Vector3 difference = Vector3.subtract(cameraPosition, point2);
         final Vector3 directionFromTopToBottom = difference.normalized();
         final Quaternion rotationFromAToB =
                 Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
@@ -958,12 +1020,13 @@ public class SpaceARFragment extends Fragment {
 
                             newNode.setParent(anchorNode);
                             newNode.setRenderable(model);
+//                            newNode.setWorldPosition(startVctor);
                             newNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(.5f));
                             newNode.setWorldRotation(rotationFromAToB);
 
                         });
 
-        new CountDownTimer(200, 200) {
+        new CountDownTimer(100, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -971,10 +1034,15 @@ public class SpaceARFragment extends Fragment {
 
             @Override
             public void onFinish() {
+                //if (newNode.getRenderable() != null) {
+                //newNode.setRenderable(null);
                 anchorNode.removeChild(newNode);
-                newNode.setRenderable(null);
+                newNode = null;
+
+
             }
         }.start();
+
 
     }
 
