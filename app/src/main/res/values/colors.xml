@@ -13,4 +13,5 @@
     <color name="non_button_bg">#000000</color>
     <color name="button_stroke_color">#E8F102</color>
     <color name="transparentWhite">#A8FFFFFF</color>
+    <color name="text_btn_color">#FFFFFF</color>
 </resources>

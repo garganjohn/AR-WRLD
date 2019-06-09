@@ -16,7 +16,7 @@
     <string name="failed">Attempt Unsuccessful!</string>
     <string name="med_weapon_info">Damage: %1$d \n Ammo: %2$d</string>
     <string name="damage_weak_weapon">Damage: 1 \n Ammo: ∞</string>
-    <string name="practice">Practice</string>
+    <string name="how_to_play">How to play</string>
     <string name="play">Play</string>
     <string name="top_players">Top Players</string>
     <string name="choose_a_level">Choose a level</string>
