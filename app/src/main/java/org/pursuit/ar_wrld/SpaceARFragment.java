@@ -15,19 +15,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ankushgrover.hourglass.Hourglass;
+import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Plane;
+import com.google.ar.core.Pose;
+import com.google.ar.core.Session;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
+import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
@@ -71,7 +77,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 45000;
+    private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -88,10 +94,8 @@ public class SpaceARFragment extends Fragment {
     private List<TransformableNode> nodeList;
     private TextView numOfAliensTv;
     private TextView medWeaponInfo;
-    private Hourglass easyAlienSpawn;
-    private Hourglass medAlienSpawn;
-    private Hourglass hardAlienSpawn;
-    private Hourglass startGame;
+
+    private CountDownTimer startGame;
     private ImageView weakWeapon;
     private ImageView medWeapon;
     private WeaponsAvailable weaponSelection;
@@ -131,6 +135,9 @@ public class SpaceARFragment extends Fragment {
     private Light modelLight = null;
     private Node laserNode = null;
     private Color Red = new Color(android.graphics.Color.RED);
+    long spawnRateEasy = 0;
+    long spawnRateMed = 0;
+    long spawnRateHard = 0;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -143,6 +150,11 @@ public class SpaceARFragment extends Fragment {
         spaceARFragment.setArguments(b);
 
         return spaceARFragment;
+    }
+
+    private void setAnchorAtZZZ() {
+        Pose pose = Pose.makeTranslation(0, 0, 0);
+        //sceneNode = arFragment.getArSceneView().getSession().createAnchor(pose);
     }
 
     @Override
@@ -158,7 +170,6 @@ public class SpaceARFragment extends Fragment {
         modelRenderablesList = new ArrayList<>();
         transformableNodesList = new ArrayList<>();
         modelCoordinates = new ModelCoordinates();
-
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
         //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
@@ -197,11 +208,13 @@ public class SpaceARFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
+        sceneNode = new AnchorNode();
+        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
         shootingTextDissapearing();
         weaponSetup();
         setMaxNumOfModels();
         getStringRes();
-        setupGameInfo();
+        //setupGameInfo();
         setUpRedLight();
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -234,7 +247,7 @@ public class SpaceARFragment extends Fragment {
         super.onDestroy();
         audioLoader.stopAudio();
         audioLoader.nullMediaPlayer();
-        arFragment.getArSceneView().clearAnimation();
+        arFragment.getArSceneView().getSession().getAllAnchors().iterator().forEachRemaining(Anchor::detach);
         arFragment = null;
         transformableNodesList.clear();
         modelRenderablesList.clear();
@@ -270,10 +283,7 @@ public class SpaceARFragment extends Fragment {
                 setPerkDrawable(R.drawable.more_damage_perk_image);
                 break;
             case GameInformation.MORE_TIME_PERK:
-                startGame.pauseTimer();
-                startGame = null;
                 timeLeftInMilliseconds += 20000;
-                startGameTimer();
                 setPerkDrawable(R.drawable.more_time_perk_image);
                 break;
             case GameInformation.MORE_CLOCKS:
@@ -289,87 +299,87 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setupGameInfo() {
-        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
-        startFromBottom.setDuration(1000);
-
-        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
-        exitToBottom.setDuration(2000);
-
-        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                exitAnimationTimer.start();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                gameInfoTv.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        exitAnimationTimer = new CountDownTimer(6000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                gameInfoTv.startAnimation(exitToBottom);
-            }
-        };
-
-        hitChangeColor = new CountDownTimer(20, 2000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-            }
-
-            @Override
-            public void onFinish() {
-                backToOriginalColor.start();
-            }
-        };
-
-        backToOriginalColor = new CountDownTimer(20, 2000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
-            }
-
-            @Override
-            public void onFinish() {
-                repitionForColors++;
-                if (repitionForColors < 5)
-                    hitChangeColor.start();
-                else {
-                    repitionForColors = 0;
-                    mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
-                }
-            }
-        };
+//        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
+//        startFromBottom.setDuration(1000);
+//
+//        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
+//        exitToBottom.setDuration(2000);
+//
+//        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                exitAnimationTimer.start();
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//
+//        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                gameInfoTv.setVisibility(View.INVISIBLE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//
+//        exitAnimationTimer = new CountDownTimer(6000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                gameInfoTv.startAnimation(exitToBottom);
+//            }
+//        };
+//
+//        hitChangeColor = new CountDownTimer(20, 2000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.warningColor));
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                backToOriginalColor.start();
+//            }
+//        };
+//
+//        backToOriginalColor = new CountDownTimer(20, 2000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                repitionForColors++;
+//                if (repitionForColors < 5)
+//                    hitChangeColor.start();
+//                else {
+//                    repitionForColors = 0;
+//                    mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
+//                }
+//            }
+//        };
     }
 
 
@@ -385,8 +395,6 @@ public class SpaceARFragment extends Fragment {
                 isMedWeaponChosen = false;
                 weaponSwitch();
             }
-
-            hitChangeColor.start();
 
             return false;
         });
@@ -470,8 +478,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void spawningAliens(boolean isBoss) {
-        sceneNode = new AnchorNode();
-        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
+        // setAnchorAtZZZ();
 
         if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
@@ -485,70 +492,8 @@ public class SpaceARFragment extends Fragment {
             final boolean[] isMedEnemyAdded = {false};
             final boolean[] isHardEnemyAdded = {false};
 
-            easyAlienSpawn = new Hourglass(2500, 1000) {
-                @Override
-                public void onTimerTick(long timeRemaining) {
 
-                }
-
-                @Override
-                public void onTimerFinish() {
-                    loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
-
-                    easyAlienSpawn.startTimer();
-
-                    if (scoreNumber > 5000 && !isMedEnemyAdded[0]) {
-                        isMedEnemyAdded[0] = true;
-                        medAlienSpawn.startTimer();
-                    }
-                }
-            };
-
-            medAlienSpawn = new Hourglass(3500, 1000) {
-                @Override
-                public void onTimerTick(long timeRemaining) {
-
-                }
-
-                @Override
-                public void onTimerFinish() {
-                    loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-                    medAlienSpawn.startTimer();
-
-                    if (scoreNumber > 10000 && !isHardEnemyAdded[0]) {
-                        isHardEnemyAdded[0] = true;
-                        hardAlienSpawn.startTimer();
-                    }
-                }
-            };
-
-            hardAlienSpawn = new Hourglass(8000, 1000) {
-                @Override
-                public void onTimerTick(long timeRemaining) {
-
-                }
-
-                @Override
-                public void onTimerFinish() {
-                    loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
-                    hardAlienSpawn.startTimer();
-                }
-            };
-
-            switch (difficulty) {
-                case UserHomeScreenActivity.EASY_STRING:
-                    easyAlienSpawn.startTimer();
-                    break;
-                case UserHomeScreenActivity.MEDIUM_STRING:
-                    medAlienSpawn.startTimer();
-                    break;
-                case UserHomeScreenActivity.HARD_STRING:
-                    hardAlienSpawn.setTime(3000);
-                    hardAlienSpawn.startTimer();
-                    break;
-            }
         }
-
         startGameTimer();
     }
 
@@ -613,8 +558,8 @@ public class SpaceARFragment extends Fragment {
         }
 
         anchorNode = new MovementNode(null);
+        anchorNode.setParent(sceneNode);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-
         transformableNodesList.add(node);
 
         getStringRes();
@@ -622,12 +567,12 @@ public class SpaceARFragment extends Fragment {
         node.setRenderable(renderable);
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
-        node.setParent(anchorNode);
         vector.set(modelCoordinates.randomCoordinates(true), modelCoordinates.randomCoordinates(false), modelCoordinates.randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
         anchorNode.randomMovement();
+        node.setParent(anchorNode);
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
 //        node.setLight(modelLight);
@@ -684,8 +629,8 @@ public class SpaceARFragment extends Fragment {
                 weaponSwitch();
             }
 
-            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             fireLasers(anchorNode, node);
+            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -696,9 +641,9 @@ public class SpaceARFragment extends Fragment {
 //                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
+                node.removeChild(anchorNode);
                 audioLoader.explosionSound();
                 sceneNode.removeChild(node);
-                anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
                 switch (whichEnemy) {
@@ -718,11 +663,9 @@ public class SpaceARFragment extends Fragment {
 
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
+
                     timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
-                    startGame.pauseTimer();
-                    startGame = null;
-                    startGameTimer();
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
 //                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
@@ -772,9 +715,35 @@ public class SpaceARFragment extends Fragment {
     }
 
     public void startGameTimer() {
-        startGame = new Hourglass(timeLeftInMilliseconds, 1000) {
+        startGame = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
-            public void onTimerTick(long timeRemaining) {
+            public void onTick(long timeRemaining) {
+                switch (difficulty) {
+                    case UserHomeScreenActivity.EASY_STRING:
+                        if (spawnRateEasy < 2000) {
+                            spawnRateEasy += 1000;
+                        } else {
+                            loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+                            spawnRateEasy = 0;
+                        }
+                        break;
+                    case UserHomeScreenActivity.MEDIUM_STRING:
+                        if (spawnRateMed < 4000) {
+                            spawnRateMed += 1000;
+                        } else {
+                            loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                            spawnRateMed = 0;
+                        }
+                        break;
+                    case UserHomeScreenActivity.HARD_STRING:
+                        if (spawnRateHard < 8000) {
+                            spawnRateHard += 1000;
+                        } else {
+                            loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                            spawnRateHard = 0;
+                        }
+                        break;
+                }
                 timeLeftInMilliseconds = timeRemaining;
                 updateTimer();
                 if (timeLeftInMilliseconds < 10000 && !isUserTimeWarned) {
@@ -787,28 +756,25 @@ public class SpaceARFragment extends Fragment {
             }
 
             @Override
-            public void onTimerFinish() {
+            public void onFinish() {
                 countDownText.setText("Time's Up");
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 goToResultPage();
             }
         };
-        startGame.startTimer();
+        startGame.start();
     }
 
     private void setNumOfAliensTextColor() {
-        if (numOfModels >= (maxModels-2)){
+        if (numOfModels >= (maxModels - 2)) {
             if (getContext() != null)
                 numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-        }
-        else if (numOfModels >= (maxModels/2) ){
+        } else if (numOfModels >= (maxModels / 2)) {
             if (getContext() != null)
                 numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
-        }
-        else {
-            //TODO null pointer exception when device is in ar and rotates
+        } else {
             if (getContext() != null)
-            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
+                numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
     }
 
@@ -862,8 +828,8 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
+        Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         audioLoader.stopAudio();
-        Intent goToResultPageIntent = new Intent(getActivity(), ResultPage.class);
         startActivity(goToResultPageIntent);
     }
 
@@ -874,28 +840,26 @@ public class SpaceARFragment extends Fragment {
         }
     }
 
-    private void nullNodes() {
-        for (int i = 0; i < nodeList.size(); i++) {
-            nodeList.get(i).setParent(null);
-            nodeList.get(i).setRenderable(null);
-        }
+    private void detachNodes() {
+        Collection<Anchor> anchorList = arFragment.getArSceneView().getSession().getAllAnchors();
+        anchorList.iterator().forEachRemaining(Anchor::detach);
     }
 
     @Override
     public void onPause() {
+        startGame.cancel();
         super.onPause();
-        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
-        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
-        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
-
+//        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
+//        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
+//        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+//        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+//        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
+//        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
     private void audioSetup(Context c) {
@@ -937,15 +901,14 @@ public class SpaceARFragment extends Fragment {
                         .setIntensity(45f)
                         .build();
         return modelLight;
-
     }
-
 
 
     public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
 
-        if (anchorNode!= null){
-        laserNode = new Node();}
+        if (anchorNode != null) {
+            laserNode = new Node();
+        }
 
         Vector3 point1, point2;
         Vector3 cameraPosition = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
@@ -978,7 +941,6 @@ public class SpaceARFragment extends Fragment {
 //                            laserNode.setWorldPosition(startVctor);
                             laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
-
                         });
 
         new CountDownTimer(100, 1000) {
@@ -993,13 +955,7 @@ public class SpaceARFragment extends Fragment {
                 //laserNode.setRenderable(null);
                 anchorNode.removeChild(laserNode);
                 laserNode = null;
-
-
             }
         }.start();
-
-
     }
-
-
 }
