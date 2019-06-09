@@ -81,11 +81,11 @@
 
     <string name="more_ammo_perk_name">More Ammo</string>
     <string name="more_time_perk_name">More Time</string>
-    <string name="slow_time_perk_name">Slow Time</string>
+    <string name="more_clocks_perk_name">More Clock</string>
     <string name="more_damage_perk_name">More Damage</string>
     <string name="no_perk_text">No Perk Chosen</string>
 
-    <string name="user_score">Top Score: \n %d</string>
+    <string name="user_score">Overall Score: \n %d</string>
 
 
 </resources>
