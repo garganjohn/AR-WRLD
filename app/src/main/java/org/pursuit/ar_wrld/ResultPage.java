@@ -55,9 +55,9 @@ public class ResultPage extends AppCompatActivity {
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        //retrieveUserNameAndScore();
+        retrieveUserNameAndScore();
 
-        retrieve3();
+        //retrieve3();
 
         moveBackHome();
 
@@ -80,10 +80,10 @@ public class ResultPage extends AppCompatActivity {
         final long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
         scoreTextView.setText(String.valueOf(userScore));
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        userID = user.getUid();
-        Log.d("user", "USER" + userID);
+//        firebaseAuth = FirebaseAuth.getInstance();
+//        FirebaseUser user = firebaseAuth.getCurrentUser();
+//        userID = user.getUid();
+//        Log.d("user", "USER" + userID);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
         DatabaseReference currentRef = databaseReference.child(playerName);
@@ -96,6 +96,7 @@ public class ResultPage extends AppCompatActivity {
                 String keys = "";
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     keys = datas.getKey();
+                    Log.d("FINDME", "onDataChange: "+keys);
                 }
                 if (dataSnapshot.child(keys).exists()) {
 
