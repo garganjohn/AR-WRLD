@@ -15,47 +15,43 @@ import org.pursuit.ar_wrld.R;
 
 public class AudioLoader {
     private Context context;
-    private MediaPlayer shootingSound;
+    private MediaPlayer laserSound;
     private MediaPlayer pointUp;
     private MediaPlayer explosionSound;
     private MediaPlayer miss;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer backgroundMusic;
 
     public AudioLoader(Context context) {
         this.context = context;
     }
 
-    public MediaPlayer getShootingSound() {
-        return shootingSound;
-    }
-
     public void laserSound() {
-        mediaPlayer = MediaPlayer.create(context, R.raw.laserbeam);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.setVolume(20f, 20f);
-        mediaPlayer.start();
+        laserSound = MediaPlayer.create(context, R.raw.laserbeam);
+        laserSound.seekTo(0);
+        laserSound.setVolume(20f, 20f);
+        laserSound.start();
     }
 
     public void backGroundMusic() {
-        mediaPlayer = MediaPlayer.create(context, R.raw.backgroundmusic);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.setVolume(20f, 20f);
-        mediaPlayer.start();
+        backgroundMusic = MediaPlayer.create(context, R.raw.backgroundmusic);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(20f, 20f);
+        backgroundMusic.start();
     }
 
     public void explosionSound(){
-        mediaPlayer = MediaPlayer.create(context, R.raw.explosion8bit);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.setVolume(20f, 20f);
-        mediaPlayer.start();
+        explosionSound = MediaPlayer.create(context, R.raw.explosion8bit);
+        explosionSound.seekTo(0);
+        explosionSound.setVolume(20f, 20f);
+        explosionSound.start();
     }
   
     public void stopAudio(){
-        mediaPlayer.stop();
-        mediaPlayer.release();
+        backgroundMusic.stop();
+        backgroundMusic.release();
     }
 
     public void nullMediaPlayer(){
-        mediaPlayer = null;
+        backgroundMusic = null;
     }
 }
