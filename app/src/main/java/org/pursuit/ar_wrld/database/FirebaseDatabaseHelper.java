@@ -74,37 +74,32 @@ public class FirebaseDatabaseHelper {
 
     public void addUser(UserInformation userInformation, final DataStatus dataStatus) {
         String key = myRef.push().getKey();
-//        String gameNumber = "Game Number";
-//        myRef.child(key).child(gameNumber).setValue(userInformation)
         myRef.child(key).setValue(userInformation)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        dataStatus.dataIsInserted();
-                        Log.e("newUserCreated: ", key);
-                    }
+                .addOnSuccessListener(aVoid -> {
+                    dataStatus.dataIsInserted();
+                    Log.e("newUserCreated: ", key);
                 });
 
     }
 
-    public String getKey(){
-        String keys = "";
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    //keys = datas.getKey();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        return keys;
-    }
+//    public String getKey(){
+//        String keys = "";
+//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+//                    //keys = datas.getKey();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//        return keys;
+//    }
 
 
     public void updateScore(String name, long score) {

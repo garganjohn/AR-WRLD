@@ -76,12 +76,49 @@ public class ResultPage extends AppCompatActivity {
         final long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
         scoreTextView.setText(String.valueOf(userScore));
 
-//        firebaseAuth = FirebaseAuth.getInstance();
-//        FirebaseUser user = firebaseAuth.getCurrentUser();
-//        userID = user.getUid();
-//        Log.d("user", "USER" + userID);
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        userID = user.getUid();
+        Log.d("user", "USER" + userID);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
+
+//        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                UserInformation userInformation = dataSnapshot.getValue(UserInformation.class);
+//                Log.d("RESULTPAGE", "findme" + userInformation);
+//                for(DataSnapshot data: dataSnapshot.getChildren()){
+//                    String key = data.getKey();
+//                    if(dataSnapshot.child(key).exists()){
+//                        userInformation.setUsername(playerName);
+//                        userInformation.setUserscore(userScore);
+//                    } else {
+//                        UserInformation newUser = new UserInformation();
+//                        newUser.setUsername(playerName);
+//                        newUser.setUserscore(userScore);
+//
+//                        new FirebaseDatabaseHelper().addUser(newUser, new FirebaseDatabaseHelper.DataStatus() {
+//                            @Override
+//                            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+//
+//                            }
+//
+//                            @Override
+//                            public void dataIsInserted() {
+//                                System.out.println("Score is saved!");
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                System.out.println("The read failed: " + databaseError.getCode());
+//
+//            }
+//        });
         DatabaseReference currentRef = databaseReference.child(playerName);
 
         Log.d("DB", "db" + databaseReference);
@@ -89,10 +126,9 @@ public class ResultPage extends AppCompatActivity {
         currentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String keys = "";
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
-                    keys = datas.getKey();
-                }
+                    String keys = datas.getKey();
+
                     if (dataSnapshot.child(keys).exists()) {
 
                         Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
@@ -124,6 +160,7 @@ public class ResultPage extends AppCompatActivity {
 
                     }
                 }
+            }
 
 
 //                long previousScore = dataSnapshot.getValue(Long.class);
@@ -135,6 +172,7 @@ public class ResultPage extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
 
             }
         });
