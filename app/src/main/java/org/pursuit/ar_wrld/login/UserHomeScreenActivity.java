@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxbinding.view.RxView;
 
@@ -173,6 +174,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         DatabaseReference currentRef = databaseReference.child(retrieveUsername());
 
         Log.d("DB", "db" + databaseReference);
+
+        //Query userQuery = databaseReference.child(retrieveUsername()).startAt(0).orderByChild()
 
         currentRef.addValueEventListener(new ValueEventListener() {
             @Override
