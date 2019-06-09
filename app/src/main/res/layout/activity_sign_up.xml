@@ -7,12 +7,14 @@
     android:paddingLeft="24dp"
     android:paddingTop="56dp"
     android:paddingRight="24dp"
+    android:background="@drawable/space_home_bg"
     tools:context=".login.SignUpActivity">
 
     <EditText
         android:id="@+id/input_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/silver_app_color"
         android:hint="@string/pick_a_username"
         android:inputType="textEmailAddress" />
 
@@ -21,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/user_email"
+        android:textColor="@color/silver_app_color"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -28,12 +31,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/user_password"
+        android:textColor="@color/silver_app_color"
         android:inputType="textPassword" />
 
     <TextView
         android:id="@+id/password_requirement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/silver_app_color"
         android:text="@string/note_passwrod_requirement" />
 
     <Button
@@ -43,6 +48,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:padding="12dp"
+        android:background="@drawable/button_bg"
         android:text="@string/create_a_new_account" />
 
     <TextView
