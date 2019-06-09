@@ -68,50 +68,53 @@ public class ResultPage extends AppCompatActivity {
         final long userScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
         scoreTextView.setText(String.valueOf(userScore));
 
-
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userID = user.getUid();
         Log.d("user", "USER" + userID);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
-
         DatabaseReference currentRef = databaseReference.child(playerName);
 
-        Log.d("DB", "db" + currentRef);
-
-
+        Log.d("DB", "db" + databaseReference);
 
         currentRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child(playerName).exists()) {
+                String keys = "";
+                for (DataSnapshot datas : dataSnapshot.getChildren()) {
+                    keys = datas.getKey();
+                }
+                    if (dataSnapshot.child(keys).exists()) {
 
-                    Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
+                        Log.d("FINDME", "chekcing user" + dataSnapshot.child(playerName));
 
 //                    Log.d("FINDME", "onDataChange: " + dataSnapshot.getValue().toString());
 //                    dataSnapshot.child(playerName).child("game 1").getValue();
 //                    Log.d("FINDME", "getting game number" + dataSnapshot.child(playerName).child("game 1").getValue());
 //                    currentRef.child("game 1").setValue(100);
-                    currentRef.child("score").setValue(userScore);
-                } else {
-                    UserInformation userInformation = new UserInformation();
-                    userInformation.setUserscore(userScore);
+                        currentRef.child(keys).setValue(userScore);
+                        // databaseReference.child("score").setValue(userScore);
+                    } else {
+                        UserInformation userInformation = new UserInformation();
+                        userInformation.setUsername(playerName);
+                        userInformation.setUserscore(userScore);
 
-                    new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
-                        @Override
-                        public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+                        new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+                            @Override
+                            public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
 
-                        }
+                            }
 
-                        @Override
-                        public void dataIsInserted() {
-                            Toast.makeText(ResultPage.this, "Score is saved successfully!", Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void dataIsInserted() {
+                                Toast.makeText(ResultPage.this, "Score is saved successfully!", Toast.LENGTH_SHORT).show();
 
-                        }
+                            }
 
-                    });
+                        });
 
+                    }
                 }
 
 
@@ -121,9 +124,6 @@ public class ResultPage extends AppCompatActivity {
 //                Log.e("Key from db", "previous " + previousScore);
 //                Log.e("Key from db", "current " + userScore);
 //                Log.e("Key from db", "updated " + newScore);
-
-            }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

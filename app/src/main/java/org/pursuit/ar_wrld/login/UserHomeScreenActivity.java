@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.annotation.NonNull;
@@ -37,8 +38,14 @@ import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
+import org.pursuit.ar_wrld.usermodel.UserInformation;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static java.lang.Long.parseLong;
+import static java.lang.Long.valueOf;
 
 public class UserHomeScreenActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -63,6 +70,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private long updatedScore;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private String nameShown;
+    private UserInformation userInformation;
 
     public static final String EASY_STRING = "EASY";
     public static final String MEDIUM_STRING = "MEDIUM";
@@ -152,6 +160,59 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
     private long retrieveUserScore() {
 
+        try {
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            databaseReference = firebaseDatabase.getReference("mARtians");
+            String playName = retrieveUsername();
+            DatabaseReference updatedRef = databaseReference.child(playName);
+            Log.d("USERHOMESCREEN", "getting the child node" + updatedRef.toString());
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot datas: dataSnapshot.getChildren()){
+                        String keys=datas.getKey();
+                        if(dataSnapshot.child(keys).exists()){
+
+                            //long gettingScore = userInformation.getUserscore();
+                            //updatedScore = dataSnapshot.child(keys).child("userscore").getValue();
+                            Log.d("FINDME", "userkey" + keys);
+
+                        } else{
+                            UserInformation userInformation = new UserInformation();
+                            userInformation.setUsername(playName);
+                            userInformation.setUserscore(0);
+                            // databaseReference.child(playName).child("score").setValue(0);
+
+                            new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+                                @Override
+                                public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+
+                                }
+
+                                @Override
+                                public void dataIsInserted() {
+
+                                }
+                            });
+                        }
+
+                        userscoreTextView.setText(String.valueOf(updatedScore));
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } catch (Exception e) {
+            Log.d("MURICA", "retrieveUserScore: " + e.toString());
+        }
+        return updatedScore;
+
 
 //        try {
 //            firebaseDatabase = FirebaseDatabase.getInstance();
@@ -182,7 +243,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 //        } catch (Exception e) {
 //            Log.d("MURICA", "retrieveUserScore: " + e.toString());
 //        }
-        return updatedScore;
     }
 
 //    private long gettingNameFromDB() {
