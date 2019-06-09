@@ -201,8 +201,6 @@ public class SpaceARFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
         findViews(rootView);
         setUpAR();
-        sceneNode = new AnchorNode();
-        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
         return rootView;
     }
 
@@ -210,6 +208,8 @@ public class SpaceARFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
+        sceneNode = new AnchorNode();
+        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
         shootingTextDissapearing();
         weaponSetup();
         setMaxNumOfModels();
@@ -284,7 +284,6 @@ public class SpaceARFragment extends Fragment {
                 break;
             case GameInformation.MORE_TIME_PERK:
                 timeLeftInMilliseconds += 20000;
-                startGameTimer();
                 setPerkDrawable(R.drawable.more_time_perk_image);
                 break;
             case GameInformation.MORE_CLOCKS:
@@ -300,87 +299,87 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setupGameInfo() {
-        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
-        startFromBottom.setDuration(1000);
-
-        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
-        exitToBottom.setDuration(2000);
-
-        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                exitAnimationTimer.start();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                gameInfoTv.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        exitAnimationTimer = new CountDownTimer(6000, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                gameInfoTv.startAnimation(exitToBottom);
-            }
-        };
-
-        hitChangeColor = new CountDownTimer(20, 2000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-            }
-
-            @Override
-            public void onFinish() {
-                backToOriginalColor.start();
-            }
-        };
-
-        backToOriginalColor = new CountDownTimer(20, 2000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
-            }
-
-            @Override
-            public void onFinish() {
-                repitionForColors++;
-                if (repitionForColors < 5)
-                    hitChangeColor.start();
-                else {
-                    repitionForColors = 0;
-                    mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
-                }
-            }
-        };
+//        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
+//        startFromBottom.setDuration(1000);
+//
+//        exitToBottom = new TranslateAnimation(0, 0, 0, 600f);
+//        exitToBottom.setDuration(2000);
+//
+//        startFromBottom.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                exitAnimationTimer.start();
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//
+//        exitToBottom.setAnimationListener(new Animation.AnimationListener() {
+//            @Override
+//            public void onAnimationStart(Animation animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                gameInfoTv.setVisibility(View.INVISIBLE);
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animation animation) {
+//
+//            }
+//        });
+//
+//        exitAnimationTimer = new CountDownTimer(6000, 1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                gameInfoTv.startAnimation(exitToBottom);
+//            }
+//        };
+//
+//        hitChangeColor = new CountDownTimer(20, 2000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.warningColor));
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                backToOriginalColor.start();
+//            }
+//        };
+//
+//        backToOriginalColor = new CountDownTimer(20, 2000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//                mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                repitionForColors++;
+//                if (repitionForColors < 5)
+//                    hitChangeColor.start();
+//                else {
+//                    repitionForColors = 0;
+//                    mainActBG.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.neutral_hit));
+//                }
+//            }
+//        };
     }
 
 
@@ -559,8 +558,8 @@ public class SpaceARFragment extends Fragment {
         }
 
         anchorNode = new MovementNode(null);
+        anchorNode.setParent(sceneNode);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
-
         transformableNodesList.add(node);
 
         getStringRes();
@@ -568,12 +567,12 @@ public class SpaceARFragment extends Fragment {
         node.setRenderable(renderable);
 
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
-        node.setParent(anchorNode);
         vector.set(modelCoordinates.randomCoordinates(true), modelCoordinates.randomCoordinates(false), modelCoordinates.randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
 
         anchorNode.randomMovement();
+        node.setParent(anchorNode);
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
 //        node.setLight(modelLight);
@@ -630,8 +629,8 @@ public class SpaceARFragment extends Fragment {
                 weaponSwitch();
             }
 
-            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             fireLasers(anchorNode, node);
+            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -641,12 +640,10 @@ public class SpaceARFragment extends Fragment {
                 audioLoader.laserSound();
 //                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
-                anchorNode.setRenderable(null);
-                anchorNode.setParent(null);
                 node.setRenderable(null);
+                node.removeChild(anchorNode);
                 audioLoader.explosionSound();
                 sceneNode.removeChild(node);
-                anchorNode.removeChild(node);
                 mli.cancelAnimator();
 
                 switch (whichEnemy) {
@@ -669,9 +666,6 @@ public class SpaceARFragment extends Fragment {
 
                     timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
-                    startGame.cancel();
-                    startGame = null;
-                    startGameTimer();
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
 //                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
@@ -726,25 +720,25 @@ public class SpaceARFragment extends Fragment {
             public void onTick(long timeRemaining) {
                 switch (difficulty) {
                     case UserHomeScreenActivity.EASY_STRING:
-                        if (spawnRateEasy < 2000){
+                        if (spawnRateEasy < 2000) {
                             spawnRateEasy += 1000;
-                        }else{
+                        } else {
                             loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
                             spawnRateEasy = 0;
                         }
                         break;
                     case UserHomeScreenActivity.MEDIUM_STRING:
-                        if (spawnRateMed < 4000){
+                        if (spawnRateMed < 4000) {
                             spawnRateMed += 1000;
-                        }else{
+                        } else {
                             loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
                             spawnRateMed = 0;
                         }
                         break;
                     case UserHomeScreenActivity.HARD_STRING:
-                        if (spawnRateHard < 8000){
+                        if (spawnRateHard < 8000) {
                             spawnRateHard += 1000;
-                        }else{
+                        } else {
                             loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
                             spawnRateHard = 0;
                         }
@@ -772,18 +766,15 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void setNumOfAliensTextColor() {
-        if (numOfModels >= (maxModels-2)){
+        if (numOfModels >= (maxModels - 2)) {
             if (getContext() != null)
                 numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.warningColor));
-        }
-        else if (numOfModels >= (maxModels/2) ){
+        } else if (numOfModels >= (maxModels / 2)) {
             if (getContext() != null)
                 numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.mid_warning_color));
-        }
-        else {
-            //TODO null pointer exception when device is in ar and rotates
+        } else {
             if (getContext() != null)
-            numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
+                numOfAliensTv.setTextColor(ContextCompat.getColor(getContext(), R.color.doing_great_color));
         }
     }
 
@@ -838,6 +829,7 @@ public class SpaceARFragment extends Fragment {
 
     public void goToResultPage() {
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
+        audioLoader.stopAudio();
         startActivity(goToResultPageIntent);
     }
 
@@ -949,7 +941,6 @@ public class SpaceARFragment extends Fragment {
 //                            laserNode.setWorldPosition(startVctor);
                             laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
-
                         });
 
         new CountDownTimer(100, 1000) {
@@ -964,11 +955,7 @@ public class SpaceARFragment extends Fragment {
                 //laserNode.setRenderable(null);
                 anchorNode.removeChild(laserNode);
                 laserNode = null;
-
-
             }
         }.start();
-
-
     }
 }
