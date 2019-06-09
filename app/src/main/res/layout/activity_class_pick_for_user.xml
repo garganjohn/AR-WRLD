@@ -33,4 +33,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
+    <me.relex.circleindicator.CircleIndicator
+        android:id="@+id/circle_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:ci_drawable="@drawable/circle_indicator_custom"
+        app:layout_constraintBottom_toBottomOf="@id/mainActivity_viewPager" />
+
 </android.support.constraint.ConstraintLayout>
