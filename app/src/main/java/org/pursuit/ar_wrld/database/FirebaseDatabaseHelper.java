@@ -87,6 +87,10 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public void getKey(){
+
+    }
+
 
     public void updateScore(String name, long score) {
 
