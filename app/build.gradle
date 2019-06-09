@@ -84,3 +84,9 @@ sceneform.asset('sampledata/boss_saucer/FlyingSacuer.obj',
         'default',
         'sampledata/boss_saucer/FlyingSacuer.sfa',
         'src/main/assets/FlyingSacuer')
+
+
+sceneform.asset('sampledata/laser/laser.obj',
+        'default',
+        'sampledata/laser/laser.sfa',
+        'src/main/assets/laser')
