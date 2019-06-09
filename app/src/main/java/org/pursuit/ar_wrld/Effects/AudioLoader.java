@@ -16,9 +16,7 @@ import org.pursuit.ar_wrld.R;
 public class AudioLoader {
     private Context context;
     private MediaPlayer laserSound;
-    private MediaPlayer pointUp;
     private MediaPlayer explosionSound;
-    private MediaPlayer miss;
     private MediaPlayer backgroundMusic;
 
     public AudioLoader(Context context) {
