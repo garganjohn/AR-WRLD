@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import org.pursuit.ar_wrld.R;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
-import org.pursuit.ar_wrld.perks.ViewPagerListener;
 
 //public class UserTitlesFragment extends Fragment implements ViewPagerListener {
 //

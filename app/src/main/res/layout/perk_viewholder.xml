@@ -4,17 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/view_for_white_bg"
-    tools:context=".perks.ViewPagerForPerk">
+    android:layout_height="wrap_content"
+    android:id="@+id/perk_viewholder"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    android:background="@drawable/view_bg_non_button"
+    tools:context=".perks.PerkViewHolder">
 
     <TextView
         android:id="@+id/perk_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:fontFamily="@font/pixel_operator"
-        android:textColor="@color/purple_app_color"
+        android:fontFamily="@font/pixel_operator_bold"
+        android:textColor="#1BDA0D"
         android:layout_margin="8dp"
         android:textSize="24sp"
         android:gravity="center"/>
@@ -24,11 +27,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginTop="68dp"
         android:fontFamily="@font/pixel_operator"
         android:gravity="center"
         android:textSize="24sp"
-        android:textColor="#000"
+        android:textColor="#fff"
         app:layout_constraintTop_toBottomOf="@id/perk_name"
         tools:layout_editor_absoluteX="16dp" />
 
@@ -36,9 +38,9 @@
         android:id="@+id/perk_image"
         android:layout_width="250dp"
         android:layout_height="150dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="150dp"
-        app:layout_constraintTop_toBottomOf="@id/perk_description"/>
+        app:layout_constraintTop_toBottomOf="@+id/perk_description" />
   
 </android.support.constraint.ConstraintLayout>
