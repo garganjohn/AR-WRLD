@@ -46,6 +46,7 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.movement.MovementNode;
+import org.pursuit.ar_wrld.movement.ProjectileNode;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -131,6 +132,8 @@ public class SpaceARFragment extends Fragment {
     private Light modelLight = null;
     private Node laserNode = null;
     private Color Red = new Color(android.graphics.Color.RED);
+    AnchorNode laserAnchor = new AnchorNode();
+    private ProjectileNode projectileNode;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -593,6 +596,9 @@ public class SpaceARFragment extends Fragment {
     public void addNodeToScene(ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
 
+
+
+
         modelRenderablesList.add(renderable);
         Log.d(TAG, "addNodeToScene: " + numOfModels);
 
@@ -614,6 +620,7 @@ public class SpaceARFragment extends Fragment {
 
         anchorNode = new MovementNode(null);
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
+        laserAnchor.setParent(anchorNode);
 
         transformableNodesList.add(node);
 
@@ -632,6 +639,10 @@ public class SpaceARFragment extends Fragment {
         node.setLocalPosition(vector);
 //        node.setLight(modelLight);
         mli.indicate(vector);
+
+        projectileNode = new ProjectileNode(getContext());
+        projectileNode.setParent(sceneNode);
+        projectileNode.setUpRenderable(Uri.parse(GameInformation.BOSS_ENEMY));
 
         ModelLives modelLives = new ModelLives();
         boolean isTimerModel = false;
@@ -683,9 +694,9 @@ public class SpaceARFragment extends Fragment {
                 isMedWeaponChosen = false;
                 weaponSwitch();
             }
-
+            projectileNode.launchProjectile(node);
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
-            fireLasers(anchorNode, node);
+            //fireLasers(anchorNode, node);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
