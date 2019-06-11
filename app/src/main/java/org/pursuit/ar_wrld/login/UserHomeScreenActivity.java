@@ -124,8 +124,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         tutorialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(getApplicationContext(), TutorialActivity.class);
-               startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), TutorialActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -137,8 +137,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         });
         setPerkInfo();
         usernameTextView.setText(retrieveUsername());
-        //String userScoreText = getString(R.string.user_score, retrieveUserScore());
-        //userscoreTextView.setText(userScoreText);
+        String userScoreText = getString(R.string.user_score, retrieveScore());
+        userscoreTextView.setText(userScoreText);
     }
 
     private void findViews() {
@@ -167,7 +167,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         return sharedPreferences.getString(GameInformation.USERNAME_KEY, "");
     }
 
-    private long retrieveScore(){
+    private long retrieveScore() {
+
+        final long updatedScore = sharedPreferences.getLong(GameInformation.USER_SCORE_KEY, 0);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("mARtians");
@@ -175,7 +177,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         Log.d("DB", "db" + databaseReference);
 
-        //Query userQuery = databaseReference.child(retrieveUsername()).startAt(0).orderByChild()
 
         currentRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -183,17 +184,16 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                 String keys = "";
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     keys = datas.getKey();
-                    UserInformation existingUser = datas.getValue(UserInformation.class);
-                    Log.d("FINDME", "onUserHome: "+keys);
+                    Log.d("FINDME", "onUserHome: " + updatedScore);
                 }
                 if (dataSnapshot.child(keys).exists()) {
 
-                    Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren().iterator().toString());
+                    Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren());
 
-                    currentRef.child(keys).setValue(userInformation);
+//                    currentRef.child(keys).setValue(updatedScore);
+                    userscoreTextView.setText(String.valueOf(updatedScore));
                 } else {
                     UserInformation userInformation = new UserInformation();
-                    //userInformation.setUsername(retrieveUsername());
                     userInformation.setUserscore(0);
 
                     currentRef.child(keys).setValue(userInformation);
@@ -209,80 +209,48 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         return updatedScore;
     }
 
-    private long retrieveUserScore() {
-
-        try {
-            firebaseDatabase = FirebaseDatabase.getInstance();
-            databaseReference = firebaseDatabase.getReference("mARtians");
-            String playName = retrieveUsername();
-            DatabaseReference updatedRef = databaseReference.child(playName);
-            Log.d("USERHOMESCREEN", "getting the child node" + updatedRef.toString());
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot datas: dataSnapshot.getChildren()){
-                        String keys=datas.getKey();
-                        if(dataSnapshot.child(keys).exists()){
-
-                            //long gettingScore = userInformation.getUserscore();
-                            //updatedScore = dataSnapshot.child(keys).child("userscore").getValue();
-                            Log.d("FINDME", "userkey" + keys);
-
-                        } else{
-                            UserInformation userInformation = new UserInformation();
-//                            userInformation.setUsername(playName);
-                            userInformation.setUserscore(0);
-                            // databaseReference.child(playName).child("score").setValue(0);
-
-                            new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
-                                @Override
-                                public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
-
-                                }
-
-                                @Override
-                                public void dataIsInserted() {
-
-                                }
-                            });
-                        }
-                        userscoreTextView.setText(String.valueOf(updatedScore));
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } catch (Exception e) {
-            Log.d("MURICA", "retrieveUserScore: " + e.toString());
-        }
-        return updatedScore;
-
-
+//    private long retrieveUserScore() {
+//
 //        try {
 //            firebaseDatabase = FirebaseDatabase.getInstance();
 //            databaseReference = firebaseDatabase.getReference("mARtians");
-//            //String name = gettingNameFromDB();
-//            DatabaseReference updatedRef = databaseReference.child("name");
-//            updatedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            String playName = retrieveUsername();
+//            DatabaseReference updatedRef = databaseReference.child(playName);
+//            Log.d("USERHOMESCREEN", "getting the child node" + updatedRef.toString());
+//            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
 //                @Override
 //                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    try {
-//                        long updatedScore = dataSnapshot.getValue(Long.class);
-//                    } catch (NullPointerException npe) {
-//                        updatedScore = 0;
-//                    } catch (DatabaseException dbe) {
+//                    for(DataSnapshot datas: dataSnapshot.getChildren()){
+//                        String keys=datas.getKey();
+//                        if(dataSnapshot.child(keys).exists()){
 //
-//                        updatedScore = 0;
+//                            //long gettingScore = userInformation.getUserscore();
+//                            //updatedScore = dataSnapshot.child(keys).child("userscore").getValue();
+//                            Log.d("FINDME", "userkey" + keys);
+//
+//                        } else{
+//                            UserInformation userInformation = new UserInformation();
+////                            userInformation.setUsername(playName);
+//                            userInformation.setUserscore(0);
+//                            // databaseReference.child(playName).child("score").setValue(0);
+//
+//                            new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
+//                                @Override
+//                                public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
+//
+//                                }
+//
+//                                @Override
+//                                public void dataIsInserted() {
+//
+//                                }
+//                            });
+//                        }
+//                        userscoreTextView.setText(String.valueOf(updatedScore));
 //                    }
-//                    String userScoreText = getString(R.string.user_score, updatedScore);
-//                    userscoreTextView.setText(userScoreText);
-//                }
 //
+//
+//                }
 //
 //                @Override
 //                public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -292,124 +260,88 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 //        } catch (Exception e) {
 //            Log.d("MURICA", "retrieveUserScore: " + e.toString());
 //        }
+//        return updatedScore;
+
+
+    private void setPerkInfo() {
+        perkImage.setImageDrawable(setUserPerk());
     }
 
-//    private long gettingNameFromDB() {
-//        String playName = retrieveUsername();
-//        DatabaseReference root = FirebaseDatabase.getInstance().getReference("mARtians");
-//        DatabaseReference users = root.child(playName);
-//        users.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot snapshot) {
-//                if (snapshot.child(playName).exists()) {
-//                    nameShown = root.child(playName).toString();
-//                    updatedScore = snapshot.getValue(Long.class);
-//                    root.child(nameShown).setValue(updatedScore);
-//                } else {
-//                    databaseReference = FirebaseDatabase.getInstance().getReference("mARtians");
-//                    DatabaseReference updatedRef = databaseReference.child(playName);
-//                    updatedRef.addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                            updatedRef.child(playName).setValue(0);
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//                }
-//            }
-//                    @Override
-//                    public void onCancelled (DatabaseError databaseError){
-//
-//                    }
-//                });
-//        return updatedScore;
-//
-//            }
-
-
-            private void setPerkInfo() {
-                perkImage.setImageDrawable(setUserPerk());
-            }
-
-            private Drawable setUserPerk() {
-                switch (userPerkFromSharedPref) {
-                    case GameInformation.MORE_AMMO_PERK:
-                        setUserPerkText(getString(R.string.more_ammo_perk_name));
-                        return getDrawable(R.drawable.ammo_perk);
-                    case GameInformation.MORE_DAMAGE_PERK:
-                        setUserPerkText(getString(R.string.more_damage_perk_name));
-                        return getDrawable(R.drawable.more_damage_perk_image);
-                    case GameInformation.MORE_TIME_PERK:
-                        setUserPerkText(getString(R.string.more_time_perk_name));
-                        return getDrawable(R.drawable.more_time_perk_image);
-                    case GameInformation.MORE_CLOCKS:
-                        setUserPerkText(getString(R.string.more_clocks_perk_name));
-                        return getDrawable(R.drawable.slow_time_perk);
-                    default:
-                        perkChosen.setText(getString(R.string.no_perk_text));
-                        return getDrawable(R.drawable.noperk_chosen_image);
-                }
-            }
-
-            private void setUserPerkText(String perk) {
-                perkChosen.setText(getString(R.string.perk_selected_text, perk));
-            }
-
-            private boolean checkPermission() {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    // Permission is not granted
-                    return false;
-                }
-                return true;
-            }
-
-            private void requestPermission() {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},
-                        PERMISSION_REQUEST_CODE);
-            }
-
-            @Override
-            public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-                switch (requestCode) {
-                    case PERMISSION_REQUEST_CODE:
-                        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                            Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
-
-                            // main logic
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                                        != PackageManager.PERMISSION_GRANTED) {
-                                    showMessageOKCancel("You need to allow access permissions",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                        requestPermission();
-                                                    }
-                                                }
-                                            });
-                                }
-                            }
-                        }
-                        break;
-                }
-            }
-
-            private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-                new AlertDialog.Builder(this)
-                        .setMessage(message)
-                        .setPositiveButton("OK", okListener)
-                        .setNegativeButton("Cancel", null)
-                        .create()
-                        .show();
-            }
+    private Drawable setUserPerk() {
+        switch (userPerkFromSharedPref) {
+            case GameInformation.MORE_AMMO_PERK:
+                setUserPerkText(getString(R.string.more_ammo_perk_name));
+                return getDrawable(R.drawable.ammo_perk);
+            case GameInformation.MORE_DAMAGE_PERK:
+                setUserPerkText(getString(R.string.more_damage_perk_name));
+                return getDrawable(R.drawable.more_damage_perk_image);
+            case GameInformation.MORE_TIME_PERK:
+                setUserPerkText(getString(R.string.more_time_perk_name));
+                return getDrawable(R.drawable.more_time_perk_image);
+            case GameInformation.MORE_CLOCKS:
+                setUserPerkText(getString(R.string.more_clocks_perk_name));
+                return getDrawable(R.drawable.slow_time_perk);
+            default:
+                perkChosen.setText(getString(R.string.no_perk_text));
+                return getDrawable(R.drawable.noperk_chosen_image);
         }
+    }
+
+    private void setUserPerkText(String perk) {
+        perkChosen.setText(getString(R.string.perk_selected_text, perk));
+    }
+
+    private boolean checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            return false;
+        }
+        return true;
+    }
+
+    private void requestPermission() {
+
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.CAMERA},
+                PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+
+                    // main logic
+                } else {
+                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            showMessageOKCancel("You need to allow access permissions",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                requestPermission();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+}
