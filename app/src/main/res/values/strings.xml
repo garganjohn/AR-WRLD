@@ -19,13 +19,12 @@
     <string name="how_to_play">How to play</string>
     <string name="play">Play</string>
     <string name="top_players">Top Players</string>
-    <string name="choose_a_level">Choose a level</string>
+    <string name="choose_a_level">CHOOSE A LEVEL</string>
     <string name="boss_level">This enemy looks strong, destroy it before it has a chance to take over the world! \n HINT: Switch weapons below to defeat it quicker</string>
     <string-array name="level_array">
         <item>EASY</item>
         <item>MEDIUM</item>
         <item>HARD</item>
-        <item>BOSS</item>
     </string-array>
     <string name="forgot_password">Forgot Password?</string>
     <string name="note_passwrod_requirement">Note: Password must have 6 characters or more!</string>
@@ -85,7 +84,7 @@
     <string name="more_damage_perk_name">More Damage</string>
     <string name="no_perk_text">No Perk Chosen</string>
 
-    <string name="user_score">Overall Score: \n %d</string>
+    <string name="user_score">OVERALL SCORE: \n %d</string>
     <string name="tap_to_shoot_string">TAP TO SHOOT</string>
 
 

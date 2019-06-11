@@ -144,7 +144,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private void findViews() {
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
-        userTitleTextView = findViewById(R.id.user_title);
+//        userTitleTextView = findViewById(R.id.user_title);
         levelSpinner = findViewById(R.id.level_spinner);
         pickAPerkButton = findViewById(R.id.pick_a_perk);
         tutorialButton = findViewById(R.id.practice_button);
