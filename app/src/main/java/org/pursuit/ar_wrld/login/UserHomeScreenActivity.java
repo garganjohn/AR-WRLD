@@ -191,7 +191,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren());
 
 //                    currentRef.child(keys).setValue(updatedScore);
-                    userscoreTextView.setText(String.valueOf(updatedScore));
+                    String userScore = getString(R.string.user_score, updatedScore);
+                    userscoreTextView.setText(userScore);
                 } else {
                     UserInformation userInformation = new UserInformation();
                     userInformation.setUserscore(0);
