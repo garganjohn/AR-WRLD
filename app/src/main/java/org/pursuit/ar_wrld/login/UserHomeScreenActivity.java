@@ -345,4 +345,10 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                 .create()
                 .show();
     }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        super.onBackPressed();
+    }
 }
