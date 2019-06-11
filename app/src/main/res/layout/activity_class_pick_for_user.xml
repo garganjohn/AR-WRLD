@@ -18,27 +18,26 @@
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="@id/mainActivity_viewPager"
-        app:layout_constraintStart_toStartOf="@id/mainActivity_viewPager"
+        app:layout_constraintEnd_toEndOf="@id/perk_recyclerview"
+        app:layout_constraintStart_toStartOf="@id/perk_recyclerview"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/mainActivity_viewPager"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/perk_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/view_for_white_bg"
-        app:layout_constraintTop_toBottomOf="@id/intro_for_choosing_class_text"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/intro_for_choosing_class_text" />
 
-    <me.relex.circleindicator.CircleIndicator
-        android:id="@+id/circle_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:ci_drawable="@drawable/circle_indicator_custom"
-        app:layout_constraintBottom_toBottomOf="@id/mainActivity_viewPager" />
+    <!--<me.relex.circleindicator.CircleIndicator-->
+        <!--android:id="@+id/circle_indicator"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="16dp"-->
+        <!--app:ci_drawable="@drawable/circle_indicator_custom"-->
+        <!--app:layout_constraintBottom_toBottomOf="@id/mainActivity_viewPager" />-->
 
 </android.support.constraint.ConstraintLayout>

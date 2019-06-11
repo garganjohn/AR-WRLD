@@ -16,16 +16,16 @@
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/view_bg_non_button">
+            android:background="@drawable/view_bg_non_button"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pixel_operator"
                 android:textAlignment="center"
                 android:textColor="#E1E2E7"
-                android:fontFamily="@font/pixel_operator"
                 android:textSize="30sp" />
 
             <TextView
@@ -42,42 +42,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/pixel_operator"
                 android:textAlignment="center"
                 android:textColor="#E1E2E7"
-                android:fontFamily="@font/pixel_operator"
                 android:textSize="25sp" />
 
         </android.support.v7.widget.LinearLayoutCompat>
 
-            <android.support.v7.widget.LinearLayoutCompat
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/view_bg_non_button"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/game_levels"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:orientation="vertical"
-                android:background="@drawable/view_bg_non_button">
+                android:fontFamily="@font/pixel_operator"
+                android:text="@string/choose_a_level"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp" />
 
-                <TextView
-                    android:id="@+id/game_levels"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="@font/pixel_operator"
-                    android:text="@string/choose_a_level"
-                    android:textAlignment="center"
-                    android:textColor="#FFFFFF"
-                    android:textSize="30sp" />
+            <Spinner
+                android:id="@+id/level_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:entries="@array/level_array"
+                android:scrollbarSize="30dp"
+                android:textAlignment="center" />
 
-                <Spinner
-                    android:id="@+id/level_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:entries="@array/level_array"
-                    android:scrollbarSize="30dp"
-                    android:textAlignment="center"/>
-
-            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.LinearLayoutCompat>
 
         <Button
             android:id="@+id/practice_button"
@@ -90,60 +90,61 @@
             android:textColor="@color/text_btn_color"
             android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/pick_a_perk"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_bg"
-        android:fontFamily="@font/pixel_operator"
-        android:text="@string/pick_a_perk"
-        android:textColor="@color/text_btn_color"
-        android:textSize="25sp" />
+        <Button
+            android:id="@+id/pick_a_perk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_bg"
+            android:fontFamily="@font/pixel_operator"
+            android:text="@string/pick_a_perk"
+            android:textColor="@color/text_btn_color"
+            android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/play_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_bg"
-        android:fontFamily="@font/pixel_operator8_bold"
-        android:text="@string/play"
-        android:textColor="@color/text_btn_color"
-        android:textSize="25sp" />
+        <Button
+            android:id="@+id/play_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_bg"
+            android:fontFamily="@font/pixel_operator8_bold"
+            android:text="@string/play"
+            android:textColor="@color/text_btn_color"
+            android:textSize="25sp" />
 
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/button_bg"
-        android:fontFamily="@font/pixel_operator"
-        android:text="@string/logout"
-        android:textColor="@color/text_btn_color"
-        android:textSize="25sp" />
+        <TextView
+            android:id="@+id/perk_selected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/pixel_operator"
+            android:text="@string/perk_selected_text"
+            android:textAlignment="center"
+            android:textColor="#fff"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/perk_selected"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        android:textColor="#fff"
-        android:fontFamily="@font/pixel_operator"
-        android:text="@string/perk_selected_text"
-        android:textAlignment="center"/>
+        <ImageView
+            android:id="@+id/perk_selected_image"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/border_for_perks"
+            android:backgroundTint="#94FFFFFF"
+            android:padding="8dp" />
 
-    <ImageView
-        android:id="@+id/perk_selected_image"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:backgroundTint="#94FFFFFF"
-        android:background="@drawable/border_for_perks"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:layout_gravity="center"/>
+        <Button
+            android:id="@+id/logout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button_bg"
+            android:fontFamily="@font/pixel_operator"
+            android:text="@string/logout"
+            android:textColor="@color/text_btn_color"
+            android:textSize="25sp" />
+
     </LinearLayout>
-
 
 </ScrollView>

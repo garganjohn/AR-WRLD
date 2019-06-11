@@ -58,6 +58,7 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -77,7 +78,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 30000;
+    private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -150,11 +151,6 @@ public class SpaceARFragment extends Fragment {
         spaceARFragment.setArguments(b);
 
         return spaceARFragment;
-    }
-
-    private void setAnchorAtZZZ() {
-        Pose pose = Pose.makeTranslation(0, 0, 0);
-        //sceneNode = arFragment.getArSceneView().getSession().createAnchor(pose);
     }
 
     @Override
@@ -663,7 +659,6 @@ public class SpaceARFragment extends Fragment {
 
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
-
                     timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
@@ -904,7 +899,7 @@ public class SpaceARFragment extends Fragment {
     }
 
 
-    public void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
+    public synchronized void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
 
         if (anchorNode != null) {
             laserNode = new Node();
@@ -925,7 +920,7 @@ public class SpaceARFragment extends Fragment {
         final Vector3 directionFromTopToBottom = difference.normalized();
         final Quaternion rotationFromAToB =
                 Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
-        MaterialFactory.makeOpaqueWithColor(getContext(), Red)
+         MaterialFactory.makeOpaqueWithColor(getContext(), Red)
                 .thenAccept(
                         material -> {
 /* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
@@ -941,21 +936,22 @@ public class SpaceARFragment extends Fragment {
 //                            laserNode.setWorldPosition(startVctor);
                             laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
+
+                            new CountDownTimer(10, 800) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    laserNode.setRenderable(null);
+                                }
+                            }.start();
+
                         });
 
-        new CountDownTimer(100, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                //if (laserNode.getRenderable() != null) {
-                //laserNode.setRenderable(null);
-                anchorNode.removeChild(laserNode);
-                laserNode = null;
-            }
-        }.start();
     }
+
+
 }

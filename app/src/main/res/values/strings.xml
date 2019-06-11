@@ -45,7 +45,7 @@
 
     <string name="more_ammo_perk">Need more powerful ammo? Get an additional 50% more ammo for all of your weapons.</string>
     <string name="more_time_perk">Not enough time to destroy the aliens? Your time starts with +20 seconds at the start of every game.</string>
-    <string name="slow_time_perk">Feel confident with your shooting? Clocks that appear on screen become more frequent.</string>
+    <string name="more_clocks_perk">Feel confident with your shooting? Clocks that appear on screen become more frequent.</string>
     <string name="more_damage_park">Need some juice to destroy more often? Your special weapons do 1 more damage to the enemies.</string>
     <string name="your_score_is">Your score is</string>
     <string name="pick_a_perk">Pick a perk</string>
@@ -60,10 +60,10 @@
     <string name="more_time_level_3">+6 seconds to timer</string>
     <string name="more_time_level_4">+10 seconds to timer</string>
 
-    <string name="slow_time_level_1">Points required for clock to appear is reduced</string>
-    <string name="slow_time_level_2">Points required for clock to appear is greatly reduced</string>
-    <string name="slow_time_level_3">Points required for clock to appear is dramatically reduced</string>
-    <string name="slow_time_level_4">Destroying martians increase your score by an additional 1000 points</string>
+    <string name="more_clocks_level_1">Points required for clock to appear is reduced</string>
+    <string name="more_clocks_level_2">Points required for clock to appear is greatly reduced</string>
+    <string name="more_clocks_level_3">Points required for clock to appear is dramatically reduced</string>
+    <string name="more_clocks_level_4">Destroying martians increase your score by an additional 1000 points</string>
 
     <string name="more_damage_level_1">Special weapons do +1 damage</string>
     <string name="more_damage_level_2">Special weapons do +2 damage</string>
