@@ -9,8 +9,8 @@ public class ModelCoordinates {
         Random random = new Random();
 
         if (isX) {
-            float min = -.5f;
-            float max = .5f;
+            float min = -.3f;
+            float max = .3f;
             return (min + random.nextFloat() * (max - min));
         }
 
