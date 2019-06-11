@@ -665,6 +665,7 @@ public class SpaceARFragment extends Fragment {
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 2000;
+                    startGame.onTick(timeLeftInMilliseconds);
                     scoreNumber += 500;
                     updateTimer();
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
