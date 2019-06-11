@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,43 +7,44 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-        <android.support.v7.widget.LinearLayoutCompat
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/view_bg_non_button"
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/player_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/view_bg_non_button"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:orientation="vertical">
+            android:layout_marginTop="8dp"
+            android:text="UserName Here"
+            android:textAlignment="center"
+            android:textColor="#E1E2E7"
+            android:textSize="30sp" />
 
-            <TextView
-                android:id="@+id/player_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAlignment="center"
-                android:textColor="#E1E2E7"
-                android:text="UserName Here"
-                android:textSize="30sp" />
+        <TextView
+            android:id="@+id/title_for_player_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/your_score_is"
+            android:textAlignment="center"
+            android:textColor="#E1E2E7"
+            android:textSize="30sp" />
 
-            <TextView
-                android:id="@+id/title_for_player_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/your_score_is"
-                android:textAlignment="center"
-                android:textColor="#E1E2E7"
-                android:textSize="30sp" />
+        <TextView
+            android:id="@+id/player_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Score Is here"
+            android:textAlignment="center"
+            android:textColor="#E1E2E7"
+            android:textSize="30sp" />
 
-            <TextView
-                android:id="@+id/player_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="#E1E2E7"
-                android:text="Score Is here"
-                android:textSize="30sp" />
+    </android.support.v7.widget.LinearLayoutCompat>
 
-        </android.support.v7.widget.LinearLayoutCompat>
 
     <Button
         android:id="@+id/playagain_button"
@@ -56,5 +56,13 @@
         android:textAlignment="center"
         android:textColor="#E1E2E7"
         android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/pic_for_result_logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:padding="24dp"
+        android:src="@drawable/logo_splash_transparent" />
 
 </android.support.v7.widget.LinearLayoutCompat>

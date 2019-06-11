@@ -8,7 +8,11 @@ import android.support.annotation.Nullable;
 
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.pursuit.ar_wrld.Effects.MyBounceInterpolator;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
@@ -38,8 +43,10 @@ public class ResultPage extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private ImageView logoImage;
     private String dbKey;
     private UserInformation userInfo;
+    private Animation bounceAnimation;
 
 
     @Override
@@ -48,16 +55,22 @@ public class ResultPage extends AppCompatActivity {
         setContentView(R.layout.activity_resultpage);
         sharedPreferences = getApplicationContext().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
+        findViews();
+        retrieveUserNameAndScore();
+        animateViews();
+
+        moveBackHome();
+
+
+    }
+
+    public void findViews(){
         nameTextView = findViewById(R.id.player_name);
         titleForScore = findViewById(R.id.title_for_player_score);
         scoreTextView = findViewById(R.id.player_score);
         playAgainButton = findViewById(R.id.playagain_button);
 
-        retrieveUserNameAndScore();
-
-        moveBackHome();
-
-
+        logoImage = findViewById(R.id.pic_for_result_logo);
     }
 
     public void moveBackHome(){
@@ -65,6 +78,25 @@ public class ResultPage extends AppCompatActivity {
             startActivity(new Intent(ResultPage.this, UserHomeScreenActivity.class));
             finish();
         });
+    }
+
+    public void animateViews(){
+
+        bounceAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.bounce_anim);
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        bounceAnimation.setInterpolator(interpolator);
+        nameTextView.startAnimation(bounceAnimation);
+        scoreTextView.startAnimation(bounceAnimation);
+
+
+
+    }
+    public void showImageAnimation(){
+
+//        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 20);
+//        myAnim.setInterpolator(interpolator);
+//        v.startAnimation(myAnim);
+
     }
 
 
