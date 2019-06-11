@@ -16,7 +16,7 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PerkPickForUser extends AppCompatActivity implements PerkListener{
+public class PerkPickForUser extends AppCompatActivity implements PerkListener {
 
     private RecyclerView recyclerView;
     private PerkAdapter perkAdapter;
@@ -40,11 +40,11 @@ public class PerkPickForUser extends AppCompatActivity implements PerkListener{
 
         perkAdapter = new PerkAdapter(perkInfoModelList, this);
         recyclerView.setAdapter(perkAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+        recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
     }
 
-    private void makePerkToAdd(int perkName, int perkDesc, int perkImage, String whichPerk){
-       perkInfoModelList.add(new PerkInfoModel(getString(perkName), getString(perkDesc), getDrawable(perkImage), whichPerk));
+    private void makePerkToAdd(int perkName, int perkDesc, int perkImage, String whichPerk) {
+        perkInfoModelList.add(new PerkInfoModel(getString(perkName), getString(perkDesc), getDrawable(perkImage), whichPerk));
     }
 
     @Override
@@ -52,5 +52,11 @@ public class PerkPickForUser extends AppCompatActivity implements PerkListener{
         sharedPreferences.edit().putString(GameInformation.GAME_PERK_KEY, gamePerk).apply();
         startActivity(new Intent(this, UserHomeScreenActivity.class));
         this.finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, UserHomeScreenActivity.class));
+        super.onBackPressed();
     }
 }
