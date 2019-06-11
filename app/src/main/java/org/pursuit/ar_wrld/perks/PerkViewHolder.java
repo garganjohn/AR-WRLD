@@ -1,13 +1,11 @@
 package org.pursuit.ar_wrld.perks;
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
 
 public class PerkViewHolder extends RecyclerView.ViewHolder {
@@ -21,15 +19,15 @@ public class PerkViewHolder extends RecyclerView.ViewHolder {
         findViews();
     }
 
-    public void onBind(PerkInfo perkInfo, PerkListener perkListener){
-        perkNameTv.setText(perkInfo.getPerkName());
-        perkImage.setImageDrawable(perkInfo.getPerkImage());
-        perkDescriptionTv.setText(perkInfo.getPerkDescription());
+    public void onBind(PerkInfoModel perkInfoModel, PerkListener perkListener){
+        perkNameTv.setText(perkInfoModel.getPerkName());
+        perkImage.setImageDrawable(perkInfoModel.getPerkImage());
+        perkDescriptionTv.setText(perkInfoModel.getPerkDescription());
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                perkListener.savePerkToSharedPref(perkInfo.getWhichPerkFromInterface());
+                perkListener.savePerkToSharedPref(perkInfoModel.getWhichPerkFromInterface());
             }
         });
     }

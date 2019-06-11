@@ -4,13 +4,13 @@ import android.graphics.drawable.Drawable;
 
 import org.pursuit.ar_wrld.GameInformation;
 
-public class PerkInfo {
+public class PerkInfoModel {
     private String perkName;
     private String perkDescription;
     private Drawable perkImage;
     private String whichPerkFromInterface;
 
-    public PerkInfo(String perkName, String perkDescription, Drawable perkImage, String whichPerkFromInterface){
+    public PerkInfoModel(String perkName, String perkDescription, Drawable perkImage, String whichPerkFromInterface){
         this.perkName = perkName;
         this.perkDescription = perkDescription;
         this.perkImage = perkImage;

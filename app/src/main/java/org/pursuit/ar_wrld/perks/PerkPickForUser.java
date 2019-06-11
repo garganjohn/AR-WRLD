@@ -2,15 +2,10 @@ package org.pursuit.ar_wrld.perks;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
@@ -19,13 +14,11 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.relex.circleindicator.CircleIndicator;
-
 public class PerkPickForUser extends AppCompatActivity implements PerkListener{
 
     private RecyclerView recyclerView;
     private PerkAdapter perkAdapter;
-    private List<PerkInfo> perkInfoList;
+    private List<PerkInfoModel> perkInfoModelList;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -35,7 +28,7 @@ public class PerkPickForUser extends AppCompatActivity implements PerkListener{
         sharedPreferences = getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
 
         recyclerView = findViewById(R.id.perk_recyclerview);
-        perkInfoList = new ArrayList<>();
+        perkInfoModelList = new ArrayList<>();
 
         makePerkToAdd(R.string.more_ammo_perk_name, R.string.more_ammo_perk, R.drawable.ammo_perk, GameInformation.MORE_AMMO_PERK);
         makePerkToAdd(R.string.more_time_perk_name, R.string.more_time_perk, R.drawable.more_time_perk_image, GameInformation.MORE_TIME_PERK);
@@ -43,13 +36,13 @@ public class PerkPickForUser extends AppCompatActivity implements PerkListener{
         makePerkToAdd(R.string.more_damage_perk_name, R.string.more_damage_park, R.drawable.more_damage_perk_image, GameInformation.MORE_DAMAGE_PERK);
 
 
-        perkAdapter = new PerkAdapter(perkInfoList, this);
+        perkAdapter = new PerkAdapter(perkInfoModelList, this);
         recyclerView.setAdapter(perkAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
     }
 
     private void makePerkToAdd(int perkName, int perkDesc, int perkImage, String whichPerk){
-       perkInfoList.add(new PerkInfo(getString(perkName), getString(perkDesc), getDrawable(perkImage), whichPerk));
+       perkInfoModelList.add(new PerkInfoModel(getString(perkName), getString(perkDesc), getDrawable(perkImage), whichPerk));
     }
 
     @Override

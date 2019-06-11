@@ -11,11 +11,11 @@ import org.pursuit.ar_wrld.R;
 import java.util.List;
 
 public class PerkAdapter extends RecyclerView.Adapter<PerkViewHolder> {
-    private List<PerkInfo> perkInfoList;
+    private List<PerkInfoModel> perkInfoModelList;
     private PerkListener perkListener;
 
-    public PerkAdapter(List<PerkInfo> perkInfoList, PerkListener perkListener){
-        this.perkInfoList = perkInfoList;
+    public PerkAdapter(List<PerkInfoModel> perkInfoModelList, PerkListener perkListener){
+        this.perkInfoModelList = perkInfoModelList;
         this.perkListener = perkListener;
     }
 
@@ -28,11 +28,11 @@ public class PerkAdapter extends RecyclerView.Adapter<PerkViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PerkViewHolder viewPagerForPerk, int i) {
-        viewPagerForPerk.onBind(perkInfoList.get(i), perkListener);
+        viewPagerForPerk.onBind(perkInfoModelList.get(i), perkListener);
     }
 
     @Override
     public int getItemCount() {
-        return perkInfoList.size();
+        return perkInfoModelList.size();
     }
 }
