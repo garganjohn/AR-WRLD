@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/space_home_bg"
     android:orientation="vertical"
+    android:layout_marginTop="8dp"
     android:padding="24dp">
 
     <android.support.v7.widget.LinearLayoutCompat
@@ -50,7 +51,7 @@
         android:id="@+id/playagain_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/button_bg"
         android:text="@string/play_again"
         android:textAlignment="center"
@@ -59,8 +60,8 @@
 
     <ImageView
         android:id="@+id/pic_for_result_logo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_gravity="center"
         android:padding="24dp"
         android:src="@drawable/logo_splash_transparent" />

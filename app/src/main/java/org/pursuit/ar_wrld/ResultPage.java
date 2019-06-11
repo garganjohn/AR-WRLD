@@ -1,5 +1,7 @@
 package org.pursuit.ar_wrld;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -47,6 +50,7 @@ public class ResultPage extends AppCompatActivity {
     private String dbKey;
     private UserInformation userInfo;
     private Animation bounceAnimation;
+    private long durationX = 2000;
 
 
     @Override
@@ -88,14 +92,15 @@ public class ResultPage extends AppCompatActivity {
         nameTextView.startAnimation(bounceAnimation);
         scoreTextView.startAnimation(bounceAnimation);
 
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(logoImage, "x", 180f);
+        animatorX.setDuration(durationX);
 
+        ObjectAnimator rotateAnimator = ObjectAnimator.ofFloat(logoImage, "rotation", 360f);
+        rotateAnimator.setDuration(durationX);
 
-    }
-    public void showImageAnimation(){
-
-//        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.1, 20);
-//        myAnim.setInterpolator(interpolator);
-//        v.startAnimation(myAnim);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animatorX, rotateAnimator);
+        animatorSet.start();
 
     }
 
