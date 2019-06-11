@@ -25,15 +25,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MovementNode extends AnchorNode {
-
-    public MovementNode(Anchor anchor) {
-        super(anchor);
-    }
-
+    private ArrayList<Vector3> vector3List;
+    private Long speedMultiplier = 10000L;
     private ObjectAnimator objectAnimator;
     private Node node;
     private ModelSpeed modelSpeed;
     private Light light;
+
+    public MovementNode(Anchor anchor) {
+        super(anchor);
+    }
 
     public ModelSpeed getModelSpeed() {
         return modelSpeed;
@@ -43,8 +44,7 @@ public class MovementNode extends AnchorNode {
         this.modelSpeed = modelSpeed;
     }
 
-    private ArrayList<Vector3> vector3List;
-    private Long speedMultiplier = 10000L;
+
 
 
     public Node getNode() {
@@ -56,12 +56,12 @@ public class MovementNode extends AnchorNode {
         super.onUpdate(frameTime);
 
 
-        if (objectAnimator == null) {
-            return;
-
-        }
-
-        randomMovement();
+//        if (objectAnimator == null) {
+//            return;
+//
+//        }
+//
+//        randomMovement();
 
     }
 

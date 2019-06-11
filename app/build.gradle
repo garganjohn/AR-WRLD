@@ -90,3 +90,14 @@ sceneform.asset('sampledata/laser/laser.obj',
         'default',
         'sampledata/laser/laser.sfa',
         'src/main/assets/laser')
+
+
+sceneform.asset('sampledata/laser_beam/beam.obj',
+        'default',
+        'sampledata/laser_beam/beam.sfa',
+        'src/main/assets/beam')
+
+sceneform.asset('sampledata/spiky_ball/spiky.obj',
+        'default',
+        'sampledata/spiky_ball/spiky.sfa',
+        'src/main/assets/spiky')

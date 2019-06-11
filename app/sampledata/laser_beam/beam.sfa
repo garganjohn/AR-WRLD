@@ -1,21 +1,21 @@
- {
+{
   materials: [
     {
-      name: 'blinn1SG',
+      name: 'mat21',
       parameters: [
         {
-          baseColor: 'FlyingSaucer_BaseColor',
+          baseColor: null,
         },
         {
           baseColorTint: [
-            1,
-            1,
-            1,
-            1,
+            0.95999999999999996,
+                        0.26000000000000001,
+                        0.20999999999999999,
+                        1,
           ],
         },
         {
-          metallic: 1,
+          metallic: 0,
         },
         {
           roughness: 1,
@@ -34,17 +34,9 @@
       'Orientation',
     ],
     collision: {},
-    file: 'sampledata/boss_saucer/FlyingSacuer.obj',
-    name: 'FlyingSacuer',
+    file: 'sampledata/laser_beam/beam.obj',
+    name: 'beam',
     recenter: 'root',
-    scale: 0.17093500000000001,
   },
-  samplers: [
-    {
-      file: 'sampledata/boss_saucer/FlyingSaucer_BaseColor.png',
-      name: 'FlyingSaucer_BaseColor',
-      pipeline_name: 'FlyingSaucer_BaseColor.png',
-    },
-  ],
   version: '0.54:2',
 }
