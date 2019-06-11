@@ -224,6 +224,11 @@ public class SpaceARFragment extends Fragment {
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
     private void setMaxNumOfModels() {
         switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
@@ -661,6 +666,7 @@ public class SpaceARFragment extends Fragment {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
                     timeLeftInMilliseconds += 2000;
                     scoreNumber += 500;
+                    updateTimer();
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
 //                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
@@ -920,7 +926,7 @@ public class SpaceARFragment extends Fragment {
         final Vector3 directionFromTopToBottom = difference.normalized();
         final Quaternion rotationFromAToB =
                 Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
-         MaterialFactory.makeOpaqueWithColor(getContext(), Red)
+        MaterialFactory.makeOpaqueWithColor(getContext(), Red)
                 .thenAccept(
                         material -> {
 /* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
