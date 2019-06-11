@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 
 import org.pursuit.ar_wrld.GameInformation;
+import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 
@@ -49,5 +51,12 @@ public class PerkPickForUser extends AppCompatActivity implements PerkListener{
     public void savePerkToSharedPref(String gamePerk) {
         sharedPreferences.edit().putString(GameInformation.GAME_PERK_KEY, gamePerk).apply();
         startActivity(new Intent(getApplicationContext(), UserHomeScreenActivity.class));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, UserHomeScreenActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }
