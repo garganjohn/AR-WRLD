@@ -50,13 +50,7 @@ public class PerkPickForUser extends AppCompatActivity implements PerkListener{
     @Override
     public void savePerkToSharedPref(String gamePerk) {
         sharedPreferences.edit().putString(GameInformation.GAME_PERK_KEY, gamePerk).apply();
-        startActivity(new Intent(getApplicationContext(), UserHomeScreenActivity.class));
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(this, UserHomeScreenActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
+        startActivity(new Intent(this, UserHomeScreenActivity.class));
+        this.finish();
     }
 }
