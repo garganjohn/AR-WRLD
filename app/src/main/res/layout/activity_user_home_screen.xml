@@ -129,7 +129,6 @@
             android:layout_height="75dp"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:background="@drawable/view_bg_non_button"
             android:padding="8dp" />
 
     <Button

@@ -126,7 +126,7 @@ public class SpaceARFragment extends Fragment {
     private MovementNode anchorNode;
     private int nextAnimation;
     private int firstPointThreshold;
-    private int startingMedAmmo = 25;
+    private int startingMedAmmo = 10;
     private int increaseScoreTillClockModelEasy = 5000;
     private int increaseScoreTillClockModelMed = 15000;
     private ArrayList<ModelRenderable> modelRenderablesList;
