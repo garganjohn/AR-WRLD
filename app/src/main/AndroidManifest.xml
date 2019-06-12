@@ -53,7 +53,7 @@
             android:parentActivityName=".login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TutorialActivity"
+            android:name=".tutorial.TutorialActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".perks.PerkViewHolder" />
