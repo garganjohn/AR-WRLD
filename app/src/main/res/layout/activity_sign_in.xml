@@ -28,6 +28,7 @@
         android:autofillHints="Email"
         android:textColorHighlight="@color/silver_app_color"
         android:hint="@string/user_email"
+        android:fontFamily="@font/pixel_operator"
         android:layout_marginTop="16dp"
         android:inputType="textEmailAddress"
         android:textColor="@color/silver_app_color"
