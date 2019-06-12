@@ -52,6 +52,7 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.movement.MovementNode;
+import org.pursuit.ar_wrld.movement.Projectiles;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -139,6 +140,7 @@ public class SpaceARFragment extends Fragment {
     long spawnRateEasy = 0;
     long spawnRateMed = 0;
     long spawnRateHard = 0;
+    private Projectiles projectiles;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -195,8 +197,11 @@ public class SpaceARFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
+
+
         findViews(rootView);
         setUpAR();
+        projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BOSS_ENEMY),arFragment);
         return rootView;
     }
 
@@ -603,6 +608,7 @@ public class SpaceARFragment extends Fragment {
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
+        arFragment.getArSceneView().getScene().addChild(projectiles);
         //Rotates the model every frame
         //Second parameter in Quaternion.axisAngle() measures speed of rotation
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
@@ -630,8 +636,9 @@ public class SpaceARFragment extends Fragment {
                 weaponSwitch();
             }
 
-            fireLasers(anchorNode, node);
+            //fireLasers(anchorNode, node);
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            projectiles.launchProjectile(node);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
