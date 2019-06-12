@@ -18,8 +18,8 @@
     <io.supercharge.shimmerlayout.ShimmerLayout
         android:id="@+id/shimmer_text"
         app:shimmer_reverse_animation="true"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -28,8 +28,8 @@
 
         <ImageView
             android:id="@+id/splash_logo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:elevation="2dp"
             android:src="@drawable/logo_splash_transparent"
             app:layout_constraintBottom_toBottomOf="parent"
