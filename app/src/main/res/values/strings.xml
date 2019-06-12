@@ -88,6 +88,11 @@
     <string name="tap_to_shoot_string">TAP TO SHOOT</string>
     <string name="default_username">GUEST</string>
     <string name="total_score_default">Total Score:\n 0</string>
+    <string name="app_title_login">Welcome to AR-WRLD</string>
+    <string name="already_a_member_log_in">Already a Member? Log In!</string>
+    <string name="congrats_msg">Congratulations! \n You\'ve defended the Earth!</string>
+    <string name="score_is_here">Score Is here</string>
+    <string name="play_again_result">Play Again?</string>
 
 
 </resources>
