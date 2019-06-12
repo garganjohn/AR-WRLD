@@ -722,7 +722,10 @@ public class SpaceARFragment extends Fragment {
             public void onTick(long timeRemaining) {
                 switch (difficulty) {
                     case UserHomeScreenActivity.EASY_STRING:
-                        if (spawnRateEasy < 2000) {
+                        if (numOfModels < 1) {
+                            loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+                        }
+                        if (spawnRateEasy < 1000) {
                             spawnRateEasy += 1000;
                         } else {
                             loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
@@ -730,7 +733,10 @@ public class SpaceARFragment extends Fragment {
                         }
                         break;
                     case UserHomeScreenActivity.MEDIUM_STRING:
-                        if (spawnRateMed < 4000) {
+                        if (numOfModels < 1) {
+                            loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                        }
+                        if (spawnRateMed < 1000) {
                             spawnRateMed += 1000;
                         } else {
                             loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
@@ -738,7 +744,10 @@ public class SpaceARFragment extends Fragment {
                         }
                         break;
                     case UserHomeScreenActivity.HARD_STRING:
-                        if (spawnRateHard < 8000) {
+                        if (numOfModels < 1) {
+                            loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                        }
+                        if (spawnRateHard < 1000) {
                             spawnRateHard += 1000;
                         } else {
                             loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
