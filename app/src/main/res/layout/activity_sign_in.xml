@@ -42,6 +42,7 @@
         android:hint="@string/user_email"
         android:layout_marginTop="16dp"
         android:inputType="textEmailAddress"
+        android:textSize="25sp"
         android:fontFamily="@font/pixel_operator"
         android:textColor="@color/silver_app_color"
         android:textColorHint="@android:color/darker_gray" />
@@ -55,6 +56,7 @@
         android:autofillHints="@string/user_password"
         android:hint="@string/user_password"
         android:inputType="textPassword"
+        android:textSize="25sp"
         android:textColor="@color/silver_app_color"
         android:fontFamily="@font/pixel_operator"
         android:textColorHint="@android:color/darker_gray" />
@@ -63,6 +65,7 @@
         android:id="@+id/forgot_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
         android:fontFamily="@font/pixel_operator"
         android:text="@string/forgot_password"
         android:textAlignment="center" />
@@ -72,6 +75,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:textSize="25sp"
         android:background="@drawable/button_bg"
         android:text="@string/log_in"
         android:fontFamily="@font/pixel_operator"
@@ -87,14 +91,14 @@
         android:fontFamily="@font/pixel_operator"
         android:text="@string/create_a_new_account"
         android:textAllCaps="false"
-        android:textSize="15sp" />
+        android:textSize="25sp" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
-        android:paddingTop="16dp" />
+    <!--<com.google.android.gms.common.SignInButton-->
+        <!--android:id="@+id/sign_in_google"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="110dp"-->
+        <!--android:paddingTop="16dp" />-->
 
     <ProgressBar
         android:id="@+id/sign_in_progressbar"

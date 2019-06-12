@@ -19,7 +19,7 @@
     <string name="how_to_play">How to play</string>
     <string name="play">Play</string>
     <string name="top_players">Top Players</string>
-    <string name="choose_a_level">CHOOSE A LEVEL</string>
+    <string name="choose_a_level">CHOOSE DIFFICULTY</string>
     <string name="boss_level">This enemy looks strong, destroy it before it has a chance to take over the world! \n HINT: Switch weapons below to defeat it quicker</string>
     <string-array name="level_array">
         <item>EASY</item>
@@ -84,8 +84,10 @@
     <string name="more_damage_perk_name">More Damage</string>
     <string name="no_perk_text">No Perk Chosen</string>
 
-    <string name="user_score">TOP SCORE: \n %d</string>
+    <string name="user_score">TOP SCORE:\n %d</string>
     <string name="tap_to_shoot_string">TAP TO SHOOT</string>
+    <string name="default_username">GUEST</string>
+    <string name="total_score_default">Total Score:\n 0</string>
     <string name="app_title_login">Welcome to AR-WRLD</string>
     <string name="already_a_member_log_in">Already a Member? Log In!</string>
     <string name="congrats_msg">Congratulations! \n You\'ve defended the Earth!</string>

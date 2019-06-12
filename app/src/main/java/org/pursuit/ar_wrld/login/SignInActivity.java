@@ -65,7 +65,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         forgotTextview = findViewById(R.id.forgot_password);
 
         signInButton = findViewById(R.id.button_login);
-        button = findViewById(R.id.sign_in_google);
+//        button = findViewById(R.id.sign_in_google);
 
         if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
@@ -76,7 +76,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         createNewAcct.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, SignUpActivity.class)));
 
-        button.setOnClickListener(v -> signIn());
+//        button.setOnClickListener(v -> signIn());
 
         signInButton.setOnClickListener(v -> {
             String email = inputEmail.getText().toString();
