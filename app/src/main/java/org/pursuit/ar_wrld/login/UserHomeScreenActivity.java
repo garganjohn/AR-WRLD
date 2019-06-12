@@ -142,7 +142,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private void findViews() {
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
-        userTitleTextView = findViewById(R.id.user_title);
+//        userTitleTextView = findViewById(R.id.user_title);
         levelSpinner = findViewById(R.id.level_spinner);
         pickAPerkButton = findViewById(R.id.pick_a_perk);
         tutorialButton = findViewById(R.id.practice_button);
@@ -189,7 +189,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                     Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren());
 
 //                    currentRef.child(keys).setValue(updatedScore);
-                    userscoreTextView.setText(String.valueOf(updatedScore));
+                    String userScore = getString(R.string.user_score, updatedScore);
+                    userscoreTextView.setText(userScore);
                 } else {
                     UserInformation userInformation = new UserInformation();
                     userInformation.setUserscore(0);
@@ -341,5 +342,11 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        super.onBackPressed();
     }
 }

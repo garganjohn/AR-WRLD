@@ -60,6 +60,7 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -79,7 +80,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 30000;
+    private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -127,7 +128,7 @@ public class SpaceARFragment extends Fragment {
     private MovementNode anchorNode;
     private int nextAnimation;
     private int firstPointThreshold;
-    private int startingMedAmmo = 25;
+    private int startingMedAmmo = 10;
     private int increaseScoreTillClockModelEasy = 5000;
     private int increaseScoreTillClockModelMed = 15000;
     private ArrayList<ModelRenderable> modelRenderablesList;
@@ -154,11 +155,6 @@ public class SpaceARFragment extends Fragment {
         spaceARFragment.setArguments(b);
 
         return spaceARFragment;
-    }
-
-    private void setAnchorAtZZZ() {
-        Pose pose = Pose.makeTranslation(0, 0, 0);
-        //sceneNode = arFragment.getArSceneView().getSession().createAnchor(pose);
     }
 
     @Override
@@ -234,6 +230,11 @@ public class SpaceARFragment extends Fragment {
             spawningAliens(false);
         }
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     private void setMaxNumOfModels() {
@@ -678,9 +679,10 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
 
                 if (isTimerModel) {
                     Log.d(TAG, "setNodeListener: TIME LEFT BEFORE CHANGE: " + timeLeftInMilliseconds);
-
                     timeLeftInMilliseconds += 2000;
+                    startGame.onTick(timeLeftInMilliseconds);
                     scoreNumber += 500;
+                    updateTimer();
                     Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
 //                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
@@ -735,7 +737,10 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
             public void onTick(long timeRemaining) {
                 switch (difficulty) {
                     case UserHomeScreenActivity.EASY_STRING:
-                        if (spawnRateEasy < 2000) {
+                        if (numOfModels < 1) {
+                            loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
+                        }
+                        if (spawnRateEasy < 1000) {
                             spawnRateEasy += 1000;
                         } else {
                             loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
@@ -743,7 +748,10 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
                         }
                         break;
                     case UserHomeScreenActivity.MEDIUM_STRING:
-                        if (spawnRateMed < 4000) {
+                        if (numOfModels < 1) {
+                            loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
+                        }
+                        if (spawnRateMed < 1000) {
                             spawnRateMed += 1000;
                         } else {
                             loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
@@ -751,7 +759,10 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
                         }
                         break;
                     case UserHomeScreenActivity.HARD_STRING:
-                        if (spawnRateHard < 8000) {
+                        if (numOfModels < 1) {
+                            loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
+                        }
+                        if (spawnRateHard < 1000) {
                             spawnRateHard += 1000;
                         } else {
                             loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
@@ -919,7 +930,11 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
     }
 
 
+<<<<<<< HEAD
     public void fireLasers(TransformableNode transformableNode) {
+=======
+    public synchronized void fireLasers(AnchorNode anchorNode, TransformableNode transformableNode) {
+>>>>>>> master
 
         if (transformableNode != null) {
             laserNode = new Node();
@@ -956,14 +971,22 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
 //                            laserNode.setWorldPosition(startVctor);
                             laserNode.setWorldPosition(Vector3.add(point1, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
+
+                            new CountDownTimer(10, 800) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    laserNode.setRenderable(null);
+                                }
+                            }.start();
+
                         });
 
-        new CountDownTimer(100, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-            }
-
+<<<<<<< HEAD
             @Override
             public void onFinish() {
                 //if (laserNode.getRenderable() != null) {
@@ -992,5 +1015,9 @@ laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().ge
 //                });
 //    }
 
+=======
+    }
+
+>>>>>>> master
 
 }

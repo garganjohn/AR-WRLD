@@ -68,6 +68,12 @@ public class ResultPage extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(this, UserHomeScreenActivity.class));
+        super.onBackPressed();
+    }
+
     public void findViews(){
         nameTextView = findViewById(R.id.player_name);
         titleForScore = findViewById(R.id.title_for_player_score);
@@ -144,8 +150,6 @@ public class ResultPage extends AppCompatActivity {
 
             }
         });
-
-
     }
 
 //    private void retrieve3(){
