@@ -78,7 +78,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 45000;
+    private long timeLeftInMilliseconds = 30000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -722,9 +722,6 @@ public class SpaceARFragment extends Fragment {
             public void onTick(long timeRemaining) {
                 switch (difficulty) {
                     case UserHomeScreenActivity.EASY_STRING:
-                        if (numOfModels < 1) {
-                            loadModel(Uri.parse(GameInformation.EASY_ENEMY), GameInformation.EASY_ENEMY);
-                        }
                         if (spawnRateEasy < 1000) {
                             spawnRateEasy += 1000;
                         } else {
@@ -733,9 +730,6 @@ public class SpaceARFragment extends Fragment {
                         }
                         break;
                     case UserHomeScreenActivity.MEDIUM_STRING:
-                        if (numOfModels < 1) {
-                            loadModel(Uri.parse(GameInformation.MEDIUM_ENEMY), GameInformation.MEDIUM_ENEMY);
-                        }
                         if (spawnRateMed < 1000) {
                             spawnRateMed += 1000;
                         } else {
@@ -744,9 +738,6 @@ public class SpaceARFragment extends Fragment {
                         }
                         break;
                     case UserHomeScreenActivity.HARD_STRING:
-                        if (numOfModels < 1) {
-                            loadModel(Uri.parse(GameInformation.HARD_ENEMY), GameInformation.HARD_ENEMY);
-                        }
                         if (spawnRateHard < 1000) {
                             spawnRateHard += 1000;
                         } else {
