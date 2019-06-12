@@ -208,6 +208,7 @@ public class SpaceARFragment extends Fragment {
         sceneNode.setWorldPosition(new Vector3(0, 0, 0));
         shootingTextDissapearing();
         weaponSetup();
+        applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
         setMaxNumOfModels();
         getStringRes();
         //setupGameInfo();
@@ -221,7 +222,6 @@ public class SpaceARFragment extends Fragment {
         } else {
             spawningAliens(false);
         }
-        applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
     }
 
     @Override
