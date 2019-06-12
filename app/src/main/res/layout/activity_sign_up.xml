@@ -76,7 +76,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:text="Already a Member? Log In!"
+        android:fontFamily="@font/pixel_operator"
+        android:text="@string/already_a_member_log_in"
         android:textSize="16sp" />
 
 

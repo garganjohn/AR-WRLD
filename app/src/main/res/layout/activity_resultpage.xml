@@ -20,15 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/pixel_operator"
             android:text="UserName Here"
             android:textAlignment="center"
             android:textColor="#E1E2E7"
-            android:textSize="30sp" />
+            android:textSize="40sp" />
 
         <TextView
             android:id="@+id/title_for_player_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/pixel_operator"
             android:text="@string/your_score_is"
             android:textAlignment="center"
             android:textColor="#E1E2E7"
@@ -38,10 +40,11 @@
             android:id="@+id/player_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Score Is here"
+            android:fontFamily="@font/pixel_operator"
+            android:text="@string/score_is_here"
             android:textAlignment="center"
             android:textColor="#E1E2E7"
-            android:textSize="30sp" />
+            android:textSize="35sp" />
 
     </android.support.v7.widget.LinearLayoutCompat>
 
@@ -52,6 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/button_bg"
+        android:fontFamily="@font/pixel_operator"
         android:text="@string/play_again"
         android:textAlignment="center"
         android:textColor="#E1E2E7"
@@ -63,6 +67,34 @@
         android:layout_height="250dp"
         android:layout_gravity="center"
         android:padding="24dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/logo_splash_transparent" />
+
+    <TextView
+        android:id="@+id/congrats_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/pixel_operator"
+        android:text="@string/congrats_msg"
+        android:textAlignment="center"
+        android:textColor="@color/silver_app_color"
+        android:textSize="30sp" />
+
+    <Button
+        android:id="@+id/play_again_button"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_bg"
+        android:fontFamily="@font/pixel_operator"
+        android:text="@string/play_again_result"
+        android:textAlignment="center"
+        android:textColor="@color/silver_app_color"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+
+        />
 
 </android.support.v7.widget.LinearLayoutCompat>
