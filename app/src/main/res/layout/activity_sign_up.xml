@@ -10,12 +10,23 @@
     android:background="@drawable/space_home_bg"
     tools:context=".login.SignUpActivity">
 
+    <TextView
+        android:id="@+id/sign_in_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_title_login"
+        android:textAlignment="center"
+        android:textColor="@color/silver_app_color"
+        android:fontFamily="@font/pixel_operator"
+        android:textSize="40sp"/>
+
     <EditText
         android:id="@+id/input_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/silver_app_color"
         android:hint="@string/pick_a_username"
+        android:textSize="25sp"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -23,6 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/user_email"
+        android:textSize="25sp"
+        android:fontFamily="@font/pixel_operator"
         android:textColor="@color/silver_app_color"
         android:inputType="textEmailAddress" />
 
@@ -31,6 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/user_password"
+        android:textSize="25sp"
+        android:fontFamily="@font/pixel_operator"
         android:textColor="@color/silver_app_color"
         android:inputType="textPassword" />
 
@@ -39,6 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/silver_app_color"
+        android:fontFamily="@font/pixel_operator"
+        android:textSize="18sp"
         android:text="@string/note_passwrod_requirement" />
 
     <Button
@@ -48,6 +65,8 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp"
         android:padding="12dp"
+        android:textSize="25sp"
+        android:fontFamily="@font/pixel_operator"
         android:background="@drawable/button_bg"
         android:text="@string/create_a_new_account" />
 
