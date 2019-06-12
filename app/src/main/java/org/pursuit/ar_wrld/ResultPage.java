@@ -41,6 +41,7 @@ public class ResultPage extends AppCompatActivity {
     private TextView nameTextView;
     private TextView scoreTextView;
     private TextView titleForScore;
+    private TextView msgTextView;
     private Button playAgainButton;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
     private SharedPreferences sharedPreferences;
@@ -81,6 +82,7 @@ public class ResultPage extends AppCompatActivity {
         playAgainButton = findViewById(R.id.playagain_button);
 
         logoImage = findViewById(R.id.pic_for_result_logo);
+        msgTextView = findViewById(R.id.congrats_msg);
     }
 
     public void moveBackHome(){
@@ -97,6 +99,7 @@ public class ResultPage extends AppCompatActivity {
         bounceAnimation.setInterpolator(interpolator);
         nameTextView.startAnimation(bounceAnimation);
         scoreTextView.startAnimation(bounceAnimation);
+        msgTextView.startAnimation(bounceAnimation);
 
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(logoImage, "x", 180f);
         animatorX.setDuration(durationX);
