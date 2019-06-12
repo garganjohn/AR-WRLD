@@ -29,7 +29,7 @@
         android:contentDescription="@string/user_image"
         android:scaleType="fitCenter"
         android:layout_marginTop="16dp"
-        android:src="@drawable/blank_profile_picture" />
+        android:src="@drawable/logo_splash_transparent" />
 
 
     <EditText
