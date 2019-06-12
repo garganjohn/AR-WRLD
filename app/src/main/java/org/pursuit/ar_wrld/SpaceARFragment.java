@@ -216,8 +216,8 @@ public class SpaceARFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mainActBG = view.findViewById(R.id.background_for_ar_view);
         sceneNode = new AnchorNode();
-        sceneNode.setWorldPosition(new Vector3(0, 0, 0));
-        laserAnchor.setWorldPosition(new Vector3(0, 0, 800));
+        sceneNode.setWorldPosition(new Vector3(0, 0, -50));
+        laserAnchor.setWorldPosition(new Vector3(0f, 0f, 5f));
         shootingTextDissapearing();
         weaponSetup();
         setMaxNumOfModels();
@@ -546,8 +546,8 @@ public class SpaceARFragment extends Fragment {
     public void addNodeToScene(ModelRenderable renderable, String whichEnemy) {
         numOfModels++;
    laserNode = new Node();
-   laserNode.setParent(laserAnchor);
-
+   laserNode.setParent(anchorNode);
+laserNode.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().getBack());
         modelRenderablesList.add(renderable);
         Log.d(TAG, "addNodeToScene: " + numOfModels);
 
@@ -569,9 +569,9 @@ public class SpaceARFragment extends Fragment {
 
         anchorNode = new MovementNode(null);
         anchorNode.setParent(sceneNode);
+
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         transformableNodesList.add(node);
-        projectileNode.setParent(anchorNode);
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
@@ -580,11 +580,12 @@ public class SpaceARFragment extends Fragment {
         vector.set(modelCoordinates.randomCoordinates(true), modelCoordinates.randomCoordinates(false), modelCoordinates.randomZCoordinates());
 
         Quaternion rotate = Quaternion.axisAngle(new Vector3(0, 1f, 0), 90f);
-
+//        projectileNode.setWorldPosition(new Vector3(100f,100f,-20f));
         anchorNode.randomMovement();
         node.setParent(anchorNode);
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
+
 //        node.setLight(modelLight);
         mli.indicate(vector);
 

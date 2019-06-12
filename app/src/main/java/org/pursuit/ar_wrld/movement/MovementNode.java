@@ -31,6 +31,7 @@ public class MovementNode extends AnchorNode {
     private Node node;
     private ModelSpeed modelSpeed;
     private Light light;
+    int[] nums = new int[]{3};
 
     public MovementNode(Anchor anchor) {
         super(anchor);

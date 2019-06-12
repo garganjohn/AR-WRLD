@@ -14,9 +14,11 @@ import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.math.Vector3Evaluator;
 import com.google.ar.sceneform.rendering.Color;
 import com.google.ar.sceneform.rendering.Light;
+import com.google.ar.sceneform.rendering.MaterialFactory;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.ShapeFactory;
 
-public class ProjectileNode extends Node {
+public class ProjectileNode extends AnchorNode {
 
     public ProjectileNode(Context context, Uri uri) {
         this.context = context;
@@ -37,43 +39,59 @@ public class ProjectileNode extends Node {
     @Override
     public void onUpdate(FrameTime frameTime) {
         super.onUpdate(frameTime);
+        targetLocation = this.getLocalPosition();
 
-//        targetLocation = targetNode.getLocalPosition();
         //point1 = this.getLocalPosition();
 
     }
 
+    @Override
+    public void onTransformChange(Node node) {
+        super.onTransformChange(node);
+        targetLocation = getScene().getCamera().getBack();
+    }
 
     public void launchProjectile(Node node) {
-        Light light = Light.builder(Light.Type.POINT)
+        Light light = Light.builder(Light.Type.DIRECTIONAL)
                 .setColor(new Color(android.graphics.Color.MAGENTA))
                 .setFalloffRadius(0f)
                 .setShadowCastingEnabled(true)
                 .setIntensity(45f)
                 .build();
-        point1 = this.getParent().getWorldPosition();
-        Vector3 point2 = node.getWorldPosition();
+        point1 = targetLocation;
+        Vector3 point2 = node.getLocalPosition();
 
-        final Vector3 difference = Vector3.subtract(point1, point2);
-        final Vector3 directionFromTopToBottom = difference.normalized();
-        final Quaternion rotationFromAToB =
-                Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
+//        final Vector3 difference = Vector3.subtract(point1, point2);
+//        final Vector3 directionFromTopToBottom = difference.normalized();
+//        final Quaternion rotationFromAToB =
+//
+//
+//                Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
+//        MaterialFactory.makeOpaqueWithColor(context, new Color(android.graphics.Color.MAGENTA))
+//                .thenAccept(
+//                        material -> {
+/* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
+       to extend to the necessary length.  */
+//                            ModelRenderable model = ShapeFactory.makeCube(
+//                                    new Vector3(.01f, .01f, difference.length()),
+//                                    Vector3.zero(), material);
         ModelRenderable.builder()
                 .setSource(context, uri)
                 .build()
                 .thenAccept(modelRenderable -> {
-                    this.setLight(light);
-                    this.setRenderable(modelRenderable);
-                    modelBlink(light,2 , 0f, 100000f, 500);
-                    //this.setWorldRotation(rotationFromAToB);
-                });
+                            this.setLight(light);
+                            this.setRenderable(modelRenderable);
+                            modelBlink(light, 2, 0f, 500f, 500);
+                            this.setLocalScale(new Vector3(1f, 1f, 1f));
+                            //this.setWorldRotation(rotationFromAToB);
+                        });
 
 
         ObjectAnimator objectAnimator = new ObjectAnimator();
 
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
-        objectAnimator.setPropertyName("worldPosition");
+        objectAnimator.setPropertyName("localPosition");
         objectAnimator.setObjectValues(point1, point2);
 
         objectAnimator.setEvaluator(new Vector3Evaluator());
@@ -89,7 +107,7 @@ public class ProjectileNode extends Node {
         objectAnimator.start();
 
 
-        new CountDownTimer(550, 1000) {
+        new CountDownTimer(450, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -97,12 +115,9 @@ public class ProjectileNode extends Node {
 
             @Override
             public void onFinish() {
-             setRenderable(null);
-                }
-            }.start();
-
-
-
+                setRenderable(null);
+            }
+        }.start();
 
 
     }
@@ -114,7 +129,6 @@ public class ProjectileNode extends Node {
         intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
         intensityAnimator.start();
     }
-
 
 
 }
