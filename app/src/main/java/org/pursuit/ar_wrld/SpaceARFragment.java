@@ -140,7 +140,7 @@ public class SpaceARFragment extends Fragment {
     long spawnRateEasy = 0;
     long spawnRateMed = 0;
     long spawnRateHard = 0;
-    private Projectiles projectiles;
+    private Projectiles projectiles = null;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -201,7 +201,6 @@ public class SpaceARFragment extends Fragment {
 
         findViews(rootView);
         setUpAR();
-        projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BOSS_ENEMY),arFragment);
         return rootView;
     }
 
@@ -608,7 +607,6 @@ public class SpaceARFragment extends Fragment {
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
-        arFragment.getArSceneView().getScene().addChild(projectiles);
         //Rotates the model every frame
         //Second parameter in Quaternion.axisAngle() measures speed of rotation
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
@@ -638,7 +636,12 @@ public class SpaceARFragment extends Fragment {
 
             //fireLasers(anchorNode, node);
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BOSS_ENEMY),arFragment);
+            arFragment.getArSceneView().getScene().addChild(projectiles);
             projectiles.launchProjectile(node);
+            if (projectiles.isActive()){
+                projectiles = null;
+            }
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -710,6 +713,7 @@ public class SpaceARFragment extends Fragment {
             }
         }));
         node.select();
+
     }
 
     public void loadModel(Uri uri, String whichEnemy) {

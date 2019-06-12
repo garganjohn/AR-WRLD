@@ -43,12 +43,10 @@ public class Projectiles extends AnchorNode {
     private Uri uri;
     private Uri uri2;
     private Camera camera;
-
     @Override
     public void onActivate() {
         super.onActivate();
         point1 = arFragment.getArSceneView().getScene().getCamera().getBack();
-
         this.setLocalPosition(arFragment.getArSceneView().getScene().getCamera().getBack());
         this.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward());
 
@@ -90,9 +88,9 @@ public class Projectiles extends AnchorNode {
 //
 //                            this.setRenderable(model);
 //                            this.setLocalScale(new Vector3(1f, 1f, 1f));
-//                           //this.setWorldRotation(rotationFromAToB);
-//                        });
-//
+                           //this.setWorldRotation(rotationFromAToB);
+                    //    });
+
 //        ModelRenderable.builder()
 //                .setSource(context, uri2)
 //                .build()
@@ -121,12 +119,14 @@ public class Projectiles extends AnchorNode {
         // This makes the animation linear (smooth and uniform).
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
-        objectAnimator.setDuration(475);
+        objectAnimator.clone();
+        objectAnimator.setDuration(500);
 
         objectAnimator.start();
 
 
-        new CountDownTimer(450, 500) {
+
+        new CountDownTimer(600, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -135,7 +135,7 @@ public class Projectiles extends AnchorNode {
             @Override
             public void onFinish() {
 
-                setRenderable(null);
+            setRenderable(null);
             }
         }.start();
 
@@ -153,9 +153,9 @@ public class Projectiles extends AnchorNode {
     }
 
     public void setRenderable () {
-        Light light = Light.builder(Light.Type.DIRECTIONAL)
+        Light light = Light.builder(Light.Type.POINT)
                 .setColor(new Color(android.graphics.Color.MAGENTA))
-                .setFalloffRadius(0f)
+                .setFalloffRadius(0.5f)
                 .setShadowCastingEnabled(true)
                 .setIntensity(45f)
                 .build();
