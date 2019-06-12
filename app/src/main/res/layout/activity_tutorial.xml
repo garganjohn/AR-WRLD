@@ -4,9 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TutorialActivity">
+    tools:context=".tutorial.TutorialActivity">
+
+<android.support.v4.view.ViewPager
+    android:id="@+id/tutorial_viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
+</android.support.v4.view.ViewPager>
   <FrameLayout
       android:id="@+id/tutorial_container"
       android:layout_width="match_parent"

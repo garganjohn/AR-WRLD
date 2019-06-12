@@ -27,20 +27,18 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.jakewharton.rxbinding.view.RxView;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.MainActivity;
 import org.pursuit.ar_wrld.R;
-import org.pursuit.ar_wrld.TutorialActivity;
-import org.pursuit.ar_wrld.TutorialFragment;
+import org.pursuit.ar_wrld.tutorial.TutorialActivity;
+import org.pursuit.ar_wrld.tutorial.TutorialFragment;
 import org.pursuit.ar_wrld.database.FirebaseDatabaseHelper;
 import org.pursuit.ar_wrld.perks.PerkPickForUser;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Long.parseLong;

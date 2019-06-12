@@ -630,7 +630,7 @@ public class SpaceARFragment extends Fragment {
                 weaponSwitch();
             }
 
-            fireLasers(anchorNode, node);
+            //fireLasers(anchorNode, node);
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
