@@ -23,5 +23,6 @@ public interface GameInformation {
     String NOOB = "Work Hard!.. or harder, no seriously, you need to work hard";
     String UPHILLCLIMBER = "You'll get to the top ... someday";
     String USERNAME_KEY = "username";
+    String LIGHT_BEAM = "tinker.sfb";
 
 }
