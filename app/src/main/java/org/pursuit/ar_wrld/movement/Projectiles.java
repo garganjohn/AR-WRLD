@@ -24,7 +24,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 
 public class Projectiles extends AnchorNode {
 
-    public Projectiles(Context context, Uri uri,ArFragment arFragment) {
+    public Projectiles(Context context, Uri uri, ArFragment arFragment) {
         this.context = context;
         this.uri = uri;
         this.anchorNode = anchorNode;
@@ -43,6 +43,7 @@ public class Projectiles extends AnchorNode {
     private Uri uri;
     private Uri uri2;
     private Camera camera;
+    private  Vector3 position;
     @Override
     public void onActivate() {
         super.onActivate();
@@ -68,28 +69,40 @@ public class Projectiles extends AnchorNode {
     }
 
     public void launchProjectile(Node node) {
-        setRenderable();
-        //point1 = this.getLocalPosition();
+        //setRenderable();
+        position = new Vector3(0,0,arFragment.getArSceneView().getScene().getCamera().getBack().z);
 
+        //point1 = this.getLocalPosition();
+        point1 = arFragment.getArSceneView().getScene().getCamera().getBack();
+        Vector3 startPoint = getWorldPosition();
         Vector3 point2 = node.getWorldPosition();
 
-        final Vector3 difference = Vector3.subtract(point1, point2);
-        final Vector3 directionFromTopToBottom = difference;
-        final Quaternion rotationFromAToB = Quaternion.lookRotation(directionFromTopToBottom, Vector3.up());
-//        MaterialFactory.makeOpaqueWithColor(context, new Color(android.graphics.Color.MAGENTA))
-//                .thenAccept(
-//                        material -> {
-//////                            Then, create a rectangular prism, using ShapeFactory.makeCube() and use
-//////                            the difference vector
-//////                            to extend to the necessary length.  */
-//                            ModelRenderable model = ShapeFactory.makeCube(
-//                                    new Vector3(-.1f, 0f, difference.length()),
-//                                    Vector3.zero(), material);
-//
-//                            this.setRenderable(model);
-//                            this.setLocalScale(new Vector3(1f, 1f, 1f));
-                           //this.setWorldRotation(rotationFromAToB);
-                    //    });
+        final Vector3 difference = Vector3.subtract(position, point2);
+        final Vector3 directionFromTopToBottom = difference.normalized();
+       final Quaternion rotationFromAToB =
+               Quaternion.lookRotation(directionFromTopToBottom, Vector3.back());
+        MaterialFactory.makeOpaqueWithColor(context, new Color(android.graphics.Color.RED))
+                .thenAccept(
+                        material -> {
+/* Then, create a rectangular prism, using ShapeFactory.makeCube() and use the difference vector
+       to extend to the necessary length.  */
+                            ModelRenderable model = ShapeFactory.makeCube(
+                                    new Vector3(0.01f, 0.01f, difference.length()),position
+                                    , material);
+
+/* Last, set the world rotation of the node to the rotation calculated earlier and set the world position to
+       the midpoint between the given points . */
+
+                            setRenderable(model);
+//                            laserNode.setWorldPosition(startVctor);
+                            position = new Vector3(0,0,arFragment.getArSceneView().getScene().getCamera().getBack().z);
+                            //position = Vector3.add(point1, point2).scaled(0f);
+                            setParent(arFragment.getArSceneView().getScene());
+
+                            setWorldPosition(position);
+                           setWorldRotation(rotationFromAToB);
+                            });
+
 
 //        ModelRenderable.builder()
 //                .setSource(context, uri2)
@@ -108,8 +121,8 @@ public class Projectiles extends AnchorNode {
 
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
-        objectAnimator.setPropertyName("localPosition");
-        objectAnimator.setObjectValues(point1, point2);
+        objectAnimator.setPropertyName("worldPosition");
+        objectAnimator.setObjectValues(position, point2);
 
         objectAnimator.setEvaluator(new Vector3Evaluator());
         //animation happens forever
@@ -120,61 +133,57 @@ public class Projectiles extends AnchorNode {
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
         objectAnimator.clone();
-        objectAnimator.setDuration(500);
+        objectAnimator.setDuration(250);
 
         objectAnimator.start();
 
 
+                            new CountDownTimer(200, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
 
-        new CountDownTimer(600, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
+                                }
 
-            }
+                                @Override
+                                public void onFinish() {
 
-            @Override
-            public void onFinish() {
+                                    setRenderable(null);
+                                }
+                            }.start();
+                        }
 
-            setRenderable(null);
-            }
-        }.start();
+                            public void modelBlink (Light receiver,int times, float from, float to,
+                            long inMs){
+                                ObjectAnimator intensityAnimator = ObjectAnimator.ofFloat(receiver, "intensity", from, to);
+                                intensityAnimator.setDuration(inMs);
+                                intensityAnimator.setRepeatCount(times * 2 - 1);
+                                intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+                                intensityAnimator.start();
+                            }
 
-
-    }
-
-
-
-    public void modelBlink (Light receiver,int times, float from, float to, long inMs){
-        ObjectAnimator intensityAnimator = ObjectAnimator.ofFloat(receiver, "intensity", from, to);
-        intensityAnimator.setDuration(inMs);
-        intensityAnimator.setRepeatCount(times * 2 - 1);
-        intensityAnimator.setRepeatMode(ObjectAnimator.REVERSE);
-        intensityAnimator.start();
-    }
-
-    public void setRenderable () {
-        Light light = Light.builder(Light.Type.POINT)
-                .setColor(new Color(android.graphics.Color.MAGENTA))
-                .setFalloffRadius(0.5f)
-                .setShadowCastingEnabled(true)
-                .setIntensity(45f)
-                .build();
+                            public void setRenderable () {
+                                Light light = Light.builder(Light.Type.POINT)
+                                        .setColor(new Color(android.graphics.Color.MAGENTA))
+                                        .setFalloffRadius(0.5f)
+                                        .setShadowCastingEnabled(true)
+                                        .setIntensity(45f)
+                                        .build();
 
 
-        ModelRenderable.builder()
-                .setSource(context, uri)
-                .build()
-                .thenAccept(modelRenderable -> {
-                    this.setLight(light);
-                    this.setRenderable(modelRenderable);
-                    modelBlink(light, 2, 0f, 500f, 500);
-                    this.setLocalScale(new Vector3(1f, 1f, 1f));
+                                ModelRenderable.builder()
+                                        .setSource(context, uri)
+                                        .build()
+                                        .thenAccept(modelRenderable -> {
+                                            this.setLight(light);
+                                            this.setRenderable(modelRenderable);
+                                            modelBlink(light, 2, 0f, 500f, 500);
+                                            this.setLocalScale(new Vector3(1f, 1f, 1f));
+
+                                            // this.setLocalScale(new Vector3(.1f, .1f, -.009f));
 //                            this.setWorldRotation(rotationFromAToB);
-                });
+                                        });
 
-    }
-
-
+                            }
 
 
-}
+                        }

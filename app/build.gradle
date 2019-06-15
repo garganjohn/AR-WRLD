@@ -90,3 +90,9 @@ sceneform.asset('sampledata/laser/laser.obj',
         'default',
         'sampledata/laser/laser.sfa',
         'src/main/assets/laser')
+
+
+sceneform.asset('sampledata/tinker/tinker.obj',
+        'default',
+        'sampledata/tinker/tinker.sfa',
+        'src/main/assets/tinker')
