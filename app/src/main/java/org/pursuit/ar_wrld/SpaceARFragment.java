@@ -52,6 +52,8 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.movement.MovementNode;
+import org.pursuit.ar_wrld.movement.Projectiles;
+import org.pursuit.ar_wrld.movement.TargetNode;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -139,6 +141,9 @@ public class SpaceARFragment extends Fragment {
     long spawnRateEasy = 0;
     long spawnRateMed = 0;
     long spawnRateHard = 0;
+    private Projectiles projectiles = null;
+    private TargetNode targetNode;
+    private Color Yellow = new Color(android.graphics.Color.YELLOW);
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -195,6 +200,8 @@ public class SpaceARFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
+
+
         findViews(rootView);
         setUpAR();
         return rootView;
@@ -560,13 +567,13 @@ public class SpaceARFragment extends Fragment {
 
         anchorNode = new MovementNode(null);
         anchorNode.setParent(sceneNode);
+
         TransformableNode node = new TransformableNode(arFragment.getTransformationSystem());
         transformableNodesList.add(node);
 
         getStringRes();
         numOfAliensTv.setText(aliensLeftString);
         node.setRenderable(renderable);
-
         node.setLocalScale(new Vector3(0.25f, 0.5f, 1.0f));
         vector.set(modelCoordinates.randomCoordinates(true), modelCoordinates.randomCoordinates(false), modelCoordinates.randomZCoordinates());
 
@@ -632,8 +639,17 @@ public class SpaceARFragment extends Fragment {
 
             //fireLasers(anchorNode, node);
             modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BOSS_ENEMY),arFragment);
+            arFragment.getArSceneView().getScene().addChild(projectiles);
+             projectiles.setWorldPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getBack()));
+            //projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());
+
+            projectiles.launchProjectile(node);
+            if (projectiles.isActive()){
+                projectiles = null;
+            }
             if (0 < modelLives.getNumofLivesModel0()) {
-                if (modelLives.getNumofLivesModel0() > 1) {
+                if (modelLives.getNumofLivesModel0()> 1) {
                     lightsYellow(node, modelLight);
                 } else {
                     lightsRed(node, modelLight);
@@ -703,6 +719,7 @@ public class SpaceARFragment extends Fragment {
             }
         }));
         node.select();
+
     }
 
     public void loadModel(Uri uri, String whichEnemy) {
@@ -878,7 +895,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void lightsYellow(Node node, Light light) {
-        light.setColor(Red);
+        light.setColor(Yellow);
         node.setLight(light);
 
         modelBlink(light, 6, 0f, 100000f, 500);
