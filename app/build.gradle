@@ -64,7 +64,7 @@ sceneform.asset('sampledata/CUPIC_FYINGSAUCER.obj',
         'sampledata/CUPIC_FYINGSAUCER.sfa',
         'src/main/assets/CUPIC_FYINGSAUCER')
 
-sceneform.asset('sampledata/model.obj',
+sceneform.asset('sampledata/ball_shot.obj',
         'default',
         'sampledata/model.sfa',
         'src/main/assets/model')
@@ -90,3 +90,29 @@ sceneform.asset('sampledata/laser/laser.obj',
         'default',
         'sampledata/laser/laser.sfa',
         'src/main/assets/laser')
+
+
+sceneform.asset('sampledata/light_beam/tinker.obj',
+        'default',
+        'sampledata/light_beam/tinker.sfa',
+        'src/main/assets/tinker')
+
+sceneform.asset('sampledata/ball_shot/ball_shot.obj',
+        'default',
+        'sampledata/ball_shot/ball_shot.sfa',
+        'src/main/assets/ball_shot')
+
+sceneform.asset('sampledata/gray_ball/gray_ball.obj',
+        'default',
+        'sampledata/gray_ball/gray_ball.sfa',
+        'src/main/assets/gray_ball')
+
+sceneform.asset('sampledata/mosaic_ball/mosaic ball.obj',
+        'default',
+        'sampledata/mosaic_ball/mosaic ball.sfa',
+        'src/main/assets/mosaic ball')
+
+sceneform.asset('sampledata/trippy/tripball.obj',
+        'default',
+        'sampledata/trippy/tripball.sfa',
+        'src/main/assets/tripball')
