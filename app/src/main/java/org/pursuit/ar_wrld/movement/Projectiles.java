@@ -48,8 +48,8 @@ public class Projectiles extends AnchorNode {
     public void onActivate() {
         super.onActivate();
         point1 = arFragment.getArSceneView().getScene().getCamera().getBack();
-        this.setLocalPosition(arFragment.getArSceneView().getScene().getCamera().getBack());
-        this.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward());
+        setLocalPosition(arFragment.getArSceneView().getScene().getCamera().getLocalPosition());
+
 
     }
 
@@ -73,9 +73,10 @@ public class Projectiles extends AnchorNode {
         //position = new Vector3(0,0,10);
 
         //point1 = this.getLocalPosition();
-        point1 = arFragment.getArSceneView().getScene().getCamera().getBack();
+        point1 = arFragment.getArSceneView().getScene().getCamera().getLocalPosition();
         Vector3 startPoint = getWorldPosition();
-         Vector3 point2 = node.getLocalPosition();
+        Vector3 point2 = node.getWorldPosition();
+        setLookDirection(point2);
 //
 //        final Vector3 difference = Vector3.subtract(point1, point2);
 //        final Vector3 directionFromTopToBottom = difference.normalized();
@@ -122,7 +123,7 @@ public class Projectiles extends AnchorNode {
 
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
-        objectAnimator.setPropertyName("localPosition");
+        objectAnimator.setPropertyName("worldPosition");
         objectAnimator.setObjectValues(point1, point2);
 
         objectAnimator.setEvaluator(new Vector3Evaluator());
@@ -134,12 +135,12 @@ public class Projectiles extends AnchorNode {
         objectAnimator.setInterpolator(new LinearInterpolator());
         // Duration in ms of the animation.
         objectAnimator.clone();
-        objectAnimator.setDuration(500);
+        objectAnimator.setDuration(350);
 
         objectAnimator.start();
 
 
-        new CountDownTimer(450, 1000) {
+        new CountDownTimer(400, 450) {
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -164,7 +165,7 @@ public class Projectiles extends AnchorNode {
 
     public void setRenderable () {
         Light light = Light.builder(Light.Type.POINT)
-                .setColor(new Color(android.graphics.Color.MAGENTA))
+                .setColor(new Color(android.graphics.Color.GREEN))
                 .setFalloffRadius(0.5f)
                 .setShadowCastingEnabled(true)
                 .setIntensity(45f)
@@ -175,10 +176,11 @@ public class Projectiles extends AnchorNode {
                 .setSource(context, uri)
                 .build()
                 .thenAccept(modelRenderable -> {
-                    this.setLight(light);
-                    this.setRenderable(modelRenderable);
+
+                    setLight(light);
+                    setRenderable(modelRenderable);
                     modelBlink(light, 2, 0f, 500f, 500);
-                    this.setLocalScale(new Vector3(0.1f, 0.1f, 0.1f));
+                    setLocalScale(new Vector3(.225f, .225f, .225f));
                     //setParent(arFragment.getArSceneView().getScene());
 
 

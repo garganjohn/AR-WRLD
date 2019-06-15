@@ -24,5 +24,6 @@ public interface GameInformation {
     String UPHILLCLIMBER = "You'll get to the top ... someday";
     String USERNAME_KEY = "username";
     String LIGHT_BEAM = "tinker.sfb";
+    String BALL_SHOT = "tripball.sfb";
 
 }
