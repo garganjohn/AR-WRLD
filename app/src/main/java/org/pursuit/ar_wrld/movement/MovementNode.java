@@ -90,7 +90,7 @@ public class MovementNode extends AnchorNode {
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
         objectAnimator.setPropertyName("localPosition");
-        objectAnimator.setObjectValues(originalNodePosition, postion, left, down, up,left,up,down);
+        objectAnimator.setObjectValues(originalNodePosition,Vector3.down(),Vector3.forward(),Vector3.up(), left, down, up,left,down);
 
 
         //requires the setter name of what you are manipulating

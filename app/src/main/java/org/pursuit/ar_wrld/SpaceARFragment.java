@@ -634,7 +634,7 @@ public class SpaceARFragment extends Fragment {
             }
 
             //fireLasers(anchorNode, node);
-            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BALL_SHOT),arFragment);
+            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.LIGHT_BEAM),arFragment);
             arFragment.getArSceneView().getScene().addChild(projectiles);
             projectiles.setLocalPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getLocalPosition()));
 //projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());

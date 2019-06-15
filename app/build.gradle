@@ -116,8 +116,3 @@ sceneform.asset('sampledata/trippy/tripball.obj',
         'default',
         'sampledata/trippy/tripball.sfa',
         'src/main/assets/tripball')
-
-sceneform.asset('sampledata/light_beam/tinker.obj',
-        'default',
-        'sampledata/light_beam/tinker.sfa',
-        'src/main/assets/tinker')

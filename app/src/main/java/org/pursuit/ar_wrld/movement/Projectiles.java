@@ -180,7 +180,7 @@ public class Projectiles extends AnchorNode {
                     setLight(light);
                     setRenderable(modelRenderable);
                     modelBlink(light, 2, 0f, 500f, 500);
-                    setLocalScale(new Vector3(.225f, .225f, .225f));
+                    setLocalScale(new Vector3(1f, 1f, 1f));
                     //setParent(arFragment.getArSceneView().getScene());
 
 
