@@ -75,7 +75,7 @@ public class Projectiles extends AnchorNode {
         //point1 = this.getLocalPosition();
         point1 = arFragment.getArSceneView().getScene().getCamera().getBack();
         Vector3 startPoint = getWorldPosition();
-        Vector3 point2 = node.getWorldPosition();
+         Vector3 point2 = node.getLocalPosition();
 //
 //        final Vector3 difference = Vector3.subtract(point1, point2);
 //        final Vector3 directionFromTopToBottom = difference.normalized();
@@ -122,7 +122,7 @@ public class Projectiles extends AnchorNode {
 
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
-        objectAnimator.setPropertyName("worldPosition");
+        objectAnimator.setPropertyName("localPosition");
         objectAnimator.setObjectValues(point1, point2);
 
         objectAnimator.setEvaluator(new Vector3Evaluator());

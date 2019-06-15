@@ -634,17 +634,20 @@ public class SpaceARFragment extends Fragment {
             }
 
             //fireLasers(anchorNode, node);
-            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.LIGHT_BEAM),arFragment);
+            projectiles = new Projectiles(getContext(), Uri.parse(GameInformation.LIGHT_BEAM), arFragment);
             arFragment.getArSceneView().getScene().addChild(projectiles);
-            projectiles.setWorldPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getBack()));
+
+            //projectiles.setWorldPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getBack()));
 //projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());
+            projectiles.setWorldPosition(arFragment.getArSceneView().getScene().getCamera().getBack());
 
-            projectiles.launchProjectile(node);
-            if (projectiles.isActive()){
-                projectiles = null;}
+            projectiles.launchProjectile(hitTestResult.getNode());
+            if (projectiles.isActive()) {
+                projectiles = null;
+            }
 
 
-                modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
