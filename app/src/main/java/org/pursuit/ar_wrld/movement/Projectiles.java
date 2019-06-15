@@ -76,6 +76,9 @@ public class Projectiles extends AnchorNode {
         point1 = arFragment.getArSceneView().getScene().getCamera().getLocalPosition();
         Vector3 startPoint = getWorldPosition();
         Vector3 point2 = node.getWorldPosition();
+//        Quaternion startQ = getLocalRotation();
+//        Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
+//        setLocalRotation(Quaternion.multiply(startQ, rotateQ));
         setLookDirection(point2);
 //
 //        final Vector3 difference = Vector3.subtract(point1, point2);
@@ -180,7 +183,7 @@ public class Projectiles extends AnchorNode {
                     setLight(light);
                     setRenderable(modelRenderable);
                     modelBlink(light, 2, 0f, 500f, 500);
-                    setLocalScale(new Vector3(1f, 1f, 1f));
+                    setLocalScale(new Vector3(.225f, .225f, .225f));
                     //setParent(arFragment.getArSceneView().getScene());
 
 
