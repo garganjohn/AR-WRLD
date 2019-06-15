@@ -116,3 +116,19 @@ sceneform.asset('sampledata/trippy/tripball.obj',
         'default',
         'sampledata/trippy/tripball.sfa',
         'src/main/assets/tripball')
+
+
+sceneform.asset('sampledata/glow_tri/PONI Cracked Pyra Glow.obj',
+        'default',
+        'sampledata/glow_tri/PONI Cracked Pyra Glow.sfa',
+        'src/main/assets/PONI Cracked Pyra Glow')
+
+sceneform.asset('sampledata/arrow/arrow.obj',
+        'default',
+        'sampledata/arrow/arrow.sfa',
+        'src/main/assets/arrow')
+
+sceneform.asset('sampledata/green_sphere/sphere.obj',
+        'default',
+        'sampledata/green_sphere/sphere.sfa',
+        'src/main/assets/sphere')
