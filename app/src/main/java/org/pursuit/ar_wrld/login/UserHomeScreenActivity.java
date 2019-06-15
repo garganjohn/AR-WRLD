@@ -139,7 +139,7 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         if (retrieveUsername() != null){
             usernameTextView.setText(retrieveUsername());
         }
-        
+
         String userScoreText = getString(R.string.user_score, retrieveScore());
         userscoreTextView.setText(userScoreText);
     }
