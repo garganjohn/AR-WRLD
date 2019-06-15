@@ -52,6 +52,7 @@ import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
 import org.pursuit.ar_wrld.movement.MovementNode;
+import org.pursuit.ar_wrld.movement.Projectiles;
 import org.pursuit.ar_wrld.util.ModelLocationIndicator;
 import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 
@@ -136,9 +137,11 @@ public class SpaceARFragment extends Fragment {
     private Light modelLight = null;
     private Node laserNode = null;
     private Color Red = new Color(android.graphics.Color.RED);
+    private Color Yellow = new Color(android.graphics.Color.YELLOW);
     long spawnRateEasy = 0;
     long spawnRateMed = 0;
     long spawnRateHard = 0;
+    private Projectiles projectiles = null;
 
     public SpaceARFragment() {
         // Required empty public constructor
@@ -631,7 +634,17 @@ public class SpaceARFragment extends Fragment {
             }
 
             //fireLasers(anchorNode, node);
-            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.LIGHT_BEAM),arFragment);
+            arFragment.getArSceneView().getScene().addChild(projectiles);
+            projectiles.setWorldPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getBack()));
+//projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());
+
+            projectiles.launchProjectile(node);
+            if (projectiles.isActive()){
+                projectiles = null;}
+
+
+                modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
@@ -878,7 +891,7 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void lightsYellow(Node node, Light light) {
-        light.setColor(Red);
+        light.setColor(Yellow);
         node.setLight(light);
 
         modelBlink(light, 6, 0f, 100000f, 500);
