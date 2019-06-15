@@ -79,7 +79,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 30000;
+    private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;
@@ -634,9 +634,9 @@ public class SpaceARFragment extends Fragment {
             }
 
             //fireLasers(anchorNode, node);
-            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.LIGHT_BEAM),arFragment);
+            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BALL_SHOT),arFragment);
             arFragment.getArSceneView().getScene().addChild(projectiles);
-            projectiles.setWorldPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getBack()));
+            projectiles.setLocalPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getLocalPosition()));
 //projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());
 
             projectiles.launchProjectile(node);
@@ -926,7 +926,7 @@ public class SpaceARFragment extends Fragment {
         }
 
         Vector3 point1, point2;
-        Vector3 cameraPosition = arFragment.getArSceneView().getScene().getCamera().getWorldPosition();
+        Vector3 cameraPosition = arFragment.getArSceneView().getScene().getCamera().getLocalPosition();
         Vector3 startPos = sceneNode.getWorldPosition();
         Vector3 startVctor = new Vector3(0f, 0f, 0f);
 
