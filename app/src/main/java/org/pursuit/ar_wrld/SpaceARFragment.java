@@ -78,7 +78,7 @@ public class SpaceARFragment extends Fragment {
     private TextView countDownText;
     private boolean timerRunning;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMilliseconds = 30000;
+    private long timeLeftInMilliseconds = 45000;
     int numOfModels = 0;
     private long scoreNumber;
     private int scoreTillClockModel = 2000;

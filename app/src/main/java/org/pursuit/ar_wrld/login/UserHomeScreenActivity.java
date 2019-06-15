@@ -134,7 +134,12 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             finish();
         });
         setPerkInfo();
-        usernameTextView.setText(retrieveUsername());
+        Log.d("FINDME", "onCreate: "+retrieveUsername());
+
+        if (retrieveUsername() != null){
+            usernameTextView.setText(retrieveUsername());
+        }
+
         String userScoreText = getString(R.string.user_score, retrieveScore());
         userscoreTextView.setText(userScoreText);
     }

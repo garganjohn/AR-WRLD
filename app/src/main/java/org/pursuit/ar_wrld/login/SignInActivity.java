@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
 
 public class SignInActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -68,6 +69,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 //        button = findViewById(R.id.sign_in_google);
 
         if (firebaseAuth.getCurrentUser() != null) {
+            getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE).edit().putString(GameInformation.USERNAME_KEY,firebaseAuth.getCurrentUser().getDisplayName()).apply();
             startActivity(new Intent(SignInActivity.this, UserHomeScreenActivity.class));
             finish();
         }
@@ -100,7 +102,8 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
                         if (task.isSuccessful()) {
                             // there was an error
-                            Log.d(TAG, "signInWithEmail:success");
+                            Log.d(TAG, "signInWithEmail:success"+firebaseAuth.getCurrentUser().getDisplayName());
+                            getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE).edit().putString(GameInformation.USERNAME_KEY, firebaseAuth.getCurrentUser().getDisplayName()).apply();
                             Intent intent = new Intent(SignInActivity.this, UserHomeScreenActivity.class);
                             startActivity(intent);
                             finish();
