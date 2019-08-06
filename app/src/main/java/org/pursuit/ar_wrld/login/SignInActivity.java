@@ -1,7 +1,10 @@
 package org.pursuit.ar_wrld.login;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +25,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
@@ -31,11 +37,12 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
     private Button signInButton;
     private Button createNewAcct;
     GoogleApiClient mGoogleApiClient;
-    private static final String TAG = "SignInActivity";
+    private static final String TAG = "FINDME";
     private static final int RC_SIGN_IN = 9001;
 
     private EditText inputEmail;
     private EditText inputPassword;
+    private TextView errorMessage;
     private FirebaseAuth firebaseAuth;
     private ProgressBar progressBar;
     private TextView forgotTextview;
@@ -64,6 +71,7 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         createNewAcct = findViewById(R.id.sign_in_text);
         progressBar = findViewById(R.id.sign_in_progressbar);
         forgotTextview = findViewById(R.id.forgot_password);
+        errorMessage = findViewById(R.id.error_message);
 
         signInButton = findViewById(R.id.button_login);
 //        button = findViewById(R.id.sign_in_google);
@@ -83,12 +91,17 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         signInButton.setOnClickListener(v -> {
             String email = inputEmail.getText().toString();
             final String password = inputPassword.getText().toString();
-            if (TextUtils.isEmpty(email)) {
-                Toast.makeText(getApplicationContext(), getString(R.string.insert_email_message), Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(errorMessage, "Error Message", Snackbar.LENGTH_LONG);
+            snackbar.setActionTextColor(Color.RED);
+
+            if (TextUtils.isEmpty(email)){
+                snackbar.setText("E-mail field is empty");
+                snackbar.show();
                 return;
             }
-            if (TextUtils.isEmpty(password)) {
-                Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
+            if (TextUtils.isEmpty(password)){
+                snackbar.setText("Password field is empty");
+                snackbar.show();
                 return;
             }
 
@@ -108,9 +121,15 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                             startActivity(intent);
                             finish();
 
-                        } else {
-                            Log.d(TAG, "singInWithEmail:Fail");
-                            Toast.makeText(SignInActivity.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            try {
+                                throw task.getException();
+                            } catch (Exception e){
+                                snackbar.setText(e.getMessage());
+                                snackbar.show();
+                            }
+
                         }
                     });
         });
