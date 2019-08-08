@@ -48,6 +48,7 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
 import org.pursuit.ar_wrld.Effects.AudioLoader;
+import org.pursuit.ar_wrld.Effects.CustomSounds;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.modelObjects.ModelLives;
 import org.pursuit.ar_wrld.movement.ModelCoordinates;
@@ -113,12 +114,14 @@ public class SpaceARFragment extends Fragment {
     private CountDownTimer backToOriginalColor;
     private int repitionForColors = 0;
     private int maxModels;
-    private AudioLoader audioLoader;
     private View mainActBG;
     private ModelCoordinates modelCoordinates;
     private SpaceARFragment spaceARFragment;
     private ImageView imageForPerk;
     private TextView shootText;
+
+    //new song implementation
+    private CustomSounds customSounds;
 
 
     // Controls animation playback.
@@ -159,8 +162,9 @@ public class SpaceARFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        audioSetup(context);
-        audioLoader.backGroundMusic();
+
+        customSounds = new CustomSounds(context);
+        customSounds.playBackground();
     }
 
     @Override
@@ -249,8 +253,10 @@ public class SpaceARFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        audioLoader.stopAudio();
-        audioLoader.nullMediaPlayer();
+        customSounds.getSoundPool().release();
+        customSounds.setSoundPool(null);
+        customSounds.getBackgroundMusic().release();
+        customSounds.setBackgroundMusic(null);
         arFragment.getArSceneView().getSession().getAllAnchors().iterator().forEachRemaining(Anchor::detach);
         arFragment = null;
         transformableNodesList.clear();
@@ -634,29 +640,30 @@ public class SpaceARFragment extends Fragment {
             }
 
             //fireLasers(anchorNode, node);
-            projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BALL_SHOT),arFragment);
+            projectiles = new Projectiles(getContext(), Uri.parse(GameInformation.BALL_SHOT), arFragment);
             arFragment.getArSceneView().getScene().addChild(projectiles);
             projectiles.setLocalPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getLocalPosition()));
 //projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());
 
             projectiles.launchProjectile(node);
-            if (projectiles.isActive()){
-                projectiles = null;}
+            if (projectiles.isActive()) {
+                projectiles = null;
+            }
 
 
-                modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
+            modelLives.setNumofLivesModel0(modelLives.getNumofLivesModel0() - weaponDamage);
             if (0 < modelLives.getNumofLivesModel0()) {
                 if (modelLives.getNumofLivesModel0() > 1) {
                     lightsYellow(node, modelLight);
                 } else {
                     lightsRed(node, modelLight);
                 }
-                audioLoader.laserSound();
+                customSounds.playLaser();
 //                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
                 node.removeChild(anchorNode);
-                audioLoader.explosionSound();
+                customSounds.playExplosion();
                 sceneNode.removeChild(node);
                 mli.cancelAnimator();
 
@@ -705,7 +712,7 @@ public class SpaceARFragment extends Fragment {
                 }
 
                 numOfModels--;
-                audioLoader.laserSound();
+                customSounds.playLaser();
                 getStringRes();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 Log.d(TAG, "setNodeListener: " + scoreString);
@@ -843,8 +850,8 @@ public class SpaceARFragment extends Fragment {
 //    }
 
     public void goToResultPage() {
+        customSounds.getBackgroundMusic().setLooping(false);
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
-        audioLoader.stopAudio();
         startActivity(goToResultPageIntent);
     }
 
@@ -877,9 +884,6 @@ public class SpaceARFragment extends Fragment {
 //        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
-    private void audioSetup(Context c) {
-        audioLoader = new AudioLoader(c);
-    }
 
     private void lightsRed(Node node, Light light) {
         light.setColor(new Color(android.graphics.Color.RED));
