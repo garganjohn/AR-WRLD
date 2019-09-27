@@ -20,6 +20,6 @@ public class ModelSpeed {
     private long modelSpeedMultiplier = 1000;
     private long rotationSpeedMultiplier = 1000;
 
-
 }
+
 

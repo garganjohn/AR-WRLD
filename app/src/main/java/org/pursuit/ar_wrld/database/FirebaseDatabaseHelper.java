@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -14,7 +13,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.login.UserHomeScreenActivity;
 import org.pursuit.ar_wrld.recyclerview.TopScoreViewHolder;
 import org.pursuit.ar_wrld.usermodel.UserInformation;
@@ -38,16 +36,13 @@ public class FirebaseDatabaseHelper {
 
     public interface DataStatus {
         void dataIsLoaded(List<UserInformation> userInformations, List<String> keys);
-
         void dataIsInserted();
-
     }
 
     public FirebaseDatabaseHelper() {
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("mARtians");
     }
-
 
     public void savePlayerInfo(final DataStatus dataStatus) {
 
@@ -69,7 +64,6 @@ public class FirebaseDatabaseHelper {
 
             }
         });
-
     }
 
     public void addUser(UserInformation userInformation, final DataStatus dataStatus) {
@@ -79,28 +73,7 @@ public class FirebaseDatabaseHelper {
                     dataStatus.dataIsInserted();
                     Log.e("newUserCreated: ", key);
                 });
-
     }
-
-//    public String getKey(){
-//        String keys = "";
-//        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for (DataSnapshot datas : dataSnapshot.getChildren()) {
-//                    //keys = datas.getKey();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
-//
-//        return keys;
-//    }
-
 
     public void updateScore(String name, long score) {
 
@@ -115,7 +88,7 @@ public class FirebaseDatabaseHelper {
                     long previousScore = 0;
                     newScore = score + previousScore;
                     myRef.child(name).setValue(newScore);
-                } catch (DatabaseException dbe){
+                } catch (DatabaseException dbe) {
                     myRef.child(name).setValue(newScore);
                 }
             }
@@ -126,6 +99,5 @@ public class FirebaseDatabaseHelper {
             }
         });
     }
-
-
 }
+

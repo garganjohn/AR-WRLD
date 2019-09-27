@@ -36,3 +36,4 @@ public class PerkAdapter extends RecyclerView.Adapter<PerkViewHolder> {
         return perkInfoModelList.size();
     }
 }
+

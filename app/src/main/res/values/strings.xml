@@ -102,6 +102,20 @@
     <string name="enemy_location">Enemy Location</string>
     <string name="weapon_info">Weapon Info</string>
     <string name="current_perk">Current Perk</string>
+    <string name="reset_password_text">Please check your email if you want to reset your password!</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="enter_email_id">Enter Email Id</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="auth_fail_msg">Authentication failed.</string>
+    <string name="hello">Hello</string>
+    <string name="failure_msg">Not Successful</string>
+    <string name="try_msg">Try again</string>
+    <string name="permission_grant_msg">Permission Granted</string>
+    <string name="permission_denied_msg">Permission Denied</string>
+    <string name="msg_ok_cancel">You need to allow access permissions</string>
+    <string name="okay">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="time_up">Time\'s Up</string>
 
 
 </resources>

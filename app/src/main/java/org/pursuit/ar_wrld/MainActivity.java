@@ -2,8 +2,6 @@ package org.pursuit.ar_wrld;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 
@@ -17,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initSpaceFragment();
     }
 
@@ -29,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.main_activity_container, spaceARFragment)
                 .addToBackStack(null)
                 .commit();
-
     }
 
     @Override
@@ -42,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             return super.onKeyDown(keyCode, event);
         }
-
     }
 
     @Override
@@ -51,3 +46,4 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 }
+

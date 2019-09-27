@@ -3,17 +3,12 @@ package org.pursuit.ar_wrld.util;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.Renderable;
-import com.google.ar.sceneform.rendering.ViewRenderable;
-import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
 
-import org.pursuit.ar_wrld.R;
 
 public class ModelLocationIndicator {
     private static final String TAG = "model location";
@@ -29,9 +24,6 @@ public class ModelLocationIndicator {
         this.rightArrow = right;
     }
 
-
-
-
     //TODO take in vector upon opbj inst. and then decide which arrow to indicate
     public void indicate(Vector3 vector) {
         if (vector.x < 0) {
@@ -42,7 +34,6 @@ public class ModelLocationIndicator {
             animator.setRepeatMode(Animation.REVERSE);
             animator.setRepeatCount(Animation.ABSOLUTE);
             animator.start();
-            //leftArrow.setBackgroundColor(Color.TRANSPARENT);
         }
         if (0 < vector.x) {
             animator = new ObjectAnimator().ofInt(rightArrow, "backgroundColor", Color.RED, Color.TRANSPARENT);
@@ -60,4 +51,5 @@ public class ModelLocationIndicator {
         animator.cancel();
     }
 }
+
 

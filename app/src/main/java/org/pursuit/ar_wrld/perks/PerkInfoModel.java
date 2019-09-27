@@ -2,8 +2,6 @@ package org.pursuit.ar_wrld.perks;
 
 import android.graphics.drawable.Drawable;
 
-import org.pursuit.ar_wrld.GameInformation;
-
 public class PerkInfoModel {
     private String perkName;
     private String perkDescription;

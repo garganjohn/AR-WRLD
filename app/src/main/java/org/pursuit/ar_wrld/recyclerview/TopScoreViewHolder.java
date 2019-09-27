@@ -21,3 +21,4 @@ public class TopScoreViewHolder extends RecyclerView.ViewHolder {
         selectedUserScore = itemView.findViewById(R.id.select_userscore);
     }
 }
+

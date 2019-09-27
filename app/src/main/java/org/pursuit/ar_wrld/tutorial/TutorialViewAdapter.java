@@ -14,13 +14,11 @@ public class TutorialViewAdapter extends FragmentPagerAdapter {
     public TutorialViewAdapter(FragmentManager fm, List<Fragment> fragmentList) {
         super(fm);
         this.fragmentList = fragmentList;
-
     }
 
     @Override
     public Fragment getItem(int i) {
         return fragmentList.get(i);
-
     }
 
     @Override
@@ -28,3 +26,4 @@ public class TutorialViewAdapter extends FragmentPagerAdapter {
         return fragmentList.size();
     }
 }
+

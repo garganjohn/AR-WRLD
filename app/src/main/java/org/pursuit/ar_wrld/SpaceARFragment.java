@@ -15,25 +15,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ankushgrover.hourglass.Hourglass;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Plane;
-import com.google.ar.core.Pose;
-import com.google.ar.core.Session;
 import com.google.ar.core.TrackingState;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.FrameTime;
-import com.google.ar.sceneform.HitTestResult;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.animation.ModelAnimator;
 import com.google.ar.sceneform.math.Quaternion;
@@ -59,7 +52,6 @@ import org.pursuit.ar_wrld.weaponsInfo.WeaponsAvailable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -170,13 +162,11 @@ public class SpaceARFragment extends Fragment {
         transformableNodesList = new ArrayList<>();
         modelCoordinates = new ModelCoordinates();
         sharedPreferences = getActivity().getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE);
-        //sharedPreferences = getActivity().getSharedPreferences(UserTitleInformation.TITLE_SHAREDPREF_KEY, MODE_PRIVATE);
 
         vector = new Vector3();
         renderableList = new ArrayList<>();
         nodeList = new ArrayList<>();
         difficulty = sharedPreferences.getString(GameInformation.GAME_DIFFICULTY, null);
-        // If user misses their shot account here
     }
 
     private void shootingTextDissapearing() {
@@ -196,7 +186,6 @@ public class SpaceARFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_space_ar, container, false);
         findViews(rootView);
         setUpAR();
@@ -214,7 +203,6 @@ public class SpaceARFragment extends Fragment {
         applyPerkToUser(sharedPreferences.getString(GameInformation.GAME_PERK_KEY, null));
         setMaxNumOfModels();
         getStringRes();
-        //setupGameInfo();
         setUpRedLight();
         scorekeepingTv.setText(scoreString);
         numOfAliensTv.setText(aliensLeftString);
@@ -302,7 +290,7 @@ public class SpaceARFragment extends Fragment {
         imageForPerk.setImageDrawable(getActivity().getDrawable(drawable));
     }
 
-    private void setupGameInfo() {
+        private void setupGameInfo() {
 //        startFromBottom = new TranslateAnimation(0, 0, 600f, 0);
 //        startFromBottom.setDuration(1000);
 //
@@ -408,7 +396,6 @@ public class SpaceARFragment extends Fragment {
     private void setMedAmmoTv() {
         medDamageString = Integer.toString(weaponSelection.getMedWeaponDamage());
         medAmmoString = Integer.toString(weaponSelection.getMedWeaponAmmo());
-//        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
         medWeaponInfo.setText(getString(R.string.med_weapon_info, weaponSelection.getMedWeaponDamage(), weaponSelection.getMedWeaponAmmo()));
     }
 
@@ -450,10 +437,6 @@ public class SpaceARFragment extends Fragment {
         });
 
         medWeapon.setOnClickListener(v -> {
-            Log.d(TAG, "setWeaponListener: Is med weapon chosen: " + isMedWeaponChosen);
-            Log.d(TAG, "setWeaponListener: Is weak weapon chosen: " + isWeakWeaponChosen);
-            Log.d(TAG, "setWeaponListener: Weak weapon alpha: " + weakWeapon.getAlpha());
-            Log.d(TAG, "setWeaponListener: Med Weapon alpha: " + medWeapon.getAlpha());
             if (weaponSelection.getMedWeaponAmmo() > 0) {
                 isMedWeaponChosen = true;
                 isWeakWeaponChosen = false;
@@ -482,7 +465,6 @@ public class SpaceARFragment extends Fragment {
     }
 
     private void spawningAliens(boolean isBoss) {
-        // setAnchorAtZZZ();
 
         if (isBoss) {
             Log.d(TAG, "spawningAliens: ");
@@ -506,7 +488,6 @@ public class SpaceARFragment extends Fragment {
     private void getStringRes() {
         scoreString = getString(R.string.score_text, scoreNumber);
         aliensLeftString = getString(R.string.aliens_remaining_string, numOfModels, maxModels);
-//        medAmmoCounter = getString(R.string.med_weapon_info, weaponSelection.getMedWeaponAmmo());
     }
 
     private void playAnimation(ModelRenderable modelRenderable) {
@@ -531,9 +512,6 @@ public class SpaceARFragment extends Fragment {
             ArrayList<Node> overlappedNodes = arFragment.getArSceneView().getScene().overlapTestAll(anchorNode);
             for (Node node : overlappedNodes) {
                 if (node instanceof MovementNode) {
-//                    Toast.makeText(getContext(), "Collision!", Toast.LENGTH_SHORT).show();
-                    // May want to use a flag to check that the node wasn't overlapping the previous frame.
-                    // Play sound if overlapping started.
                 }
             }
         }
@@ -543,9 +521,6 @@ public class SpaceARFragment extends Fragment {
         numOfModels++;
 
         modelRenderablesList.add(renderable);
-        Log.d(TAG, "addNodeToScene: " + numOfModels);
-
-        //Game is over once a certain number of models is higher than the limit shown below
         switch (difficulty) {
             case UserHomeScreenActivity.EASY_STRING:
                 if (numOfModels >= maxModels) {
@@ -579,7 +554,6 @@ public class SpaceARFragment extends Fragment {
         node.setParent(anchorNode);
         node.setWorldRotation(rotate);
         node.setLocalPosition(vector);
-//        node.setLight(modelLight);
         mli.indicate(vector);
 
         ModelLives modelLives = new ModelLives();
@@ -598,7 +572,6 @@ public class SpaceARFragment extends Fragment {
             case GameInformation.TIME_INCREASE_MODEL:
                 modelLives.setNumofLivesModel0(1);
                 isTimerModel = true;
-                Log.d(TAG, "addNodeToScene: " + node.getLocalScale());
                 break;
             case GameInformation.BOSS_ENEMY:
                 modelLives.setNumofLivesModel0(50);
@@ -606,8 +579,6 @@ public class SpaceARFragment extends Fragment {
         }
 
         arFragment.getArSceneView().getScene().addChild(anchorNode);
-        //Rotates the model every frame
-        //Second parameter in Quaternion.axisAngle() measures speed of rotation
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
             Quaternion startQ = node.getLocalRotation();
             Quaternion rotateQ = Quaternion.axisAngle(new Vector3(0, 1f, 0), 5f);
@@ -633,11 +604,9 @@ public class SpaceARFragment extends Fragment {
                 weaponSwitch();
             }
 
-            //fireLasers(anchorNode, node);
             projectiles = new Projectiles(getContext(),Uri.parse(GameInformation.BALL_SHOT),arFragment);
             arFragment.getArSceneView().getScene().addChild(projectiles);
             projectiles.setLocalPosition(new Vector3(arFragment.getArSceneView().getScene().getCamera().getLocalPosition()));
-//projectiles.setLookDirection(arFragment.getArSceneView().getScene().getCamera().getForward(),node.getForward());
 
             projectiles.launchProjectile(node);
             if (projectiles.isActive()){
@@ -652,7 +621,6 @@ public class SpaceARFragment extends Fragment {
                     lightsRed(node, modelLight);
                 }
                 audioLoader.laserSound();
-//                Toast.makeText(getContext(), "Lives left: " + modelLives.getNumofLivesModel0(), Toast.LENGTH_SHORT).show();
             } else {
                 node.setRenderable(null);
                 node.removeChild(anchorNode);
@@ -681,8 +649,6 @@ public class SpaceARFragment extends Fragment {
                     startGame.onTick(timeLeftInMilliseconds);
                     scoreNumber += 500;
                     updateTimer();
-                    Log.d(TAG, "setNodeListener: TIME LEFT AFTER CHANGE:" + timeLeftInMilliseconds);
-//                    Toast.makeText(getContext(), "Time Extended by 5 sec", Toast.LENGTH_SHORT).show();
                 }
 
                 if (scoreNumber >= scoreTillClockModel) {
@@ -708,8 +674,6 @@ public class SpaceARFragment extends Fragment {
                 audioLoader.laserSound();
                 getStringRes();
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-                Log.d(TAG, "setNodeListener: " + scoreString);
-                Log.d(TAG, "setNodeListener: " + scorekeepingTv.getText().toString());
                 scorekeepingTv.setText(scoreString);
                 numOfAliensTv.setText(aliensLeftString);
 
@@ -772,7 +736,7 @@ public class SpaceARFragment extends Fragment {
 
             @Override
             public void onFinish() {
-                countDownText.setText("Time's Up");
+                countDownText.setText(getString(R.string.time_up));
                 sharedPreferences.edit().putLong(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
                 goToResultPage();
             }
@@ -808,40 +772,6 @@ public class SpaceARFragment extends Fragment {
 
         countDownText.setText(timeLeftText);
     }
-
-//    public void gameOver(String gameOverMessage) {
-//
-//        arFragment.onDestroy();
-//
-//        sharedPreferences.edit().putInt(GameInformation.USER_SCORE_KEY, scoreNumber).apply();
-//
-//        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
-//        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
-//        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
-//        if (startGame != null && startGame.isRunning()) startGame.pauseTimer();
-//
-//        GameOverFragment gameOverFragment = GameOverFragment.newInstance(gameOverMessage);
-//        //TODO ensure this transaction happens
-//        getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.left_to_right, R.anim.mid_to_right).replace(R.id.background_for_ar_view, gameOverFragment).commit();
-//        new CountDownTimer(5000, 1000) {
-//            @Override
-//            public void onTick(long millisUntilFinished) {
-//
-//            }
-//
-//            @Override
-//            public void onFinish() {
-//                //TODO ensure intent moves to next activity from fragment
-//                try {
-//                    arFragment.onDestroy();
-//                } catch (Exception e) {
-//                    Log.d(TAG, "onFinish: " + e.toString());
-//                }
-//                goToResultPage();
-//            }
-//        }.start();
-//    }
-
     public void goToResultPage() {
         Intent goToResultPageIntent = new Intent(getContext(), ResultPage.class);
         audioLoader.stopAudio();
@@ -864,17 +794,11 @@ public class SpaceARFragment extends Fragment {
     public void onPause() {
         startGame.cancel();
         super.onPause();
-//        if (easyAlienSpawn != null && easyAlienSpawn.isRunning()) easyAlienSpawn.pauseTimer();
-//        if (medAlienSpawn != null && medAlienSpawn.isRunning()) medAlienSpawn.pauseTimer();
-//        if (hardAlienSpawn != null && hardAlienSpawn.isRunning()) hardAlienSpawn.pauseTimer();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        if (easyAlienSpawn != null && easyAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-//        if (medAlienSpawn != null && medAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
-//        if (hardAlienSpawn != null && hardAlienSpawn.isPaused()) easyAlienSpawn.resumeTimer();
     }
 
     private void audioSetup(Context c) {
@@ -884,7 +808,6 @@ public class SpaceARFragment extends Fragment {
     private void lightsRed(Node node, Light light) {
         light.setColor(new Color(android.graphics.Color.RED));
         node.setLight(light);
-
         modelBlink(light, 6, 0f, 100000f, 500);
 
 
@@ -893,10 +816,7 @@ public class SpaceARFragment extends Fragment {
     private void lightsYellow(Node node, Light light) {
         light.setColor(Yellow);
         node.setLight(light);
-
         modelBlink(light, 6, 0f, 100000f, 500);
-
-
     }
 
     public void modelBlink(Light receiver, int times, float from, float to, long inMs) {
@@ -910,7 +830,6 @@ public class SpaceARFragment extends Fragment {
     private Light setUpRedLight() {
         modelLight =
                 Light.builder(Light.Type.POINT)
-                        // .setColor(new Color(android.graphics.Color.RED))
                         .setFalloffRadius(0.5f)
                         .setShadowCastingEnabled(true)
                         .setIntensity(45f)
@@ -953,7 +872,6 @@ public class SpaceARFragment extends Fragment {
 
                             laserNode.setParent(anchorNode);
                             laserNode.setRenderable(model);
-//                            laserNode.setWorldPosition(startVctor);
                             laserNode.setWorldPosition(Vector3.add(cameraPosition, point2).scaled(0f));
                             laserNode.setWorldRotation(rotationFromAToB);
 
@@ -970,8 +888,6 @@ public class SpaceARFragment extends Fragment {
                             }.start();
 
                         });
-
     }
-
 
 }

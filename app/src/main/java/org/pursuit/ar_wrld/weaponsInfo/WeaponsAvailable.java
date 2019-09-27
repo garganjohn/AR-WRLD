@@ -27,3 +27,4 @@ public class WeaponsAvailable {
 
     public void setMedWeaponDamage(int damage){medWeapon.setDamageDone(damage);}
 }
+

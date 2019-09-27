@@ -1,9 +1,7 @@
 package org.pursuit.ar_wrld.movement;
 
 import android.animation.TypeEvaluator;
-
 import com.google.ar.sceneform.math.Vector3;
-
 import javax.annotation.Nullable;
 
 public final class VectorEvaluator implements TypeEvaluator {
