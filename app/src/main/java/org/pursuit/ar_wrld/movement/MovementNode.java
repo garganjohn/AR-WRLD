@@ -45,8 +45,6 @@ public class MovementNode extends AnchorNode {
     }
 
 
-
-
     public Node getNode() {
         return node;
     }
@@ -55,10 +53,8 @@ public class MovementNode extends AnchorNode {
     public void onUpdate(FrameTime frameTime) {
         super.onUpdate(frameTime);
 
-
         if (objectAnimator == null) {
             return;
-
         }
 
         randomMovement();
@@ -78,10 +74,6 @@ public class MovementNode extends AnchorNode {
 
         Vector3 postion = getRandomElement(vector3List);
 
-
-        //get nodes original coordinates
-
-        //set new coordinates
         Vector3 up = new Vector3(0.885f, 0.0f, -0.800f);
         Vector3 left = new Vector3(0.700f, 0.5f, -0.300f);
         Vector3 down = new Vector3(-0.5f, -0.5f, -0.5f);
@@ -90,14 +82,9 @@ public class MovementNode extends AnchorNode {
         objectAnimator.setAutoCancel(true);
         objectAnimator.setTarget(this);
         objectAnimator.setPropertyName("localPosition");
-        objectAnimator.setObjectValues(originalNodePosition,Vector3.down(),Vector3.forward(),Vector3.up(), left, down, up,left,down);
+        objectAnimator.setObjectValues(originalNodePosition, Vector3.down(), Vector3.forward(), Vector3.up(), left, down, up, left, down);
 
 
-        //requires the setter name of what you are manipulating
-
-        //evaluator of what values your are passing
-
-        //set multiple coordinates to be called one after the other
         //objectAnimator.setObjectValues(originalNodePosition, up, left, down, originalNodePosition);
         objectAnimator.setEvaluator(new Vector3Evaluator());
         //animation happens forever
@@ -112,7 +99,6 @@ public class MovementNode extends AnchorNode {
         objectAnimator.start();
 
         return objectAnimator;
-
 
     }
 
@@ -132,24 +118,12 @@ public class MovementNode extends AnchorNode {
             zPos = rand.nextFloat() * (0.300f - 0.800f) - 0.800f;
             Vector3 vectors = new Vector3(xPos, yPos, zPos);
             vector3List.add(vectors);
-
-//            for (int j = 0; j < i; j++) {
-//                yPos = rand.nextFloat();
-//                for (int k = 0; k < i; k++) {
-//                    zPos = rand.nextFloat();
-//
-//                }
-//
-//            }
-
-
         }
         return vector3List;
 
     }
 
     private void collisionSpace() {
-
         node.getCollisionShape();
 
     }
@@ -164,3 +138,4 @@ public class MovementNode extends AnchorNode {
         return list.get(rand.nextInt(list.size()));
     }
 }
+

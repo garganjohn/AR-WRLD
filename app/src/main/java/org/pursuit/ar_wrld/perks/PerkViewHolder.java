@@ -37,5 +37,5 @@ public class PerkViewHolder extends RecyclerView.ViewHolder {
         perkImage = itemView.findViewById(R.id.perk_image);
         perkDescriptionTv = itemView.findViewById(R.id.perk_description);
     }
-
 }
+

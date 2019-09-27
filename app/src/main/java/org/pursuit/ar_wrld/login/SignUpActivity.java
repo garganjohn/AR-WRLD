@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -69,21 +68,20 @@ public class SignUpActivity extends AppCompatActivity {
         signupBtn.setOnClickListener(v -> {
             String userName = username.getText().toString();
             sharedPreferences.edit().putString(GameInformation.USERNAME_KEY, userName).apply();
-            Log.d(TAG, "Khaing" + sharedPreferences.getString(GameInformation.USERNAME_KEY, "a"));
 
             String email = emailId.getText().toString();
             String password = passwordCheck.getText().toString();
 
             if (TextUtils.isEmpty(userName)) {
-                Toast.makeText(getApplicationContext(), "Enter Username", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.enter_username), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(getApplicationContext(), "Enter Email Id", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.enter_email_id), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (TextUtils.isEmpty(password)) {
-                Toast.makeText(getApplicationContext(), "Enter Password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.enter_password), Toast.LENGTH_SHORT).show();
                 return;
             }
             progressBar.setVisibility(View.VISIBLE);
@@ -94,33 +92,25 @@ public class SignUpActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
 
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(userName)
                                     .build();
                             user.updateProfile(request);
                             goBacktoLogIn();
-                            Log.d(TAG, "signUpNewUsers: " + username);
-                            Log.d(TAG, "createUserWithEmail:success" + user.getDisplayName());
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignUpActivity.this, "Authentication failed.",
+                            Toast.makeText(SignUpActivity.this, getString(R.string.auth_fail_msg),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
         });
-
     }
 
-
-    public void goBacktoLogIn(){
+    public void goBacktoLogIn() {
         Intent intent = new Intent(SignUpActivity.this, UserHomeScreenActivity.class);
         startActivity(intent);
         finish();
     }
-
 }
+
 

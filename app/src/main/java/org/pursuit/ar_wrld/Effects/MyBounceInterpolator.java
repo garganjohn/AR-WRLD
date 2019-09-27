@@ -16,3 +16,4 @@ public class MyBounceInterpolator implements android.view.animation.Interpolator
                 Math.cos(frequency * input) + 1);
     }
 }
+

@@ -62,7 +62,6 @@ public class TranslatableNode extends Node {
         if (this.position != DroidPosition.MOVING_DOWN && this.position != DroidPosition.DOWN) {
             this.animatePullDown();
         }
-
     }
 
     private final ObjectAnimator localPositionAnimator(Object... values) {

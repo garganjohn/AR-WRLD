@@ -2,7 +2,6 @@ package org.pursuit.ar_wrld.login;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,9 +24,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import org.pursuit.ar_wrld.GameInformation;
 import org.pursuit.ar_wrld.R;
@@ -74,7 +70,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         errorMessage = findViewById(R.id.error_message);
 
         signInButton = findViewById(R.id.button_login);
-//        button = findViewById(R.id.sign_in_google);
 
         if (firebaseAuth.getCurrentUser() != null) {
             getSharedPreferences(GameInformation.SHARED_PREF_KEY, MODE_PRIVATE).edit().putString(GameInformation.USERNAME_KEY,firebaseAuth.getCurrentUser().getDisplayName()).apply();
@@ -85,8 +80,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         forgotTextview.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, ResetPasswordActivity.class)));
 
         createNewAcct.setOnClickListener(v -> startActivity(new Intent(SignInActivity.this, SignUpActivity.class)));
-
-//        button.setOnClickListener(v -> signIn());
 
         signInButton.setOnClickListener(v -> {
             String email = inputEmail.getText().toString();
@@ -141,7 +134,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
 
         };
 
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -150,8 +142,6 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-
     }
 
     @Override
@@ -187,14 +177,14 @@ public class SignInActivity extends AppCompatActivity implements GoogleApiClient
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
     public void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             Intent goToIntent = new Intent(SignInActivity.this, UserHomeScreenActivity.class);
             startActivity(goToIntent);
-            Toast.makeText(getApplicationContext(), "Hello " + acct.getDisplayName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.hello) + acct.getDisplayName(), Toast.LENGTH_SHORT).show();
         } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.failure_msg) + getString(R.string.try_msg) , Toast.LENGTH_SHORT).show();
         }
     }
 }

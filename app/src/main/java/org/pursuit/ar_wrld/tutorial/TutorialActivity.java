@@ -26,9 +26,6 @@ public class TutorialActivity extends FragmentActivity {
 
         viewPager.setAdapter(new TutorialViewAdapter(getSupportFragmentManager(),fragmentList));
 
-
-
-
     }
 
     private void initTutorialFragment() {
@@ -40,3 +37,4 @@ public class TutorialActivity extends FragmentActivity {
                 .commit();
     }
 }
+

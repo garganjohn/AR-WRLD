@@ -27,3 +27,4 @@ public interface GameInformation {
     String BALL_SHOT = "tripball.sfb";
 
 }
+

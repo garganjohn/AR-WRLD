@@ -3,7 +3,6 @@ package org.pursuit.ar_wrld;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,7 +11,7 @@ import org.pursuit.ar_wrld.login.SignInActivity;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public class SplashActivity extends AppCompatActivity {
-    private static final int SPLASH_LENGTH = 1500;
+    private static final int SPLASH_LENGTH = 4500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,6 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void changeStatusBarColor() {
-       // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //Makes both status and navbar transparent
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); //status bar or the time bar at the top
     }

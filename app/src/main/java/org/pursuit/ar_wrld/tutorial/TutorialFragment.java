@@ -25,7 +25,6 @@ public class TutorialFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     public TutorialFragment() {
-        // Required empty public constructor
     }
 
     public static TutorialFragment newInstance (int backGroundDrawable,int contentView) {
@@ -43,7 +42,6 @@ public class TutorialFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
             mParam2 = getArguments().getInt(ARG_PARAM2);
-
         }
     }
 
@@ -52,8 +50,6 @@ public class TutorialFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         constraintLayout = view.findViewById(R.id.tutorial_layout);
         constraintLayout.setBackgroundResource(mParam1);
-
-
     }
 
     @Override
@@ -73,12 +69,6 @@ public class TutorialFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
@@ -102,5 +92,6 @@ public class TutorialFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 }
+
 
 

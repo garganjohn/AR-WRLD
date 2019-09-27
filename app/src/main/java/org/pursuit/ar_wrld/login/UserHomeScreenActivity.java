@@ -41,9 +41,6 @@ import org.pursuit.ar_wrld.usermodel.UserInformation;
 
 import java.util.concurrent.TimeUnit;
 
-import static java.lang.Long.parseLong;
-import static java.lang.Long.valueOf;
-
 public class UserHomeScreenActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 200;
 
@@ -134,7 +131,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
             finish();
         });
         setPerkInfo();
-        Log.d("FINDME", "onCreate: "+retrieveUsername());
 
         if (retrieveUsername() != null){
             usernameTextView.setText(retrieveUsername());
@@ -147,7 +143,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private void findViews() {
         usernameTextView = findViewById(R.id.user_name);
         userscoreTextView = findViewById(R.id.user_score);
-//        userTitleTextView = findViewById(R.id.user_title);
         levelSpinner = findViewById(R.id.level_spinner);
         pickAPerkButton = findViewById(R.id.pick_a_perk);
         tutorialButton = findViewById(R.id.practice_button);
@@ -161,7 +156,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     }
 
     private void changeStatusBarColor() {
-        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //Makes both status and navbar transparent
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); // Navigation bar the soft bottom of some phones like nexus and some Samsung note series
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.purple_app_color)); //status bar or the time bar at the top
     }
@@ -178,8 +172,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         databaseReference = firebaseDatabase.getReference("mARtians");
         DatabaseReference currentRef = databaseReference.child(retrieveUsername());
 
-        Log.d("DB", "db" + databaseReference);
-
 
         currentRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -187,13 +179,9 @@ public class UserHomeScreenActivity extends AppCompatActivity {
                 String keys = "";
                 for (DataSnapshot datas : dataSnapshot.getChildren()) {
                     keys = datas.getKey();
-                    Log.d("FINDME", "onUserHome: " + updatedScore);
                 }
                 if (dataSnapshot.child(keys).exists()) {
 
-                    Log.d("FINDME", "chekcing userHome" + dataSnapshot.child(retrieveUsername()).getChildren());
-
-//                    currentRef.child(keys).setValue(updatedScore);
                     String userScore = getString(R.string.user_score, updatedScore);
                     userscoreTextView.setText(userScore);
                 } else {
@@ -212,60 +200,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
 
         return updatedScore;
     }
-
-//    private long retrieveUserScore() {
-//
-//        try {
-//            firebaseDatabase = FirebaseDatabase.getInstance();
-//            databaseReference = firebaseDatabase.getReference("mARtians");
-//            String playName = retrieveUsername();
-//            DatabaseReference updatedRef = databaseReference.child(playName);
-//            Log.d("USERHOMESCREEN", "getting the child node" + updatedRef.toString());
-//            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    for(DataSnapshot datas: dataSnapshot.getChildren()){
-//                        String keys=datas.getKey();
-//                        if(dataSnapshot.child(keys).exists()){
-//
-//                            //long gettingScore = userInformation.getUserscore();
-//                            //updatedScore = dataSnapshot.child(keys).child("userscore").getValue();
-//                            Log.d("FINDME", "userkey" + keys);
-//
-//                        } else{
-//                            UserInformation userInformation = new UserInformation();
-////                            userInformation.setUsername(playName);
-//                            userInformation.setUserscore(0);
-//                            // databaseReference.child(playName).child("score").setValue(0);
-//
-//                            new FirebaseDatabaseHelper().addUser(userInformation, new FirebaseDatabaseHelper.DataStatus() {
-//                                @Override
-//                                public void dataIsLoaded(List<UserInformation> userInformations, List<String> keys) {
-//
-//                                }
-//
-//                                @Override
-//                                public void dataIsInserted() {
-//
-//                                }
-//                            });
-//                        }
-//                        userscoreTextView.setText(String.valueOf(updatedScore));
-//                    }
-//
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-//        } catch (Exception e) {
-//            Log.d("MURICA", "retrieveUserScore: " + e.toString());
-//        }
-//        return updatedScore;
-
 
     private void setPerkInfo() {
         perkImage.setImageDrawable(setUserPerk());
@@ -298,7 +232,6 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private boolean checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
             return false;
         }
         return true;
@@ -316,21 +249,18 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.permission_grant_msg), Toast.LENGTH_SHORT).show();
 
                     // main logic
                 } else {
-                    Toast.makeText(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.permission_denied_msg), Toast.LENGTH_SHORT).show();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                                 != PackageManager.PERMISSION_GRANTED) {
-                            showMessageOKCancel("You need to allow access permissions",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                                requestPermission();
-                                            }
+                            showMessageOKCancel(getString(R.string.msg_ok_cancel),
+                                    (dialog, which) -> {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                            requestPermission();
                                         }
                                     });
                         }
@@ -343,8 +273,8 @@ public class UserHomeScreenActivity extends AppCompatActivity {
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(this)
                 .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(getString(R.string.okay), okListener)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .create()
                 .show();
     }
@@ -355,3 +285,4 @@ public class UserHomeScreenActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 }
+
