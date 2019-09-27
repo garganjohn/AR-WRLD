@@ -12,7 +12,7 @@ import org.pursuit.ar_wrld.login.SignInActivity;
 import io.supercharge.shimmerlayout.ShimmerLayout;
 
 public class SplashActivity extends AppCompatActivity {
-    private static final int SPLASH_LENGTH = 1500;
+    private static final int SPLASH_LENGTH = 4500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

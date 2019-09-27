@@ -93,6 +93,15 @@
     <string name="congrats_msg">Congratulations! \n You\'ve defended the Earth!</string>
     <string name="score_is_here">Score Is here</string>
     <string name="play_again_result">Play Again?</string>
+    <string name="test_string">These are just a few words to test out if this is working</string>
+    <string name="total_score">Total Score</string>
+    <string name="timer">Timer</string>
+    <string name="current_enemy_count">Current Enemy Count</string>
+    <string name="total_enemy_count">Total Enemy Count</string>
+    <string name="enemy">Enemy</string>
+    <string name="enemy_location">Enemy Location</string>
+    <string name="weapon_info">Weapon Info</string>
+    <string name="current_perk">Current Perk</string>
 
 
 </resources>

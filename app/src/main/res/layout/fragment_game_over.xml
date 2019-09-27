@@ -15,6 +15,6 @@
         android:background="#fff"
         android:textColor="#000"
         android:textSize="24sp"
-        android:text="These are just a few words to test out if this is working" />
+        android:text="@string/test_string" />
 
 </LinearLayout>
