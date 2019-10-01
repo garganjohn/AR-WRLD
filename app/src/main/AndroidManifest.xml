@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.pursuit.ar_wrld">
+    package="org.toocoolforschool979.ar_wrld">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,8 +19,8 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".SplashActivity"
-            android:parentActivityName=".login.UserHomeScreenActivity"
+            android:name="org.toocoolforschool979.ar_wrld.SplashActivity"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.login.UserHomeScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,35 +28,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".login.SignInActivity" />
+        <activity android:name="org.toocoolforschool979.ar_wrld.login.SignInActivity" />
         <activity
-            android:name=".login.SignUpActivity"
+            android:name="org.toocoolforschool979.ar_wrld.login.SignUpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".login.ResetPasswordActivity"
-            android:parentActivityName=".login.SignInActivity"
+            android:name="org.toocoolforschool979.ar_wrld.login.ResetPasswordActivity"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.login.SignInActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ResultPage"
-            android:parentActivityName=".login.UserHomeScreenActivity"
+            android:name="org.toocoolforschool979.ar_wrld.ResultPage"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".perks.PerkPickForUser"
-            android:parentActivityName=".login.UserHomeScreenActivity"
+            android:name="org.toocoolforschool979.ar_wrld.perks.PerkPickForUser"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".login.UserHomeScreenActivity"
-            android:parentActivityName=".login.UserHomeScreenActivity"
+            android:name="org.toocoolforschool979.ar_wrld.login.UserHomeScreenActivity"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
-            android:parentActivityName=".login.UserHomeScreenActivity"
+            android:name="org.toocoolforschool979.ar_wrld.MainActivity"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.login.UserHomeScreenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".tutorial.TutorialActivity"
-            android:parentActivityName=".MainActivity"
+            android:name="org.toocoolforschool979.ar_wrld.tutorial.TutorialActivity"
+            android:parentActivityName="org.toocoolforschool979.ar_wrld.MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".perks.PerkViewHolder" />
+        <activity android:name="org.toocoolforschool979.ar_wrld.perks.PerkViewHolder" />
 
         <meta-data
             android:name="com.google.ar.core"
